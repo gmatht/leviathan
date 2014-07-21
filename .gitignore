@@ -1,0 +1,7 @@
+.ninja_log
+.DS_Store
+XCode/LTLSatChecker/DerivedData
+bin
+*/xcusedata/*
+analyze/*
+build/*

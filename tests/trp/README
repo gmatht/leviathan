@@ -1,0 +1,25 @@
+trp set
+
+- authors:
+  U. Hustadt, R. A. Schmidt
+
+- url:
+  http://www.csc.liv.ac.uk/~ullrich/TRP/
+
+- obtained: (yyyy/mm/dd)
+  2009/05/18
+
+- papers:
+  [1]
+
+- description:
+
+  We only use instances 0 to 9 for each parameter configuration.
+        
+- copyright:
+  Please refer to the original site/authors.
+
+- references:
+
+  [1] U. Hustadt and R. A. Schmidt: Scientific Benchmarking with
+      Temporal Logic Decision Procedures. In KR'02.

@@ -1,0 +1,5 @@
+m && (G(m -> ((X(!m)) && (XX(!m)) && (XXX(!m)) && (XXXX(m)))))
+!b && (X(!b)) && (XX(!b)) && (XXX(!b))
+G((m && !b) -> (XXXXb && X(((!m) && (b -> XXXXb) && ((!b) -> XXXX(!b))) U m)))
+G((m && b) -> (XXXX(!b) && (X((b && (!m) && XXXX(!b)) U (m || ((!m) && (!b) && XXXX(b) && X(((!m) && (b -> XXXX(b)) && ((!b) -> XXXX(!b)) ) U m)))))))
+m && (G(m -> ((X(!m)) && (XX(!m)) && (XXX(!m)) && (XXXX(m))))) && !b && (X(!b)) && (XX(!b)) && (XXX(!b)) && G((m && !b) -> (XXXXb && X(((!m) && (b -> XXXXb) && ((!b) -> XXXX(!b))) U m))) && G((m && b) -> (XXXX(!b) && (X((b && (!m) && XXXX(!b)) U (m || ((!m) && (!b) && XXXX(b) && X(((!m) && (b -> XXXX(b)) && ((!b) -> XXXX(!b)) ) U m)))))))

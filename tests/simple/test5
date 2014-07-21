@@ -1,0 +1,10 @@
+[]((r U (r && []q)) V ([]q || (r U (r && []q))))
+!(<>p || ![]<>q)
+!r && ((((r && !Xr) || (!r && Xr)) V r) V []r)
+<>q U (<>q && X(true U Xq))
+!X<>q U !(false V Xp)
+false
+q || !((q && !<>(<>p V (q || <>p))) || (!q && <>(<>p V (q || <>p))))
+X(true U r)
+<>(!r || (false V !r))
+!<>(false V r)

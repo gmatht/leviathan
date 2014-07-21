@@ -1,0 +1,1 @@
+!b & m & G(m -> X(!m & Xm)) & X!b & G((!b & m) -> X(Xb & ((!m & (b <-> XXb)) U m))) & G((b & m) -> X(X!b & ((b & !m & XX!b) U (m | (!b & !m & X(Xb & ((!m & (b <-> XXb)) U m)))))))
