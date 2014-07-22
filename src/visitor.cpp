@@ -50,7 +50,7 @@ UNARY_VISIT(Always, "\u25A1")
 UNARY_VISIT(Eventually, "\u25C7")
 
 BINARY_VISIT(Conjunction, "\u2227")
-BINARY_VISIT(Disjunction, "\u2228");
+BINARY_VISIT(Disjunction, "\u2228")
 BINARY_VISIT(Then, "\u2192")
 BINARY_VISIT(Iff, "\u2194")
 BINARY_VISIT(Until, "\u222a")

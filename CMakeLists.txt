@@ -10,7 +10,7 @@ set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/lex.cc LANGU
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/parser.cc LANGUAGE CXX)
 
 set (src_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set (bin_dir ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+set (bin_dir ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 set (src
     ${src_dir}/formula.cpp
@@ -22,26 +22,28 @@ set (src
     ${src_dir}/parser/parser.cpp
 )
 
-set_source_files_properties (${src} PROPERTIES COMPILE_FLAGS "-std=c++11 -stdlib=libc++")
-set_source_files_properties (${src_dir}/main.cpp PROPERTIES COMPILE_FLAGS "-std=c++11 -stdlib=libc++")
-
 include_directories (include)
 include_directories (${src_dir})
 include_directories (${src_dir}/parser)
 include_directories (${src_dir}/tclap)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/c\\+\\+")
     set (CMAKE_CXX_COMPILER /usr/bin/clang++)
     set (CMAKE_C_COMPILER /usr/bin/clang)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif ()
 
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wno-c++98-compat -Wstrict-aliasing -Wunreachable-code -fPIC -march=native -mtune=native")
+if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
+    set_source_files_properties (${src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
+    set_source_files_properties (${src_dir}/main.cpp PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
+endif()
+
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -fPIC -march=native -mtune=native -std=c++11")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -flto -ffast-math -Ofast")
 
 file (MAKE_DIRECTORY ${bin_dir})
 
-set (EXECUTABLE_OUTPUT_PATH ${bin_dir})
-set (LIBRARY_OUTPUT_PATH ${bin_dir})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${bin_dir})
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 
 add_library (leviathan SHARED ${src})
 
@@ -50,7 +52,7 @@ link_directories (${bin_dir})
 add_executable (checker ${src_dir}/main.cpp)
 target_link_libraries (checker leviathan)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+" AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (checker -nodefaultlibs c++abi c c++ gcc gcc_s m)
     target_link_libraries (leviathan -nodefaultlibs c++abi c c++ gcc gcc_s m)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif ()

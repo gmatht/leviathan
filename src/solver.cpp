@@ -567,7 +567,7 @@ loop:
 				if (model)
 				{
 					auto ex_model = exhibit_model(formulas, stack, *frame.chain);
-					return { true, ex_model.first, ex_model.second };
+					return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, ex_model.first, ex_model.second);
 				}
 				else
 					return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, {}, 0);
@@ -647,7 +647,7 @@ loop:
 					if (model)
 					{
 						auto ex_model = exhibit_model(formulas, stack, *currFrame);
-						return { true, ex_model.first, ex_model.second };
+						return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, ex_model.first, ex_model.second);
 					}
 					else
 						return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, {}, 0);
