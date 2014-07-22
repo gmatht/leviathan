@@ -30,6 +30,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## How To
-To compile the test application on Linux or Mac OS X run "./compile.sh" to use Clang, or "./compile.sh gcc" to use GCC instead.
+To compile the test application on Linux or Mac OS X run "./compile.sh".
+The compile script can accept parameters to define the build type (Debug or Release, defaults to Release), the number of cores to use during compilation (defaults to number of cores available), and wheter to use Clang or GCC (defaults to Clang).
+Use "./compile.sh --help" to view  complete information about the script.
 The binaries are created in the "bin" folder.
 For every other platform/build system a CMake file is provided.

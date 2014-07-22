@@ -16,7 +16,7 @@ namespace detail
 {
 
 #ifndef MAX_FORMULA_SIZE
-#define MAX_FORMULA_SIZE 32
+#define MAX_FORMULA_SIZE 64
 #endif
 
 const uint64_t MAX_FRAME = std::numeric_limits<uint64_t>::max();
