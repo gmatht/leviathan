@@ -20,35 +20,46 @@ class PrettyPrinter;
 class Formula
 {
 public:
-	enum Type
-	{
-		True,
-		False,
-		Atom,
-		Negation,
-		Tomorrow,
-		Always,
-		Eventually,
-		Conjunction,
-		Disjunction,
-		Then,
-		Iff,
-		Until
-	};
+        enum Type
+        {
+                True,
+                False,
+                Atom,
+                Negation,
+                Tomorrow,
+                Always,
+                Eventually,
+                Conjunction,
+                Disjunction,
+                Then,
+                Iff,
+                Until
+        };
 
-	Formula() = delete;
-	Formula(Type type) : _type(type) {}
-	virtual ~Formula() {}
+        Formula() = delete;
+        Formula(Type type)
+                : _type(type)
+        {
+        }
+        virtual ~Formula()
+        {
+        }
 
-	Type type() const { return _type; }
+        Type type() const
+        {
+                return _type;
+        }
 
-	template<typename T>
-	bool isa() const { return T::type == _type; }
+        template <typename T>
+        bool isa() const
+        {
+                return T::type == _type;
+        }
 
-	virtual void accept(class Visitor& v) const = 0;
+        virtual void accept(class Visitor& v) const = 0;
 
 private:
-	Type _type;
+        Type _type;
 };
 
 using FormulaPtr = std::shared_ptr<Formula>;
@@ -56,12 +67,17 @@ using FormulaPtr = std::shared_ptr<Formula>;
 class True : public Formula
 {
 public:
-	True() : Formula(Type::True) {}
-	virtual ~True() {}
+        True()
+                : Formula(Type::True)
+        {
+        }
+        virtual ~True()
+        {
+        }
 
-	static const Type type = Type::True;
+        static const Type type = Type::True;
 
-	void accept(Visitor& v) const;
+        void accept(Visitor& v) const;
 };
 
 using TruePtr = std::shared_ptr<True>;
@@ -71,12 +87,17 @@ TruePtr make_true();
 class False : public Formula
 {
 public:
-	False() : Formula(Type::False) {}
-	virtual ~False() {}
+        False()
+                : Formula(Type::False)
+        {
+        }
+        virtual ~False()
+        {
+        }
 
-	static const Type type = Type::False;
+        static const Type type = Type::False;
 
-	void accept(Visitor& v) const;
+        void accept(Visitor& v) const;
 };
 
 using FalsePtr = std::shared_ptr<False>;
@@ -86,64 +107,88 @@ FalsePtr make_false();
 class Atom : public Formula
 {
 public:
-	Atom() = delete;
-	Atom(const std::string& name) : Formula(Type::Atom), _name(name) {}
-	virtual ~Atom() {}
+        Atom() = delete;
+        Atom(const std::string& name)
+                : Formula(Type::Atom)
+                , _name(name)
+        {
+        }
+        virtual ~Atom()
+        {
+        }
 
-	const std::string& name() const { return _name; }
-	static const Type type = Type::Atom;
+        const std::string& name() const
+        {
+                return _name;
+        }
+        static const Type type = Type::Atom;
 
-	void accept(Visitor& v) const;
+        void accept(Visitor& v) const;
 
 private:
-	std::string _name;
+        std::string _name;
 };
 
 using AtomPtr = std::shared_ptr<Atom>;
 
 AtomPtr make_atom(const std::string& name);
 
-#define DECLARE_UNARY(_Type, _make) class _Type : public Formula \
-{ \
-public: \
-	_Type() = delete; \
-	_Type(const FormulaPtr& f) : Formula(Type::_Type), _f(f) {} \
-	virtual ~_Type() {} \
-\
-	const FormulaPtr& formula() const { return _f; } \
-	static const Type type = Type::_Type; \
-\
-	void accept(Visitor& v) const; \
-\
-private: \
-	FormulaPtr _f; \
-}; \
-\
-using _Type##Ptr = std::shared_ptr<_Type>; \
-\
-_Type##Ptr make_##_make(const FormulaPtr& f);
+#define DECLARE_UNARY(_Type, _make)                                      \
+        class _Type : public Formula                                     \
+        {                                                                \
+        public:                                                          \
+                _Type() = delete;                                        \
+                _Type(const FormulaPtr& f) : Formula(Type::_Type), _f(f) \
+                {                                                        \
+                }                                                        \
+                virtual ~_Type()                                         \
+                {                                                        \
+                }                                                        \
+                                                                         \
+                const FormulaPtr& formula() const                        \
+                {                                                        \
+                        return _f;                                       \
+                }                                                        \
+                static const Type type = Type::_Type;                    \
+                                                                         \
+                void accept(Visitor& v) const;                           \
+                                                                         \
+        private:                                                         \
+                FormulaPtr _f;                                           \
+        };                                                               \
+        using _Type##Ptr = std::shared_ptr<_Type>;                       \
+        _Type##Ptr make_##_make(const FormulaPtr& f);
 
-#define DECLARE_BINARY(_Type, _make) class _Type : public Formula \
-{ \
-public: \
-	_Type() = delete; \
-	_Type(const FormulaPtr& f1, const FormulaPtr& f2) : Formula(Type::_Type), _f1(f1), _f2(f2) {} \
-	virtual ~_Type() {} \
-\
-	const FormulaPtr& left() const { return _f1; } \
-	const FormulaPtr& right() const { return _f2; } \
-	static const Type type = Type::_Type; \
-\
-	void accept(Visitor& v) const; \
-\
-private: \
-	FormulaPtr _f1; \
-	FormulaPtr _f2; \
-}; \
-\
-using _Type##Ptr = std::shared_ptr<_Type>; \
-\
-_Type##Ptr make_##_make(const FormulaPtr& f1, const FormulaPtr& f2);
+#define DECLARE_BINARY(_Type, _make)                                                                       \
+        class _Type : public Formula                                                                       \
+        {                                                                                                  \
+        public:                                                                                            \
+                _Type() = delete;                                                                          \
+                _Type(const FormulaPtr& f1, const FormulaPtr& f2) : Formula(Type::_Type), _f1(f1), _f2(f2) \
+                {                                                                                          \
+                }                                                                                          \
+                virtual ~_Type()                                                                           \
+                {                                                                                          \
+                }                                                                                          \
+                                                                                                           \
+                const FormulaPtr& left() const                                                             \
+                {                                                                                          \
+                        return _f1;                                                                        \
+                }                                                                                          \
+                const FormulaPtr& right() const                                                            \
+                {                                                                                          \
+                        return _f2;                                                                        \
+                }                                                                                          \
+                static const Type type = Type::_Type;                                                      \
+                                                                                                           \
+                void accept(Visitor& v) const;                                                             \
+                                                                                                           \
+        private:                                                                                           \
+                FormulaPtr _f1;                                                                            \
+                FormulaPtr _f2;                                                                            \
+        };                                                                                                 \
+        using _Type##Ptr = std::shared_ptr<_Type>;                                                         \
+        _Type##Ptr make_##_make(const FormulaPtr& f1, const FormulaPtr& f2);
 
 DECLARE_UNARY(Negation, negation)
 DECLARE_UNARY(Tomorrow, tomorrow)
@@ -156,35 +201,37 @@ DECLARE_BINARY(Then, then)
 DECLARE_BINARY(Iff, iff)
 DECLARE_BINARY(Until, until)
 
-template<typename T>
+template <typename T>
 inline bool isa(const FormulaPtr f)
 {
-	return T::type == f->type();
+        return T::type == f->type();
 }
 
-template<typename T, typename ReturnT = typename std::add_const<T>::type>
-inline auto fast_cast(FormulaPtr ptr)-> decltype(ptr->type(), (ReturnT*)nullptr)
+template <typename T, typename ReturnT = typename std::add_const<T>::type>
+inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), (ReturnT*) nullptr)
 {
-	if (T::type != ptr->type())
-		return nullptr;
- 
-	return static_cast<ReturnT *>(ptr.get());
+        if (T::type != ptr->type())
+                return nullptr;
+
+        return static_cast<ReturnT*>(ptr.get());
 }
 
-#define UNARY_LESS(_Type) if (isa<_Type>(a)) \
-	return fast_cast<_Type>(a)->formula() < fast_cast<_Type>(b)->formula();
+#define UNARY_LESS(_Type)  \
+        if (isa<_Type>(a)) \
+                return fast_cast<_Type>(a)->formula() < fast_cast<_Type>(b)->formula();
 
-#define BINARY_LESS(_Type) if (isa<_Type>(a)) \
-{ \
-	const _Type* aPtr = fast_cast<_Type>(a); \
-	const _Type* bPtr = fast_cast<_Type>(b); \
-\
-	if (aPtr->left() < bPtr->left()) \
-		return true; \
-	if (aPtr->left() == bPtr->left()) \
-		return aPtr->right() < bPtr->right(); \
-	return false; \
-}
+#define BINARY_LESS(_Type)                                    \
+        if (isa<_Type>(a))                                    \
+        {                                                     \
+                const _Type* aPtr = fast_cast<_Type>(a);      \
+                const _Type* bPtr = fast_cast<_Type>(b);      \
+                                                              \
+                if (aPtr->left() < bPtr->left())              \
+                        return true;                          \
+                if (aPtr->left() == bPtr->left())             \
+                        return aPtr->right() < bPtr->right(); \
+                return false;                                 \
+        }
 
 bool operator<(const FormulaPtr a, const FormulaPtr b);
 bool operator>(const FormulaPtr a, const FormulaPtr b);
@@ -197,38 +244,58 @@ using FormulaSet = std::set<FormulaPtr>;
 
 bool operator<(const FormulaSet& a, const FormulaSet& b);
 bool operator==(const FormulaSet& a, const FormulaSet& b);
-bool operator!=(const FormulaSet&  a, const FormulaSet& b);
-
+bool operator!=(const FormulaSet& a, const FormulaSet& b);
+}
 }
 
-}
-
-template<class Cont> class const_reverse_wrapper
+template <class Cont>
+class const_reverse_wrapper
 {
-	const Cont& container;
+        const Cont& container;
 
 public:
-	const_reverse_wrapper(const Cont& cont) : container(cont) { }
-	decltype(container.rbegin()) begin() const { return container.rbegin(); }
-	decltype(container.rend()) end() const { return container.rend(); }
+        const_reverse_wrapper(const Cont& cont)
+                : container(cont)
+        {
+        }
+        decltype(container.rbegin()) begin() const
+        {
+                return container.rbegin();
+        }
+        decltype(container.rend()) end() const
+        {
+                return container.rend();
+        }
 };
 
-template<class Cont> class reverse_wrapper
+template <class Cont>
+class reverse_wrapper
 {
-  Cont& container;
+        Cont& container;
 
 public:
-	reverse_wrapper(Cont& cont) : container(cont) { }
- 	decltype(container.rbegin()) begin() { return container.rbegin(); }
-	decltype(container.rend()) end() { return container.rend(); }
+        reverse_wrapper(Cont& cont)
+                : container(cont)
+        {
+        }
+        decltype(container.rbegin()) begin()
+        {
+                return container.rbegin();
+        }
+        decltype(container.rend()) end()
+        {
+                return container.rend();
+        }
 };
 
-template<class Cont> const_reverse_wrapper<Cont> reverse(const Cont& cont)
+template <class Cont>
+const_reverse_wrapper<Cont> reverse(const Cont& cont)
 {
-	return const_reverse_wrapper<Cont>(cont);
+        return const_reverse_wrapper<Cont>(cont);
 }
 
-template<class Cont> reverse_wrapper<Cont> reverse(Cont& cont)
+template <class Cont>
+reverse_wrapper<Cont> reverse(Cont& cont)
 {
-	return reverse_wrapper<Cont>(cont);
+        return reverse_wrapper<Cont>(cont);
 }
