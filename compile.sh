@@ -1,9 +1,5 @@
 #! /bin/sh
 
-if [ ! -d "build" ]; then
-	mkdir "build"
-fi
-
 compiler="clang"
 build="Release"
 j="0"
@@ -64,11 +60,15 @@ else
 	cores=$j
 fi
 
+if [ ! -d "build" ]; then
+        mkdir "build"
+fi
+
 cd "build"
 if [ $compiler == "clang" ]; then
-	cmake -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
+	cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
 elif [ $compiler == "gcc" ]; then
-	cmake -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
+	cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
 else
 	echo "ERROR: Unsupported compiler $1"
 	exit 1
