@@ -49,10 +49,17 @@ while [ "$1" != "" ]; do
 shift
 done
 
+#regex=“^machdep\.cpu\.thread_count:\s*([0-9]*)\n$”
+#string=“$(sysctl -a | grep machdep.cpu.thread_count)”
+
+threads=$(sysctl -a | grep machdep.cpu.thread_count)
+regex="machdep.cpu.thread_count: ([0-9]*)"
+
 cores="1"
 if [ $j == "0" ]; then
 	if [ "$(uname -s)" == "Darwin" ]; then
-		cores=$(sysctl -a | grep machdep.cpu | grep thread_count)
+		[[ $threads =~ $regex ]]
+		cores=${BASH_REMATCH[1]}
 	else
 		cores=$(grep -c ^processor /proc/cpuinfo) 
 	fi
