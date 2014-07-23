@@ -308,23 +308,7 @@ static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr 
 
 static inline bool check_x_rule(const Frame& f)
 {
-        // TODO: Is this worth? The alternative loop implementation gets unrolled by the compiler
         return (((f.formulas & not_bitset) >> 1) & f.formulas).any();
-
-        /*
-        auto res = f.formulas & not_bitset;
-
-        for (uint64_t i = 0; i < cycles_bound; ++i)
-        {
-                if (res[i] && f.formulas[lhs_set[i]])
-	   {
-    	           assert(lhs_set[i] == i - 1);
-	           return true;
-	   }
-        }
-
-        return false;
-        */
 }
 
 static inline bool apply_and_rule(Frame& f)
@@ -682,22 +666,7 @@ loop:
                         if (currFrame->formulas == frame.formulas)
                         {
                                 if (!framePtr)
-                                {
                                         framePtr = currFrame;
-                                        // Prune 0 rule
-                                        /*
-			if (!frame.eventualities.empty() &&
-		                      std::none_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&] (std::pair<uint64_t, uint64_t> p)
-			         {
-			                 const auto& ev = frame.eventualities.find(p.first);
-			                 return ev->second != MAX_FRAME && ev->second >= currFrame->id;
-			         }))
-			{
-		                      rollback_to_choice_point(stack, frameID);
-			         goto loop;
-			}
-			*/
-                                }
                                 else
                                 {
                                         rollback_to_choice_point(stack, frameID);

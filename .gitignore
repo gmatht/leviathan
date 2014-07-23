@@ -4,3 +4,4 @@ bin
 */xcuserdata/*
 analyze/*
 build/*
+CMakeLists.txt.user

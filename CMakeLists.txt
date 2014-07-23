@@ -1,6 +1,10 @@
 cmake_minimum_required (VERSION 3.0)
 project (leviathan CXX)
 
+if (CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_BUILD_TYPE MATCHES "Debug")
+    message (STATUS "Build type selected: " ${CMAKE_BUILD_TYPE})
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
         message (STATUS "No build type selected, defaults to Release")
         set (CMAKE_BUILD_TYPE "Release")
@@ -12,6 +16,8 @@ if (NOT (CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 set(FORMULA_SIZE "64" CACHE STRING "The maximum size of the formula")
+
+message (STATUS "Maximum formula size: " ${FORMULA_SIZE})
 
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/lex.cc LANGUAGE CXX)
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/parser.cc LANGUAGE CXX)
