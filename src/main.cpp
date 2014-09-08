@@ -38,7 +38,12 @@ int main(int argc, char* argv[])
                 std::string formula;
 
                 while (std::getline(file, formula))
-                        formulas.push_back(formula);
+                {
+                    if (formula.empty())
+                        continue;
+                    
+                    formulas.push_back(formula);
+                }
         }
         else if (ltlArg.isSet())
                 formulas.push_back(ltlArg.getValue());
