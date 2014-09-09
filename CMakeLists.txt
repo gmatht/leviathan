@@ -51,7 +51,7 @@ if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
 endif()
 
 set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -fPIC -march=native -mtune=native -std=c++11")
-set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -flto -ffast-math -Ofast")
+set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -ffast-math -Ofast")
 
 add_definitions (-DMAX_FORMULA_SIZE=${FORMULA_SIZE})
 
