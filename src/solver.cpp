@@ -81,6 +81,8 @@ static uint64_t cycles_bound = 0;
 
 static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs, uint64_t rhs)
 {
+        assert(pos < MAX_FORMULA_SIZE);
+
         switch (f->type())
         {
                 case Formula::True:
