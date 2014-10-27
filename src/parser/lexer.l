@@ -28,6 +28,6 @@
 "true"		return Parser::TRUE;
 "FALSE"     return Parser::FALSE;
 "false"		return Parser::FALSE;
-[a-z0-9:]+ 	return Parser::ATOM;
+[a-z0-9:_]+ 	return Parser::ATOM;
 
 %%
