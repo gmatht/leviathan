@@ -64,7 +64,12 @@ add_library (leviathan SHARED ${src})
 
 link_directories (${bin_dir})
 
-add_executable (checker ${src_dir}/main.cpp)
+set (checker_src
+    ${src_dir}/main.cpp
+    ${src_dir}/jsonOutput.cpp
+)
+
+add_executable (checker ${checker_src})
 target_link_libraries (checker leviathan)
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+" AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
