@@ -24,6 +24,7 @@ public:
         {
                 True,
                 False,
+                Stop,
                 Atom,
                 Negation,
                 Tomorrow,
@@ -103,6 +104,26 @@ public:
 using FalsePtr = std::shared_ptr<False>;
 
 FalsePtr make_false();
+
+class Stop : public Formula
+{
+public:
+        Stop()
+                : Formula(Type::Stop)
+        {
+        }
+        virtual ~Stop()
+        {
+        }
+
+        static const Type type = Type::Stop;
+
+        void accept(Visitor& v) const;
+};
+
+using StopPtr = std::shared_ptr<Stop>;
+
+StopPtr make_stop();
 
 class Atom : public Formula
 {

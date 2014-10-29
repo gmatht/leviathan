@@ -19,7 +19,7 @@ std::vector<std::string> readFile(std::istream &input) {
     
     while (std::getline(input, line))
     {
-        if (line.empty())
+        if (line.empty() || line[0] == '#')
             continue;
         
         lines.push_back(line);
@@ -63,7 +63,7 @@ void readableOutput(std::string const&f, bool modelFlag)
     std::tie(is_sat, model, loopTo) = LTL::is_satisfiable(formula, modelFlag);
     auto t2 = Clock::now();
     
-    std::cout << std::endl << "Is satisfiable: " << is_sat << std::endl;
+    std::cout << "Is satisfiable: " << is_sat << std::endl;
     
     if (modelFlag && is_sat)
     {

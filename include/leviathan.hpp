@@ -20,6 +20,7 @@ using detail::fast_cast;
 
 using detail::True;
 using detail::False;
+using detail::Stop;
 using detail::Atom;
 using detail::Negation;
 using detail::Always;
@@ -33,6 +34,7 @@ using detail::Until;
 
 using detail::TruePtr;
 using detail::FalsePtr;
+using detail::StopPtr;
 using detail::AtomPtr;
 using detail::NegationPtr;
 using detail::AlwaysPtr;
@@ -46,6 +48,7 @@ using detail::UntilPtr;
 
 using detail::make_true;
 using detail::make_false;
+using detail::make_stop;
 using detail::make_atom;
 using detail::make_negation;
 using detail::make_always;

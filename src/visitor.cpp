@@ -36,14 +36,19 @@ std::ostream& PrettyPrinter::print(const Formula *formula, bool newLine)
     return newLine ? _out << std::endl : _out;
 }
 
-void PrettyPrinter::visit(const True* t)
+void PrettyPrinter::visit(const True*)
 {
         _out << "\u22a4";
 }
 
-void PrettyPrinter::visit(const False* t)
+void PrettyPrinter::visit(const False*)
 {
         _out << "\u22a5";
+}
+
+void PrettyPrinter::visit(const Stop*)
+{
+        _out << "STOP";
 }
 
 void PrettyPrinter::visit(const Atom* atom)
@@ -77,14 +82,19 @@ FormulaPtr Simplifier::simplify(FormulaPtr formula)
         return toSimplify;
 }
 
-void Simplifier::visit(const True* t)
+void Simplifier::visit(const True*)
 {
         result = make_true();
 }
 
-void Simplifier::visit(const False* f)
+void Simplifier::visit(const False*)
 {
         result = make_false();
+}
+
+void Simplifier::visit(const Stop*)
+{
+        result = make_stop();
 }
 
 void Simplifier::visit(const Atom* a)

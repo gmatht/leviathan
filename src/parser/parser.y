@@ -8,6 +8,7 @@
 %token ATOM
 %token TRUE
 %token FALSE
+%token STOP
 %token LPAR
 %token RPAR
 %left CONJUNCTION
@@ -34,6 +35,7 @@ root: ltl {
 
 ltl:	TRUE			{ $$ = LTL::make_true(); } |
 	FALSE 			{ $$ = LTL::make_false(); } |
+	STOP		{ $$ = LTL::make_stop(); } |
 	LPAR ltl RPAR 	{ $$ = $2; } |
 	NOT ltl 		{ $$ = LTL::make_negation($2); } |
 	TOMORROW ltl 	{ $$ = LTL::make_tomorrow($2); } |

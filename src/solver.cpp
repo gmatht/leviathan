@@ -93,6 +93,9 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
                 case Formula::False:
                         assert(false);
 
+                case Formula::Stop:
+                        break;
+
                 case Formula::Atom:
                         atom_set[pos] = fast_cast<Atom>(f)->name();
                         break;
@@ -153,20 +156,25 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
         }
 }
 
-static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr f)
+static std::tuple<std::vector<FormulaPtr>, uint64_t, bool> initialize(const FormulaPtr f)
 {
         if (isa<True>(f))
-                return { { make_true() }, 0 };
+                return std::tuple<std::vector<FormulaPtr>, uint64_t, bool>{ { make_true() }, 0, false };
         if (isa<False>(f))
-                return { { make_false() }, 0 };
+                return std::tuple<std::vector<FormulaPtr>, uint64_t, bool>{ { make_false() }, 0, false };
 
         Generator gen;
         gen.generate(f);
         std::vector<FormulaPtr> formulas = gen.formulas();
 
-        // TODO: Check if a Not Until special case is needed
         std::function<bool(FormulaPtr, FormulaPtr)> compareFunc = [&compareFunc](const FormulaPtr a, const FormulaPtr b)
         {
+            if (isa<Stop>(a))
+                return false;
+
+            if (isa<Stop>(b))
+                return true;
+
         if (isa<Atom>(a) && isa<Atom>(b))
             return std::lexicographical_compare(fast_cast<Atom>(a)->name().begin(), fast_cast<Atom>(a)->name().end(),
                                                 fast_cast<Atom>(b)->name().begin(), fast_cast<Atom>(b)->name().end());
@@ -249,6 +257,7 @@ static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr 
 
         uint64_t currentFormula = 0;
         uint64_t start = 0;
+        bool has_stop = false;
         for (auto& _f : formulas)
         {
                 if (_f == f)
@@ -287,6 +296,8 @@ static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr 
                         left = fast_cast<Until>(_f)->left();
                         right = fast_cast<Until>(_f)->right();
                 }
+                else if (isa<Stop>(_f))
+                        has_stop = true;
 
                 if (left)
                 {
@@ -299,6 +310,7 @@ static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr 
                 {
                         rhs = std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
                         { return a == right; }) - formulas.begin();
+
                         assert(std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
                         { return a == right; }) != formulas.end());
                 }
@@ -307,7 +319,7 @@ static std::pair<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr 
         }
 
         cycles_bound = currentFormula;
-        return { formulas, start };
+        return { formulas, start, has_stop };
 }
 
 static inline bool check_x_rule(const Frame& f)
@@ -564,7 +576,8 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
 
         uint64_t start;
         std::vector<FormulaPtr> formulas;
-        std::tie(formulas, start) = initialize(simplified);
+        bool has_stop = false;
+        std::tie(formulas, start, has_stop) = initialize(simplified);
 
         std::stack<Frame> stack;
 
@@ -572,12 +585,12 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         stack.emplace(frameID, start);
 
         bool rulesApplied;
+        bool stop_found = false;
 
 loop:
         if (wants_info.load())
         {
-            std::cout << "\r";
-            std::cout << "Stack size: " << stack.size() << std::flush;
+            std::cout << "Stack size: " << stack.size() << std::endl;
             wants_info.store(false);
         }
 
@@ -590,7 +603,7 @@ loop:
                 {
                         rulesApplied = false;
 
-                        if (__builtin_expect(frame.formulas.none(), 0))
+                        if (__builtin_expect(frame.formulas.none(), 0) || stop_found)
                         {
                                 if (model)
                                 {
@@ -654,6 +667,23 @@ loop:
 
                                 goto loop;
                         }
+                }
+
+                if (has_stop && frame.formulas.test(formulas.size() - 1))
+                {
+                    /*
+                    std::cout << "STOP found" << std::endl;
+                    PrettyPrinter p;
+                    uint32_t i = 0;
+                    for (auto f : formulas)
+                    {
+                        if (frame.formulas.test(i))
+                            p.print(f) << std::endl;
+                        ++i;
+                    }
+                    */
+                    
+                    stop_found = true;
                 }
 
                 check_eventualities(frame);
