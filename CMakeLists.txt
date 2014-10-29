@@ -35,6 +35,11 @@ set (src
     ${src_dir}/parser/parser.cpp
 )
 
+set (checker_src
+    ${src_dir}/main.cpp
+    ${src_dir}/jsonOutput.cpp
+)
+
 include_directories (include)
 include_directories (${src_dir})
 include_directories (${src_dir}/parser)
@@ -47,7 +52,7 @@ endif ()
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
     set_source_files_properties (${src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
-    set_source_files_properties (${src_dir}/main.cpp PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
+    set_source_files_properties (${checker_src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
 endif()
 
 set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -fPIC -march=native -mtune=native -std=c++11")
@@ -63,11 +68,6 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 add_library (leviathan SHARED ${src})
 
 link_directories (${bin_dir})
-
-set (checker_src
-    ${src_dir}/main.cpp
-    ${src_dir}/jsonOutput.cpp
-)
 
 add_executable (checker ${checker_src})
 target_link_libraries (checker leviathan)

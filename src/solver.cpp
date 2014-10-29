@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cassert>
 #include <unordered_map>
+#include <csignal>
+#include <atomic>
 
 namespace LTL
 {
@@ -524,9 +526,24 @@ static inline std::pair<std::vector<FormulaSet>, uint64_t> exhibit_model(const s
         return { model, loopIndex };
 }
 
+namespace
+{
+    volatile std::atomic_bool wants_info{false};
+}
+
+void signal_handler(int signal)
+{
+    wants_info.store(true);
+}
+
 std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model)
 {
+        std::signal(SIGTSTP, signal_handler);
+
         FormulaPtr simplified = simplifier.simplify(formula);
+        //PrettyPrinter p;
+        //std::cout << "Simplified formula:" << std::endl;
+        //p.print(simplified);
 
         if (isa<True>(simplified))
                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, { FormulaSet() }, 0);
@@ -557,6 +574,13 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         bool rulesApplied;
 
 loop:
+        if (wants_info.load())
+        {
+            std::cout << "\r";
+            std::cout << "Stack size: " << stack.size() << std::flush;
+            wants_info.store(false);
+        }
+
         while (!stack.empty())
         {
                 Frame& frame = stack.top();

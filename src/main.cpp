@@ -31,7 +31,8 @@ std::vector<std::string> readFile(std::istream &input) {
 void readableOutput(std::string const&f, bool modelFlag)
 {
     LTL::PrettyPrinter printer;
-    std::cout << "Parsing formula: " << f << std::endl;
+    //std::cout << "Parsing formula: " << f << std::endl;
+    std::cout << "Parsing formula" << std::endl;
     
     LTL::FormulaPtr formula = nullptr;
     bool error = false;
@@ -42,8 +43,8 @@ void readableOutput(std::string const&f, bool modelFlag)
     
     if (!error)
     {
-        std::cout << "Parsing result: ";
-        printer.print(formula, true);
+        //std::cout << "Parsing result: ";
+        //printer.print(formula, true);
         std::cout << "Parsing time:  " << duration_cast<microseconds>(p2 - p1).count() << " us" << std::endl;
     }
     else
@@ -62,7 +63,7 @@ void readableOutput(std::string const&f, bool modelFlag)
     std::tie(is_sat, model, loopTo) = LTL::is_satisfiable(formula, modelFlag);
     auto t2 = Clock::now();
     
-    std::cout << "Is satisfiable: " << is_sat << std::endl;
+    std::cout << std::endl << "Is satisfiable: " << is_sat << std::endl;
     
     if (modelFlag && is_sat)
     {
