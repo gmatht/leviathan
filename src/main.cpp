@@ -30,7 +30,7 @@ std::vector<std::string> readFile(std::istream &input) {
 
 void readableOutput(std::string const&f, bool modelFlag)
 {
-    LTL::PrettyPrinter printer;
+    LTL::PrettyPrinter printer(std::cout);
     std::cout << "Parsing formula: " << f << std::endl;
     
     LTL::FormulaPtr formula = nullptr;

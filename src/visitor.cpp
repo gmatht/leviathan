@@ -10,40 +10,45 @@ namespace detail
 #define UNARY_VISIT(_Type, _Symbol)               \
         void PrettyPrinter::visit(const _Type* u) \
         {                                         \
-                std::cout << _Symbol << "( ";     \
+                _out << _Symbol << "( ";          \
                 u->formula()->accept(*this);      \
-                std::cout << " )";                \
+                _out << " )";                     \
         }
 
 #define BINARY_VISIT(_Type, _Symbol)                  \
         void PrettyPrinter::visit(const _Type* b)     \
         {                                             \
-                std::cout << "(";                     \
+                _out << "(";                          \
                 b->left()->accept(*this);             \
-                std::cout << ") " << _Symbol << " ("; \
+                _out << ") " << _Symbol << " (";      \
                 b->right()->accept(*this);            \
-                std::cout << ")";                     \
+                _out << ")";                          \
         }
 
 std::ostream& PrettyPrinter::print(const FormulaPtr formula, bool newLine)
 {
-        formula->accept(*this);
-        return newLine ? std::cout << std::endl : std::cout;
+    return print(formula.get());
+}
+    
+std::ostream& PrettyPrinter::print(const Formula *formula, bool newLine)
+{
+    formula->accept(*this);
+    return newLine ? _out << std::endl : _out;
 }
 
 void PrettyPrinter::visit(const True* t)
 {
-        std::cout << "\u22a4";
+        _out << "\u22a4";
 }
 
 void PrettyPrinter::visit(const False* t)
 {
-        std::cout << "\u22a5";
+        _out << "\u22a5";
 }
 
 void PrettyPrinter::visit(const Atom* atom)
 {
-        std::cout << atom->name();
+        _out << atom->name();
 }
 
 UNARY_VISIT(Negation, "\u00AC")
