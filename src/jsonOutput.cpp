@@ -12,6 +12,7 @@
 #include <chrono>
 #include <tuple>
 #include <sstream>
+#include <cassert>
 
 #include "leviathan.hpp"
 
@@ -22,19 +23,51 @@ struct JsonOutput
     JsonOutput(bool parseError,
                std::vector<LTL::FormulaSet> const&model = {},
                uint64_t loopTo = 0,
-               std::chrono::seconds solveTime = {})
+               std::chrono::milliseconds solveTime = {})
     : _parseError(parseError), _model(std::move(model)), _loopTo(loopTo),
       _solveTime(solveTime) { }
     
     void print(std::ostream &out) {
+        std::stringstream sstr;
+        LTL::PrettyPrinter ltlPrinter(sstr);
+        
         _output = &out;
-        block_t block(*this);
+        block_t block(*this, Brace);
             
-        keyvalue("status", _parseError ? "ParseError" : "Valid");
+        keyvalue("valid", _parseError ? "false" : "true");
         keyvalue("time", _solveTime.count());
         
-        keyblock("model", [&]() {
-            output() << indent() << "Ti piacerebbe\n";
+        keyblock("model", Brace, [&]() {
+            keyvalue("size", _model.size());
+            keyvalue("loop", _loopTo);
+            keyblock("states", Bracket, [&] {
+                for(auto const&state : _model) {
+                    newline();
+                    block_t stateBlock(*this, Bracket, IndentedBlock);
+                    for(auto const&literal : state) {
+                        newline();
+                        {
+                            block_t literalBlock(*this, Brace, IndentedBlock);
+                            
+                            bool truth = true;
+                            LTL::Atom const*symbol = LTL::fast_cast<LTL::Atom>(literal);
+                            
+                            if(LTL::Negation const*neg = LTL::fast_cast<LTL::Negation>(literal)) {
+                                truth = false;
+                                symbol = LTL::fast_cast<LTL::Atom>(neg->formula());
+                            }
+                            
+                            assert(symbol && "We should have only literals at this point");
+                            
+                            keyvalue("truth", truth ? "true" : "false");
+                            
+                            sstr.str("");
+                            ltlPrinter.print(symbol);
+                            keyvalue("symbol", quoted(sstr.str()));
+                        }
+                    }
+                }
+            });
         });
     }
     
@@ -42,11 +75,49 @@ private:
     bool _parseError;
     std::vector<LTL::FormulaSet> const&_model;
     uint64_t _loopTo;
-    std::chrono::seconds _solveTime;
+    std::chrono::milliseconds _solveTime;
     
     int _indent = 0;
+    bool _firstElement = true;
     std::ostream *_output = nullptr;
-
+    
+    enum paren_t {
+        Paren,
+        Bracket,
+        Brace
+    };
+    
+    enum IndentBlock {
+        IndentedBlock,
+        InLineBlock
+    };
+    
+    struct block_t {
+        block_t(JsonOutput &printer, paren_t paren,
+                IndentBlock indentBlock = InLineBlock)
+        : _printer(printer), _paren(paren)
+        {
+            if(indentBlock == IndentedBlock)
+                _printer.output() << _printer.indent();
+            
+            _printer.output() << (_paren == Paren   ? "(" :
+                                  _paren == Bracket ? "[" : "{");
+            _printer._indent += 1;
+            _printer._firstElement = true;
+        }
+        
+        ~block_t() {
+            _printer._indent -= 1;
+            _printer.output() << "\n" << _printer.indent()
+                              << (_paren == Paren   ? ")" :
+                                  _paren == Bracket ? "]" : "}");
+        }
+        
+    private:
+        JsonOutput &_printer;
+        paren_t _paren;
+    };
+    
     std::ostream &output() const {
         return *_output;
     }
@@ -65,51 +136,37 @@ private:
         return ('"' + str + '"');
     }
     
-    template<typename T,
-    typename std::enable_if<!std::is_same<T, std::string>::value, int>::type = 0>
-    std::string quoted(T&& v) const
-    {
-        std::stringstream str;
-        
-        str << std::forward<T>(v);
-        
-        return str.str();
+    void newline() {
+        if(!_firstElement)
+            output() << ",";
+        output() << "\n";
+        _firstElement = false;
     }
-    
     
     template<typename T>
     void keyvalue(std::string const&key,
-                  T&& value, bool last = false) const
+                  T&& value)
     {
-        output() <<  indent() + quoted(key) + " = " + quoted(value) +
-                    (last ? "" : ",") + "\n";
+        newline();
+        output() << indent() + quoted(key) + " = ";
+        output() << value;
     }
     
     template<typename F>
-    void keyblock(std::string const&key, F func) {
+    void keyblock(std::string const&key, paren_t paren, F func)
+    {
+        newline();
         output() << indent() + quoted(key) + " = ";
         
         {
-            block_t block(*this);
+            block_t block(*this, paren);
             func();
         }
     }
     
-    struct block_t {
-        block_t(JsonOutput &printer) : _printer(printer)
-        {
-            _printer.output() << "{\n";
-            _printer._indent += 1;
-        }
-        
-        ~block_t() {
-            _printer._indent -= 1;
-            _printer.output() << _printer.indent() << "}\n";
-        }
-        
-    private:
-        JsonOutput &_printer;
-    };
+    
+    
+    
 };
 
 void jsonOutput(std::string const&f)

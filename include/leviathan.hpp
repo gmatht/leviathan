@@ -15,6 +15,35 @@ using detail::FormulaPtr;
 using detail::PrettyPrinter;
 using detail::FormulaSet;
 
+using detail::isa;
+using detail::fast_cast;
+
+using detail::True;
+using detail::False;
+using detail::Atom;
+using detail::Negation;
+using detail::Always;
+using detail::Eventually;
+using detail::Tomorrow;
+using detail::Conjunction;
+using detail::Disjunction;
+using detail::Then;
+using detail::Iff;
+using detail::Until;
+
+using detail::TruePtr;
+using detail::FalsePtr;
+using detail::AtomPtr;
+using detail::NegationPtr;
+using detail::AlwaysPtr;
+using detail::EventuallyPtr;
+using detail::TomorrowPtr;
+using detail::ConjunctionPtr;
+using detail::DisjunctionPtr;
+using detail::ThenPtr;
+using detail::IffPtr;
+using detail::UntilPtr;
+
 using detail::make_true;
 using detail::make_false;
 using detail::make_atom;

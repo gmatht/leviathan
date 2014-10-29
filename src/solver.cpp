@@ -64,7 +64,7 @@ struct Frame
         }
 };
 
-static PrettyPrinter printer;
+// static PrettyPrinter printer; // Why this one?
 static Simplifier simplifier;
 
 static std::unordered_map<uint64_t, std::string> atom_set;
