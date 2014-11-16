@@ -46,11 +46,6 @@ void PrettyPrinter::visit(const False*)
         _out << "\u22a5";
 }
 
-void PrettyPrinter::visit(const Stop*)
-{
-        _out << "STOP";
-}
-
 void PrettyPrinter::visit(const Atom* atom)
 {
         _out << atom->name();
@@ -90,11 +85,6 @@ void Simplifier::visit(const True*)
 void Simplifier::visit(const False*)
 {
         result = make_false();
-}
-
-void Simplifier::visit(const Stop*)
-{
-        result = make_stop();
 }
 
 void Simplifier::visit(const Atom* a)

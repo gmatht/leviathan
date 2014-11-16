@@ -31,7 +31,6 @@ public:
 protected:
         virtual void visit(const True* t) override;
         virtual void visit(const False* f) override;
-        virtual void visit(const Stop* f) override;
         virtual void visit(const Atom* atom) override;
         virtual void visit(const Negation* negation) override;
         virtual void visit(const Tomorrow* tomorrow) override;
