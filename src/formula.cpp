@@ -35,11 +35,6 @@ FalsePtr make_false()
         return std::make_shared<False>();
 }
 
-StopPtr make_stop()
-{
-        return std::make_shared<Stop>();
-}
-
 AtomPtr make_atom(const std::string& name)
 {
         return std::make_shared<Atom>(name);
@@ -58,7 +53,6 @@ MAKE_BINARY(Until, until)
 
 ACCEPT_VISITOR(True)
 ACCEPT_VISITOR(False)
-ACCEPT_VISITOR(Stop)
 ACCEPT_VISITOR(Atom)
 ACCEPT_VISITOR(Negation)
 ACCEPT_VISITOR(Tomorrow)
@@ -150,9 +144,6 @@ bool operator==(const FormulaPtr a, const FormulaPtr b)
                 return true;
 
         if (isa<False>(a) || isa<False>(b))
-                return true;
-
-        if (isa<Stop>(a) || isa<Stop>(b))
                 return true;
 
         if (isa<Atom>(a))

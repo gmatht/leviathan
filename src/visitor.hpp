@@ -14,7 +14,6 @@ class Visitor
 {
         friend class True;
         friend class False;
-        friend class Stop;
         friend class Atom;
         friend class Negation;
         friend class Tomorrow;
@@ -29,7 +28,6 @@ class Visitor
 protected:
         virtual void visit(const True* t) = 0;
         virtual void visit(const False* f) = 0;
-        virtual void visit(const Stop* f) = 0;
         virtual void visit(const Atom* atom) = 0;
         virtual void visit(const Negation* negation) = 0;
         virtual void visit(const Tomorrow* tomorrow) = 0;
@@ -60,7 +58,6 @@ public:
 protected:
     virtual void visit(const True* t) override;
     virtual void visit(const False* f) override;
-    virtual void visit(const Stop* f) override;
     virtual void visit(const Atom* atom) override;
     virtual void visit(const Negation* negation) override;
     virtual void visit(const Tomorrow* tomorrow) override;
@@ -92,7 +89,6 @@ public:
 protected:
         virtual void visit(const True* t) override;
         virtual void visit(const False* f) override;
-        virtual void visit(const Stop* f) override;
         virtual void visit(const Atom* atom) override;
         virtual void visit(const Negation* negation) override;
         virtual void visit(const Tomorrow* tomorrow) override;

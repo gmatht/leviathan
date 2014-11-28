@@ -1,3 +1,0 @@
-#G((a && b) -> STOP) && F(a && b)
-#G((a && b) <-> STOP) && F(a && b)
-F(a && b)

@@ -38,5 +38,6 @@ const S& Container(const std::stack<T, S>& s)
 }
 
 std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model);
+    
 }
 }

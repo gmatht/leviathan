@@ -33,11 +33,6 @@ void Generator::visit(const Atom* t)
         // Nothing to do
 }
 
-void Generator::visit(const Stop* s)
-{
-        // Nothing to do
-}
-
 void Generator::visit(const Negation* t)
 {
         if (isa<Until>(t->formula()))
