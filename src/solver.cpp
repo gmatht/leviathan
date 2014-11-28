@@ -308,7 +308,7 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
         }
 
         cycles_bound = currentFormula;
-        return { formulas, start };
+        return std::tuple<std::vector<FormulaPtr>, uint64_t>{ formulas, start };
 }
 
 static inline bool check_x_rule(const Frame& f)
@@ -578,6 +578,7 @@ loop:
         if (wants_info.load())
         {
             std::cout << "Stack size: " << stack.size() << std::endl;
+            std::cout << "Number of formulas: " << stack.top().formulas.count() << std::endl;
             wants_info.store(false);
         }
 
@@ -590,6 +591,7 @@ loop:
                 {
                         rulesApplied = false;
 
+                        // if (frame.formulas.none())
                         if (__builtin_expect(frame.formulas.none(), 0))
                         {
                                 if (model)
@@ -623,6 +625,7 @@ loop:
 
                         if (apply_ev_rule(frame))
                         {
+                                //if (frame.eventualities.find(lhs_set[frame.choosenFormula]) == frame.eventualities.end())
                                 if (__builtin_expect(frame.eventualities.find(lhs_set[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[lhs_set[frame.choosenFormula]] = MAX_FRAME;
 
@@ -635,6 +638,7 @@ loop:
 
                         if (apply_until_rule(frame))
                         {
+                                //if (frame.eventualities.find(rhs_set[frame.choosenFormula]) == frame.eventualities.end())
                                 if (__builtin_expect(frame.eventualities.find(rhs_set[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[rhs_set[frame.choosenFormula]] = MAX_FRAME;
 
