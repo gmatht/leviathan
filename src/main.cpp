@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
     std::vector<std::string> formulas;
     
     if (filenameArg.isSet() && filenameArg.getValue() != "-") {
-        std::ifstream file = std::ifstream(filenameArg.getValue(), std::ios::in);
+        std::ifstream file(filenameArg.getValue(), std::ios::in);
         if (!file.is_open())
         {
             std::cout << "File not found!" << std::endl;

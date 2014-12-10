@@ -575,7 +575,7 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         bool rulesApplied;
 
 loop:
-        if (__builtin_expect(wants_info.load(), 0))
+        if (wants_info.load())
         {
             std::cout << "Stack size: " << stack.size() << std::endl;
             std::cout << "Number of formulas: " << stack.top().formulas.count() << std::endl;
