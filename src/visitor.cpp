@@ -25,12 +25,12 @@ namespace detail
                 _out << ")";                          \
         }
 
-std::ostream& PrettyPrinter::print(const FormulaPtr formula, bool newLine)
+std::ostream& PrettyPrinter::print(const FormulaPtr formula, bool /*newLine*/)
 {
     return print(formula.get());
 }
     
-std::ostream& PrettyPrinter::print(const Formula *formula, bool newLine)
+std::ostream& PrettyPrinter::print(const Formula* formula, bool newLine)
 {
     formula->accept(*this);
     return newLine ? _out << std::endl : _out;

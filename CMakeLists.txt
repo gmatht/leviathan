@@ -55,7 +55,8 @@ if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
     set_source_files_properties (${checker_src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
 endif()
 
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -march=native -mtune=native -std=c++11")
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wno-c++98-compat -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -march=native -mtune=native -std=c++11")
+set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -ffast-math -Ofast")
 
 add_definitions (-DMAX_FORMULA_SIZE=${FORMULA_SIZE})

@@ -18,20 +18,17 @@ void Generator::generate(const FormulaPtr f)
                 simplified->accept(*this);
 }
 
-void Generator::visit(const True* t)
+void Generator::visit(const True*)
 {
         assert(false && "True node found in the AST!");
 }
 
-void Generator::visit(const False* t)
+void Generator::visit(const False*)
 {
         assert(false && "False node found in the AST!");
 }
 
-void Generator::visit(const Atom* t)
-{
-        // Nothing to do
-}
+void Generator::visit(const Atom*) { }
 
 void Generator::visit(const Negation* t)
 {
@@ -91,12 +88,12 @@ void Generator::visit(const Disjunction* t)
         t->right()->accept(*this);
 }
 
-void Generator::visit(const Then* t)
+void Generator::visit(const Then*)
 {
         assert(false && "Then node found in the AST!");
 }
 
-void Generator::visit(const Iff* t)
+void Generator::visit(const Iff*)
 {
         assert(false && "Iff node found in the AST!");
 }

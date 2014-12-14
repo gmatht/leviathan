@@ -376,7 +376,7 @@ void ScannerBase::switchOstream(std::ostream &out)
 }
 
 // $insert debugFunctions
-void ScannerBase::setDebug(bool onOff)
+void ScannerBase::setDebug(bool /*onOff*/)
 {}
 
 bool ScannerBase::debug() const
@@ -631,109 +631,109 @@ try
 #line 4 "lexer.l"
             return Parser::LPAR;
         }
-        break;
+       // break;
         case 2:
         {
 #line 5 "lexer.l"
             return Parser::RPAR;
         }
-        break;
+        //break;
         case 3:
         {
 #line 6 "lexer.l"
             return Parser::NOT;
         }
-        break;
+        //break;
         case 4:
         {
 #line 7 "lexer.l"
             return Parser::NOT;
         }
-        break;
+        //break;
         case 5:
         {
 #line 8 "lexer.l"
             return Parser::NOT;
         }
-        break;
+        //break;
         case 6:
         {
 #line 9 "lexer.l"
             return Parser::TOMORROW;
         }
-        break;
+        //break;
         case 7:
         {
 #line 10 "lexer.l"
             return Parser::ALWAYS;
         }
-        break;
+        //break;
         case 8:
         {
 #line 11 "lexer.l"
             return Parser::ALWAYS;
         }
-        break;
+        //break;
         case 9:
         {
 #line 12 "lexer.l"
             return Parser::EVENTUALLY;
         }
-        break;
+        //break;
         case 10:
         {
 #line 13 "lexer.l"
             return Parser::EVENTUALLY;
         }
-        break;
+        //break;
         case 11:
         {
 #line 14 "lexer.l"
             return Parser::CONJUNCTION;
         }
-        break;
+        //break;
         case 12:
         {
 #line 15 "lexer.l"
             return Parser::CONJUNCTION;
         }
-        break;
+        //break;
         case 13:
         {
 #line 16 "lexer.l"
             return Parser::CONJUNCTION;
         }
-        break;
+        //break;
         case 14:
         {
 #line 17 "lexer.l"
             return Parser::DISJUNCTION;
         }
-        break;
+        //break;
         case 15:
         {
 #line 18 "lexer.l"
             return Parser::DISJUNCTION;
         }
-        break;
+        //break;
         case 16:
         {
 #line 19 "lexer.l"
             return Parser::DISJUNCTION;
         }
-        break;
+       // break;
         case 17:
         {
 #line 20 "lexer.l"
             return Parser::THEN;
         }
-        break;
+        //break;
         case 18:
         {
 #line 21 "lexer.l"
             return Parser::THEN;
         }
-        break;
+        //break;
         case 19:
         {
 #line 22 "lexer.l"
@@ -745,13 +745,13 @@ try
 #line 23 "lexer.l"
             return Parser::IFF;
         }
-        break;
+        //break;
         case 21:
         {
 #line 24 "lexer.l"
             return Parser::UNTIL;
         }
-        break;
+        //break;
         case 22:
         {
 #line 25 "lexer.l"
@@ -763,37 +763,37 @@ try
 #line 26 "lexer.l"
             return Parser::RELEASE;
         }
-        break;
+        //break;
         case 24:
         {
 #line 27 "lexer.l"
             return Parser::TRUE;
         }
-        break;
+        //break;
         case 25:
         {
 #line 28 "lexer.l"
             return Parser::TRUE;
         }
-        break;
+        //break;
         case 26:
         {
 #line 29 "lexer.l"
             return Parser::FALSE;
         }
-        break;
+        //break;
         case 27:
         {
 #line 30 "lexer.l"
             return Parser::FALSE;
         }
-        break;
+        //break;
         case 28:
         {
 #line 31 "lexer.l"
             return Parser::ATOM;
         }
-        break;
+        //break;
     }
     noReturn__();
     return 0;

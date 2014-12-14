@@ -21,7 +21,7 @@ namespace // anonymous
 enum class Tag__
 {
     FORMULA,
-    ATOM,
+    ATOM
 };
 
 namespace Meta__
@@ -149,7 +149,7 @@ class ParserBase
         NOT,
         TOMORROW,
         ALWAYS,
-        EVENTUALLY,
+        EVENTUALLY
     };
 
 // $insert STYPE
@@ -170,7 +170,7 @@ class ParserBase
         enum ErrorRecovery__
         {
             DEFAULT_RECOVERY_MODE__,
-            UNEXPECTED_TOKEN__,
+            UNEXPECTED_TOKEN__
         };
         bool        d_debug__;
         size_t      d_nErrors__;

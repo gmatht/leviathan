@@ -564,7 +564,7 @@ try
         pushToken__(d_token__);     // save an already available token
 
                                     // save default non-nested block $$
-    if (int size = s_productionInfo[production].d_size)
+    if (size_t size = s_productionInfo[production].d_size)
         d_val__ = d_vsp__[1 - size];
 
     switch (production)

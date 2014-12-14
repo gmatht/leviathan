@@ -87,12 +87,6 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
 
         switch (f->type())
         {
-                case Formula::True:
-                        assert(false);
-
-                case Formula::False:
-                        assert(false);
-
                 case Formula::Atom:
                         atom_set[pos] = fast_cast<Atom>(f)->name();
                         break;
@@ -136,20 +130,18 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
                         rhs_set[pos] = rhs;
                         break;
 
-                case Formula::Then:
-                        assert(false);
-
-                case Formula::Iff:
-                        assert(false);
-
                 case Formula::Until:
                         until_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         rhs_set[pos] = rhs;
                         break;
 
-                default:
+                case Formula::True:
+                case Formula::False:
+                case Formula::Iff:
+                case Formula::Then:
                         assert(false);
+                        break;
         }
 }
 
@@ -462,18 +454,17 @@ static inline void rollback_to_choice_point(std::stack<Frame>& stack, uint64_t& 
                                 newFrame.formulas[rhs_set[stack.top().choosenFormula]] = true;
                                 if (tom_bitset[stack.top().choosenFormula + 1])
                                 {
-                                        newFrame.formulas[stack.top().choosenFormula + 1];
+                                        newFrame.formulas[stack.top().choosenFormula + 1] = true;
                                         assert(lhs_set[stack.top().choosenFormula + 1] == stack.top().choosenFormula);
                                 }
                                 else
                                 {
-                                        newFrame.formulas[stack.top().choosenFormula + 2];
+                                        newFrame.formulas[stack.top().choosenFormula + 2] = true;
                                         assert(lhs_set[stack.top().choosenFormula + 2] == stack.top().choosenFormula);
                                 }
                         }
                         else
                         {
-                                //std::cout << "Something went wrong. We shouldn't be there...................." << std::endl;
                                 assert(false);
                         }
 
@@ -532,7 +523,7 @@ namespace
     volatile std::atomic_bool wants_info{false};
 }
 
-void signal_handler(int signal)
+static void signal_handler(int /*signal*/)
 {
     wants_info.store(true);
 }

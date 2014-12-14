@@ -208,7 +208,7 @@ inline bool isa(const FormulaPtr f)
 }
 
 template <typename T, typename ReturnT = typename std::add_const<T>::type>
-inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), (ReturnT*) nullptr)
+inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), static_cast<ReturnT*>(nullptr))
 {
         if (T::type != ptr->type())
                 return nullptr;

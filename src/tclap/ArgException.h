@@ -56,7 +56,7 @@ class ArgException : public std::exception
 		/**
 		 * Destructor.
 		 */
-		virtual ~ArgException() throw() { }
+		virtual ~ArgException() noexcept { }
 
 		/**
 		 * Returns the error text.
@@ -77,9 +77,9 @@ class ArgException : public std::exception
 		/**
 		 * Returns the arg id and error text. 
 		 */
-		const char* what() const throw() 
+		const char* what() const noexcept
 		{
-			static std::string ex; 
+			std::string ex; 
 			ex = _argId + " -- " + _errorText;
 			return ex.c_str();
 		}

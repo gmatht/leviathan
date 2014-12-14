@@ -54,7 +54,7 @@ inline void Scanner::preCode()
     // optionally replace by your own code
 }
 
-inline void Scanner::postCode(PostEnum__ type) 
+inline void Scanner::postCode(PostEnum__ /*type*/) 
 {
     // optionally replace by your own code
 }
