@@ -7,10 +7,9 @@
 #include <unordered_map>
 #include <stack>
 #include <queue>
-#include "dynamic_bitset"
+#include "boost/dynamic_bitset.hpp"
+#include "boost/pool/pool_alloc.hpp"
 #include "generator.hpp"
-
-using namespace dynamic_bitset;
 
 namespace LTL
 {
@@ -21,7 +20,8 @@ namespace detail
 const uint64_t MAX_FRAME = std::numeric_limits<uint64_t>::max();
 const uint64_t MAX_FORMULA = std::numeric_limits<uint64_t>::max();
 
-using Bitset = dyn_bitset;
+using Bitset = boost::dynamic_bitset<uint64_t>;
+//using Bitset = boost::dynamic_bitset<uint64_t, boost::fast_pool_allocator<uint64_t>>;
 
 template <class T, class S>
 const S& Container(const std::stack<T, S>& s)

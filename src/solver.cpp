@@ -71,15 +71,15 @@ static Simplifier simplifier;
 
 static std::unordered_map<uint64_t, std::string> atom_set;
 
-static Bitset not_bitset(1);
-static Bitset tom_bitset(1);
-static Bitset alw_bitset(1);
-static Bitset ev_bitset(1);
-static Bitset and_bitset(1);
-static Bitset or_bitset(1);
-static Bitset until_bitset(1);
-static Bitset nuntil_bitset(1);
-static Bitset res(1);
+static Bitset not_bitset(0);
+static Bitset tom_bitset(0);
+static Bitset alw_bitset(0);
+static Bitset ev_bitset(0);
+static Bitset and_bitset(0);
+static Bitset or_bitset(0);
+static Bitset until_bitset(0);
+static Bitset nuntil_bitset(0);
+static Bitset res(0);
 
 static std::vector<uint64_t> lhs_set(0, MAX_FORMULA);
 static std::vector<uint64_t> rhs_set(0, MAX_FORMULA);
@@ -245,15 +245,15 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
         uint64_t start = 0;
     
         number_of_formulas = formulas.size();
-        not_bitset = dyn_bitset(number_of_formulas);
-        tom_bitset = dyn_bitset(number_of_formulas);
-        alw_bitset = dyn_bitset(number_of_formulas);
-        ev_bitset = dyn_bitset(number_of_formulas);
-        and_bitset = dyn_bitset(number_of_formulas);
-        or_bitset = dyn_bitset(number_of_formulas);
-        until_bitset = dyn_bitset(number_of_formulas);
-        nuntil_bitset = dyn_bitset(number_of_formulas);
-        res = dyn_bitset(number_of_formulas);
+        not_bitset.resize(number_of_formulas);
+        tom_bitset.resize(number_of_formulas);
+        alw_bitset.resize(number_of_formulas);
+        ev_bitset.resize(number_of_formulas);
+        and_bitset.resize(number_of_formulas);
+        or_bitset.resize(number_of_formulas);
+        until_bitset.resize(number_of_formulas);
+        nuntil_bitset.resize(number_of_formulas);
+        res.resize(number_of_formulas);
         lhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
         rhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
 
@@ -457,6 +457,7 @@ static inline bool apply_not_until_rule(Frame& f)
 }
 
 static inline void rollback_to_choice_point(std::stack<Frame>& stack, uint64_t& frameID)
+//static inline void rollback_to_choice_point(std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>& stack, uint64_t& frameID)
 {
         while (!stack.empty())
         {
@@ -525,7 +526,8 @@ static inline void check_eventualities(Frame& f)
 }
 
 static inline std::pair<std::vector<FormulaSet>, uint64_t> exhibit_model(const std::vector<FormulaPtr>& fs,
-                                                                         const std::stack<Frame>& stack, const Frame& loopTo)
+                                                                            const std::stack<Frame>& stack, const Frame& loopTo)
+                                                                            //const std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>& stack, const Frame& loopTo)
 {
         std::vector<FormulaSet> model;
 
@@ -582,7 +584,8 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         std::vector<FormulaPtr> formulas;
         std::tie(formulas, start) = initialize(simplified);
 
-        std::stack<Frame> stack;
+        //std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>> stack;
+        std::stack<Frame, std::deque<Frame>> stack;
 
         uint64_t frameID = 0;
         stack.emplace(frameID, start);

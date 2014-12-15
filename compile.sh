@@ -3,7 +3,6 @@
 compiler="clang"
 build="Release"
 j="0"
-size="32"
  
 function usage()
 {
@@ -36,10 +35,6 @@ while [ "$1" != "" ]; do
                         j=$VALUE
                         shift
                 ;;
-                -s | --size)
-                        size=$VALUE
-                        shift
-                ;;
                 *)
                         echo "ERROR: unknown parameter \"$PARAM\""
                         usage
@@ -69,9 +64,9 @@ fi
 
 cd "build"
 if [ $compiler == "clang" ]; then
-        cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
+        cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE=$build ..
 elif [ $compiler == "gcc" ]; then
-        cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE=$build -DFORMULA_SIZE:STRING=$size ..
+        cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE=$build ..
 else
         echo "ERROR: Unsupported compiler $1"
         exit 1

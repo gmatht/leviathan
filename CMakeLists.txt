@@ -15,10 +15,6 @@ if (NOT (CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_BUILD_TYPE MATCHES "Debug")
     set (CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(FORMULA_SIZE "64" CACHE STRING "The maximum size of the formula")
-
-message (STATUS "Maximum formula size: " ${FORMULA_SIZE})
-
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/lex.cc LANGUAGE CXX)
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/parser.cc LANGUAGE CXX)
 
@@ -60,9 +56,7 @@ endif()
 
 set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wno-c++98-compat -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -mavx2 -std=c++11")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing  -flto -ffast-math -Ofast")
-
-add_definitions (-DMAX_FORMULA_SIZE=${FORMULA_SIZE})
+set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -ffast-math -Ofast")
 
 file (MAKE_DIRECTORY ${bin_dir})
 
@@ -70,6 +64,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${bin_dir})
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 
 add_library (leviathan SHARED ${src})
+target_link_libraries (leviathan boost_system)
 
 link_directories (${bin_dir})
 
