@@ -44,6 +44,7 @@ include_directories (include)
 include_directories (${src_dir})
 include_directories (${src_dir}/parser)
 include_directories (${src_dir}/tclap)
+include_directories (${src_dir}/dynamic_bitset)
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/c\\+\\+")
     set (CMAKE_CXX_COMPILER /usr/bin/clang++)
@@ -55,9 +56,11 @@ if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
     set_source_files_properties (${checker_src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
 endif()
 
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wno-c++98-compat -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -march=native -mtune=native -std=c++11")
+#-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
+
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wno-c++98-compat -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -mavx2 -std=c++11")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -ffast-math -Ofast")
+set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing  -flto -ffast-math -Ofast")
 
 add_definitions (-DMAX_FORMULA_SIZE=${FORMULA_SIZE})
 

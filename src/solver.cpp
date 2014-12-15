@@ -14,6 +14,8 @@ namespace LTL
 namespace detail
 {
 
+static size_t number_of_formulas = 0;
+
 struct Frame
 {
         Bitset formulas;
@@ -26,8 +28,8 @@ struct Frame
 
         // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
         Frame(const uint64_t _id, const uint64_t _formula)
-                : formulas()
-                , toProcess()
+                : formulas(number_of_formulas)
+                , toProcess(number_of_formulas)
                 , eventualities()
                 , id(_id)
                 , choosenFormula(MAX_FORMULA)
@@ -52,8 +54,8 @@ struct Frame
 
         // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
         Frame(const uint64_t _id, const std::unordered_map<uint64_t, uint64_t> _eventualities, const Frame* chainPtr)
-                : formulas()
-                , toProcess()
+                : formulas(number_of_formulas)
+                , toProcess(number_of_formulas)
                 , eventualities(_eventualities)
                 , id(_id)
                 , choosenFormula(MAX_FORMULA)
@@ -68,23 +70,24 @@ struct Frame
 static Simplifier simplifier;
 
 static std::unordered_map<uint64_t, std::string> atom_set;
-static Bitset not_bitset;
-static Bitset tom_bitset;
-static Bitset alw_bitset;
-static Bitset ev_bitset;
-static Bitset and_bitset;
-static Bitset or_bitset;
-static Bitset until_bitset;
-static Bitset nuntil_bitset;
-static std::vector<uint64_t> lhs_set(MAX_FORMULA_SIZE * 4, MAX_FORMULA);
-static std::vector<uint64_t> rhs_set(MAX_FORMULA_SIZE * 4, MAX_FORMULA);
+
+static Bitset not_bitset(1);
+static Bitset tom_bitset(1);
+static Bitset alw_bitset(1);
+static Bitset ev_bitset(1);
+static Bitset and_bitset(1);
+static Bitset or_bitset(1);
+static Bitset until_bitset(1);
+static Bitset nuntil_bitset(1);
+static Bitset res(1);
+
+static std::vector<uint64_t> lhs_set(0, MAX_FORMULA);
+static std::vector<uint64_t> rhs_set(0, MAX_FORMULA);
 
 static uint64_t cycles_bound = 0;
 
 static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs, uint64_t rhs)
 {
-        assert(pos < MAX_FORMULA_SIZE);
-
         switch (f->type())
         {
                 case Formula::Atom:
@@ -241,6 +244,20 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
         uint64_t currentFormula = 0;
         uint64_t start = 0;
     
+        number_of_formulas = formulas.size();
+        not_bitset = dyn_bitset(number_of_formulas);
+        tom_bitset = dyn_bitset(number_of_formulas);
+        alw_bitset = dyn_bitset(number_of_formulas);
+        ev_bitset = dyn_bitset(number_of_formulas);
+        and_bitset = dyn_bitset(number_of_formulas);
+        or_bitset = dyn_bitset(number_of_formulas);
+        until_bitset = dyn_bitset(number_of_formulas);
+        nuntil_bitset = dyn_bitset(number_of_formulas);
+        res = dyn_bitset(number_of_formulas);
+        lhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
+        rhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
+
+
         for (auto& _f : formulas)
         {
                 if (_f == f)
@@ -305,14 +322,20 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
 
 static inline bool check_x_rule(const Frame& f)
 {
-        return (((f.formulas & not_bitset) >> 1) & f.formulas).any();
+        res = f.formulas;
+        res &= not_bitset;
+        res >>= 1;
+        res &= f.formulas;
+        return res.any();
 }
 
 static inline bool apply_and_rule(Frame& f)
 {
         uint64_t count = f.formulas.count();
+        Bitset res = f.formulas;
+        res &= and_bitset;
+        res &= f.toProcess;
 
-        Bitset res = f.formulas & and_bitset & f.toProcess;
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -332,8 +355,10 @@ static inline bool apply_and_rule(Frame& f)
 static inline bool apply_always_rule(Frame& f)
 {
         uint64_t count = f.formulas.count();
+        Bitset res = f.formulas;
+        res &= alw_bitset;
+        res &= f.toProcess;
 
-        Bitset res = f.formulas & alw_bitset & f.toProcess;
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -353,7 +378,10 @@ static inline bool apply_always_rule(Frame& f)
 
 static inline bool apply_or_rule(Frame& f)
 {
-        Bitset res = f.formulas & or_bitset & f.toProcess;
+        Bitset res = f.formulas;
+        res &= or_bitset;
+        res &= f.toProcess;
+
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -370,7 +398,10 @@ static inline bool apply_or_rule(Frame& f)
 
 static inline bool apply_ev_rule(Frame& f)
 {
-        Bitset res = f.formulas & ev_bitset & f.toProcess;
+        Bitset res = f.formulas;
+        res &= ev_bitset;
+        res &= f.toProcess;
+
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -387,7 +418,10 @@ static inline bool apply_ev_rule(Frame& f)
 
 static inline bool apply_until_rule(Frame& f)
 {
-        Bitset res = f.formulas & until_bitset & f.toProcess;
+        Bitset res = f.formulas;
+        res &= until_bitset;
+        res &= f.toProcess;
+
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -404,7 +438,10 @@ static inline bool apply_until_rule(Frame& f)
 
 static inline bool apply_not_until_rule(Frame& f)
 {
-        Bitset res = f.formulas & nuntil_bitset & f.toProcess;
+        Bitset res = f.formulas;
+        res &= nuntil_bitset;
+        res &= f.toProcess;
+
         for (uint64_t i = 0; i < cycles_bound; ++i)
         {
                 if (res[i])
@@ -533,25 +570,12 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         std::signal(SIGTSTP, signal_handler);
 
         FormulaPtr simplified = simplifier.simplify(formula);
-        //PrettyPrinter p;
-        //std::cout << "Simplified formula:" << std::endl;
-        //p.print(simplified);
 
         if (isa<True>(simplified))
                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, { FormulaSet() }, 0);
         else if (isa<False>(simplified))
                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(false, {}, 0);
 
-        not_bitset.reset();
-        tom_bitset.reset();
-        alw_bitset.reset();
-        ev_bitset.reset();
-        and_bitset.reset();
-        or_bitset.reset();
-        until_bitset.reset();
-        nuntil_bitset.reset();
-        lhs_set = std::vector<uint64_t>(MAX_FORMULA_SIZE * 4, MAX_FORMULA);
-        rhs_set = std::vector<uint64_t>(MAX_FORMULA_SIZE * 4, MAX_FORMULA);
         atom_set.clear();
 
         uint64_t start;
@@ -582,7 +606,6 @@ loop:
                 {
                         rulesApplied = false;
 
-                        // if (frame.formulas.none())
                         if (__builtin_expect(frame.formulas.none(), 0))
                         {
                                 if (model)
@@ -616,7 +639,6 @@ loop:
 
                         if (apply_ev_rule(frame))
                         {
-                                //if (frame.eventualities.find(lhs_set[frame.choosenFormula]) == frame.eventualities.end())
                                 if (__builtin_expect(frame.eventualities.find(lhs_set[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[lhs_set[frame.choosenFormula]] = MAX_FRAME;
 
@@ -629,7 +651,6 @@ loop:
 
                         if (apply_until_rule(frame))
                         {
-                                //if (frame.eventualities.find(rhs_set[frame.choosenFormula]) == frame.eventualities.end())
                                 if (__builtin_expect(frame.eventualities.find(rhs_set[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[rhs_set[frame.choosenFormula]] = MAX_FRAME;
 

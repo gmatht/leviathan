@@ -17,7 +17,7 @@ std::vector<std::string> readFile(std::istream &input);
 void readableOutput(std::string const&f, bool modelFlag);
 void parsableOutput(std::string const&f);
 
-std::vector<std::string> readFile(std::istream &input) {
+std::vector<std::string> readFile(std::istream& input) {
     std::string line;
     std::vector<std::string> lines;
     
