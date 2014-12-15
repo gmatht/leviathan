@@ -53,7 +53,7 @@ struct Frame
         }
 
         // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
-        Frame(const uint64_t _id, const std::unordered_map<uint64_t, uint64_t> _eventualities, const Frame* chainPtr)
+        Frame(const uint64_t _id, const std::unordered_map<uint64_t, uint64_t>& _eventualities, const Frame* chainPtr)
                 : formulas(number_of_formulas)
                 , toProcess(number_of_formulas)
                 , eventualities(_eventualities)
@@ -361,7 +361,7 @@ static inline bool apply_always_rule(Frame& f)
         while (p != Bitset::npos)
         {
                 f.formulas[lhs_set[p]] = true;
-                assert(tom_bitset[p + 1] && lhs_set[p + 1] == i);
+                assert(tom_bitset[p + 1] && lhs_set[p + 1] == p);
                 f.formulas[p + 1] = true;
                 f.toProcess[p] = false;
                 p = res.find_next(p + 1);
@@ -562,6 +562,20 @@ static void signal_handler(int /*signal*/)
         wants_info.store(true);
 }
 
+/*
+static inline bool eventualities_satisfied(const Frame& frame, const Frame* currFrame)
+{
+            for (auto it = currFrame->eventualities.begin(); it != currFrame->eventualities.end(); ++it)
+            {
+                    const auto& ev = frame.eventualities.find((*it).first);
+                    if (ev->second == MAX_FRAME || ev->second < currFrame->id)
+                            return false;
+            }
+
+            return true;
+}
+*/
+
 std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model)
 {
         std::signal(SIGTSTP, signal_handler);
@@ -680,13 +694,13 @@ loop:
                         if (frame.formulas[40] && !currFrame->formulas[40])
                         {
                                 currFrame = currFrame->chain;
-                                continue;
+                                break;
                         }
                         */
-
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
                                 // TODO: Can this be done in a cheaper way? Probably yes
+                                // if (eventualities_satisfied(frame, currFrame))
                                 if (std::all_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&] (const std::pair<uint64_t, uint64_t>& p)
                                 {
                                         const auto& ev = frame.eventualities.find(p.first);
@@ -701,7 +715,7 @@ loop:
                                         else
                                                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, {}, 0);
                                 }
-
+                                else
                                 // STEP rule check
                                 if (frame.formulas == currFrame->formulas)
                                 {

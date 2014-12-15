@@ -7,5 +7,5 @@ analyze/*
 build/*
 .idea
 CMakeLists.txt.user
-osd
+valgrind
 asm

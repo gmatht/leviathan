@@ -93,9 +93,9 @@ void readableOutput(std::string const&f, bool modelFlag)
     
     std::cout << "Time taken: ";
     auto time = (t2 - t1).count();
-    if (time > 1000000000)
+    if (time > 2000000000)
         std::cout << duration_cast<seconds>(t2 - t1).count() << " sec" << std::endl;
-    else if (time > 1000000)
+    else if (time > 2000000)
         std::cout << duration_cast<milliseconds>(t2 - t1).count() << " ms" << std::endl;
     else
         std::cout << duration_cast<microseconds>(t2 - t1).count() << " us" << std::endl;

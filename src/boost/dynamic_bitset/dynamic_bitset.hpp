@@ -1254,9 +1254,11 @@ bool dynamic_bitset<Block, Allocator>::
 is_subset_of(const dynamic_bitset<Block, Allocator>& a) const
 {
     assert(size() == a.size());
-    for (size_type i = 0; i < num_blocks(); ++i)
+    for (size_type i = 0; i < num_blocks(); i += 2)
+    {
         if (m_bits[i] & ~a.m_bits[i])
             return false;
+    }
     return true;
 }
 
