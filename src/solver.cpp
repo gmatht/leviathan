@@ -66,9 +66,9 @@ struct Frame
         }
 };
 
-// static PrettyPrinter printer; // Why this one?
-static Simplifier simplifier;
+using Stack = std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>;
 
+static Simplifier simplifier;
 static std::unordered_map<uint64_t, std::string> atom_set;
 
 static Bitset not_bitset(0);
@@ -83,8 +83,6 @@ static Bitset res(0);
 
 static std::vector<uint64_t> lhs_set(0, MAX_FORMULA);
 static std::vector<uint64_t> rhs_set(0, MAX_FORMULA);
-
-static uint64_t cycles_bound = 0;
 
 static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs, uint64_t rhs)
 {
@@ -316,7 +314,6 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
                 add_formula_to_bitset(_f, currentFormula++, lhs, rhs);
         }
 
-        cycles_bound = currentFormula;
         return std::tuple<std::vector<FormulaPtr>, uint64_t>{ formulas, start };
 }
 
@@ -331,66 +328,64 @@ static inline bool check_x_rule(const Frame& f)
 
 static inline bool apply_and_rule(Frame& f)
 {
-        uint64_t count = f.formulas.count();
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= and_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        // TODO: find_first and find_next don't use __builtin_clz/__builtin_ctz, find if a custom implementation using them is faster
+        size_t p = res.find_first();
+        while (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.formulas[lhs_set[i]] = true;
-                        f.formulas[rhs_set[i]] = true;
-                        f.toProcess[i] = false;
-                }
+                f.formulas[lhs_set[p]] = true;
+                f.formulas[rhs_set[p]] = true;
+                f.toProcess[p] = false;
+                p = res.find_next(p + 1);
         }
 
-        if (count != f.formulas.count())
-                return true;
-
-        return false;
+        return true;
 }
 
 static inline bool apply_always_rule(Frame& f)
 {
-        uint64_t count = f.formulas.count();
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= alw_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        size_t p = res.find_first();
+        while (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.formulas[lhs_set[i]] = true;
-                        assert(tom_bitset[i + 1] && lhs_set[i + 1] == i);
-                        f.formulas[i + 1] = true;
-                        f.toProcess[i] = false;
-                }
+                f.formulas[lhs_set[p]] = true;
+                assert(tom_bitset[p + 1] && lhs_set[p + 1] == i);
+                f.formulas[p + 1] = true;
+                f.toProcess[p] = false;
+                p = res.find_next(p + 1);
         }
 
-        if (count != f.formulas.count())
-                return true;
-
-        return false;
+        return true;
 }
 
 static inline bool apply_or_rule(Frame& f)
 {
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= or_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        size_t p = res.find_first();
+        if (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.toProcess[i] = false;
-                        f.choosenFormula = i;
-                        f.choice = true;
-                        return true;
-                }
+                f.toProcess[p] = false;
+                f.choosenFormula = p;
+                f.choice = true;
+                return true;
         }
 
         return false;
@@ -398,19 +393,20 @@ static inline bool apply_or_rule(Frame& f)
 
 static inline bool apply_ev_rule(Frame& f)
 {
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= ev_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        size_t p = res.find_first();
+        if (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.toProcess[i] = false;
-                        f.choosenFormula = i;
-                        f.choice = true;
-                        return true;
-                }
+                f.toProcess[p] = false;
+                f.choosenFormula = p;
+                f.choice = true;
+                return true;
         }
 
         return false;
@@ -418,19 +414,20 @@ static inline bool apply_ev_rule(Frame& f)
 
 static inline bool apply_until_rule(Frame& f)
 {
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= until_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        size_t p = res.find_first();
+        if (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.toProcess[i] = false;
-                        f.choosenFormula = i;
-                        f.choice = true;
-                        return true;
-                }
+                f.toProcess[p] = false;
+                f.choosenFormula = p;
+                f.choice = true;
+                return true;
         }
 
         return false;
@@ -438,26 +435,26 @@ static inline bool apply_until_rule(Frame& f)
 
 static inline bool apply_not_until_rule(Frame& f)
 {
-        Bitset res = f.formulas;
+        res = f.formulas;
         res &= nuntil_bitset;
         res &= f.toProcess;
 
-        for (uint64_t i = 0; i < cycles_bound; ++i)
+        if (!res.any())
+            return false;
+
+        size_t p = res.find_first();
+        if (p != Bitset::npos)
         {
-                if (res[i])
-                {
-                        f.toProcess[i] = false;
-                        f.choosenFormula = i;
-                        f.choice = true;
-                        return true;
-                }
+                f.toProcess[p] = false;
+                f.choosenFormula = p;
+                f.choice = true;
+                return true;
         }
 
         return false;
 }
 
-static inline void rollback_to_choice_point(std::stack<Frame>& stack, uint64_t& frameID)
-//static inline void rollback_to_choice_point(std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>& stack, uint64_t& frameID)
+static inline void rollback_to_choice_point(Stack& stack, uint64_t& frameID)
 {
         while (!stack.empty())
         {
@@ -525,9 +522,7 @@ static inline void check_eventualities(Frame& f)
         }
 }
 
-static inline std::pair<std::vector<FormulaSet>, uint64_t> exhibit_model(const std::vector<FormulaPtr>& fs,
-                                                                            const std::stack<Frame>& stack, const Frame& loopTo)
-                                                                            //const std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>& stack, const Frame& loopTo)
+static inline std::pair<std::vector<FormulaSet>, uint64_t> exhibit_model(const std::vector<FormulaPtr>& fs, const Stack& stack, const Frame& loopTo)
 {
         std::vector<FormulaSet> model;
 
@@ -564,7 +559,7 @@ namespace
 
 static void signal_handler(int /*signal*/)
 {
-    wants_info.store(true);
+        wants_info.store(true);
 }
 
 std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model)
@@ -584,8 +579,7 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         std::vector<FormulaPtr> formulas;
         std::tie(formulas, start) = initialize(simplified);
 
-        //std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>> stack;
-        std::stack<Frame, std::deque<Frame>> stack;
+        Stack stack;
 
         uint64_t frameID = 0;
         stack.emplace(frameID, start);
@@ -678,18 +672,26 @@ loop:
                 check_eventualities(frame);
 
                 // LOOP rule
+                const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
                 while (currFrame)
                 {
+                        /* TODO: Investigate the option of early invalidation of the current frame. Heuristics to find the right formula(s)? Most Used Locations?
+                        if (frame.formulas[40] && !currFrame->formulas[40])
+                        {
+                                currFrame = currFrame->chain;
+                                continue;
+                        }
+                        */
 
-                        if ((frame.formulas | currFrame->formulas) == currFrame->formulas)
+                        if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
                                 // TODO: Can this be done in a cheaper way? Probably yes
-                                if (std::all_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&](std::pair<uint64_t, uint64_t> p)
+                                if (std::all_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&] (const std::pair<uint64_t, uint64_t>& p)
                                 {
-                                    const auto& ev = frame.eventualities.find(p.first);
-                                    return ev->second != MAX_FRAME && ev->second >= currFrame->id;
-                                    }))
+                                        const auto& ev = frame.eventualities.find(p.first);
+                                        return ev->second != MAX_FRAME && ev->second >= currFrame->id;
+                                }))
                                 {
                                         if (model)
                                         {
@@ -699,38 +701,37 @@ loop:
                                         else
                                                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, {}, 0);
                                 }
+
+                                // STEP rule check
+                                if (frame.formulas == currFrame->formulas)
+                                {
+                                        if (!repFrame1)
+                                                repFrame1 = currFrame;
+                                        else if (!repFrame2)
+                                                repFrame2 = currFrame;
+                                }
                         }
                         currFrame = currFrame->chain;
                 }
 
-                // REP rule
-                const Frame* framePtr = nullptr;
-                currFrame = frame.chain;
-                while (currFrame)
+                // STEP rule application
+                if (repFrame1 && repFrame2)
                 {
-                        if (currFrame->formulas == frame.formulas)
-                        {
-                                if (!framePtr)
-                                        framePtr = currFrame;
-                                else
-                                {
-                                        rollback_to_choice_point(stack, frameID);
-                                        goto loop;
-                                }
-                        }
-
-                        currFrame = currFrame->chain;
+                        rollback_to_choice_point(stack, frameID);
+                        goto loop;
                 }
 
                 // STEP rule
                 Frame newFrame(++frameID, frame.eventualities, &frame);
-                auto res = frame.formulas & tom_bitset;
-                for (uint64_t i = 0; i < cycles_bound; ++i)
+                res = frame.formulas;
+                res &= tom_bitset;
+
+                for (uint64_t i = 0; i < number_of_formulas; ++i)
                 {
                         if (res[i])
                                 newFrame.formulas[lhs_set[i]] = true;
                 }
-
+                
                 stack.push(newFrame);
         }
 
