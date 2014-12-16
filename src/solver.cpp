@@ -88,11 +88,11 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
 {
         switch (f->type())
         {
-                case Formula::Atom:
+                case Formula::Type::Atom:
                         atom_set[pos] = fast_cast<Atom>(f)->name();
                         break;
 
-                case Formula::Negation:
+                case Formula::Type::Negation:
                         if (isa<Until>(fast_cast<Negation>(f)->formula()))
                         {
                                 nuntil_bitset[pos] = true;
@@ -104,43 +104,43 @@ static void add_formula_to_bitset(const FormulaPtr f, uint64_t pos, uint64_t lhs
                         lhs_set[pos] = lhs;
                         break;
 
-                case Formula::Tomorrow:
+                case Formula::Type::Tomorrow:
                         tom_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         break;
 
-                case Formula::Always:
+                case Formula::Type::Always:
                         alw_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         break;
 
-                case Formula::Eventually:
+                case Formula::Type::Eventually:
                         ev_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         break;
 
-                case Formula::Conjunction:
+                case Formula::Type::Conjunction:
                         and_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         rhs_set[pos] = rhs;
                         break;
 
-                case Formula::Disjunction:
+                case Formula::Type::Disjunction:
                         or_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         rhs_set[pos] = rhs;
                         break;
 
-                case Formula::Until:
+                case Formula::Type::Until:
                         until_bitset[pos] = true;
                         lhs_set[pos] = lhs;
                         rhs_set[pos] = rhs;
                         break;
 
-                case Formula::True:
-                case Formula::False:
-                case Formula::Iff:
-                case Formula::Then:
+                case Formula::Type::True:
+                case Formula::Type::False:
+                case Formula::Type::Iff:
+                case Formula::Type::Then:
                         assert(false);
                         break;
         }
@@ -297,15 +297,15 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
 
                 if (left)
                 {
-                        lhs = std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
-                        { return a == left; }) - formulas.begin();
+                        lhs = static_cast<uint64_t>(std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
+                        { return a == left; }) - formulas.begin());
                         assert(std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
                         { return a == left; }) != formulas.end());
                 }
                 if (right)
                 {
-                        rhs = std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
-                        { return a == right; }) - formulas.begin();
+                        rhs = static_cast<uint64_t>(std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
+                        { return a == right; }) - formulas.begin());
 
                         assert(std::find_if(formulas.begin(), formulas.end(), [&](FormulaPtr a)
                         { return a == right; }) != formulas.end());
@@ -339,6 +339,10 @@ static inline bool apply_and_rule(Frame& f)
         size_t p = res.find_first();
         while (p != Bitset::npos)
         {
+                assert(and_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.formulas[lhs_set[p]] = true;
                 f.formulas[rhs_set[p]] = true;
                 f.toProcess[p] = false;
@@ -360,6 +364,10 @@ static inline bool apply_always_rule(Frame& f)
         size_t p = res.find_first();
         while (p != Bitset::npos)
         {
+                assert(alw_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.formulas[lhs_set[p]] = true;
                 assert(tom_bitset[p + 1] && lhs_set[p + 1] == p);
                 f.formulas[p + 1] = true;
@@ -382,6 +390,10 @@ static inline bool apply_or_rule(Frame& f)
         size_t p = res.find_first();
         if (p != Bitset::npos)
         {
+                assert(or_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.toProcess[p] = false;
                 f.choosenFormula = p;
                 f.choice = true;
@@ -403,6 +415,10 @@ static inline bool apply_ev_rule(Frame& f)
         size_t p = res.find_first();
         if (p != Bitset::npos)
         {
+                assert(ev_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.toProcess[p] = false;
                 f.choosenFormula = p;
                 f.choice = true;
@@ -424,6 +440,10 @@ static inline bool apply_until_rule(Frame& f)
         size_t p = res.find_first();
         if (p != Bitset::npos)
         {
+                assert(until_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.toProcess[p] = false;
                 f.choosenFormula = p;
                 f.choice = true;
@@ -445,6 +465,10 @@ static inline bool apply_not_until_rule(Frame& f)
         size_t p = res.find_first();
         if (p != Bitset::npos)
         {
+                assert(nuntil_bitset[p]);
+                assert(f.formulas[p]);
+                assert(f.toProcess[p]);
+
                 f.toProcess[p] = false;
                 f.choosenFormula = p;
                 f.choice = true;
@@ -697,6 +721,9 @@ loop:
                                 break;
                         }
                         */
+
+                        // TODO: Heuristics: don't always backtrack the entire stack. Once in n times? Random guess?
+
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
                                 // TODO: Can this be done in a cheaper way? Probably yes

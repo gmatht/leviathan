@@ -117,7 +117,7 @@ unsigned debug_info<b>::allocated = 0;
 
   <b>T</b> Type of object to allocate/deallocate.
 
-  <b>UserAllocator</B>. Defines the method that the underlying Pool will use to allocate memory from the system. See 
+  <b>UserAllocator</b>. Defines the method that the underlying Pool will use to allocate memory from the system. See 
   <a href="boost_pool/pool/pooling.html#boost_pool.pool.pooling.user_allocator">User Allocators</a> for details.
 
   <b>Mutex</b> Allows the user to determine the type of synchronization to be used on the underlying singleton_pool. 

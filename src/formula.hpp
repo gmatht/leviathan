@@ -7,6 +7,7 @@
 #include <iostream>
 #include <set>
 #include <iterator>
+#include <cstdint>
 
 namespace LTL
 {
@@ -20,7 +21,7 @@ class PrettyPrinter;
 class Formula
 {
 public:
-        enum Type
+        enum class Type : uint8_t
         {
                 True,
                 False,
