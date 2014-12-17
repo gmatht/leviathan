@@ -41,7 +41,6 @@ include_directories (${src_dir})
 include_directories (${src_dir}/parser)
 include_directories (${src_dir}/tclap)
 include_directories (${src_dir}/dynamic_bitset)
-include_directories (${src_dir}/sparsehash)
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/c\\+\\+")
     set (CMAKE_CXX_COMPILER /usr/bin/clang++)

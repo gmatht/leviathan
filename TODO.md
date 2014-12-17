@@ -4,3 +4,4 @@
 - Remove old code in formula.cpp
 - Improve the simplification step
 - Better error handling during parsing
+- Logging system

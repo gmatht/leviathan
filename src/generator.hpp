@@ -23,6 +23,7 @@ public:
         }
 
         void generate(const FormulaPtr f);
+        
         const std::vector<FormulaPtr>& formulas() const
         {
                 return _formulas;

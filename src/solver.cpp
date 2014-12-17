@@ -1,6 +1,7 @@
 #include "solver.hpp"
 
 #include "generator.hpp"
+#include "boost/pool/pool_alloc.hpp"
 #include <stack>
 #include <iostream>
 #include <cassert>
@@ -14,6 +15,23 @@ namespace LTL
 
 namespace detail
 {
+
+Solver::Solver(FormulaPtr formula, uint64_t maximum_depth, uint8_t backtrace_probability, uint8_t backtrace_percentage)
+{
+        _formula = formula;
+        _maximum_depth = maximum_depth;
+
+        // TODO: Notice the user of the choosen parameters don't make sense and we switched to default
+        _backtrace_probability = (backtrace_probability > 100) ? 100 : backtrace_probability;
+        _backtrace_percentage = (backtrace_percentage > 100) ? 100 : backtrace_percentage;
+
+        // TODO: Initialize the solver
+
+        _state = State::INITIALIZED;
+        _result = Result::UNDEFINED;
+}
+
+/* Old implementation */
 
 static size_t number_of_formulas = 0;
 

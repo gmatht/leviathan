@@ -2,11 +2,7 @@
 
 #include <string>
 #include <memory>
-#include <type_traits>
-#include <algorithm>
-#include <iostream>
 #include <set>
-#include <iterator>
 #include <cstdint>
 
 namespace LTL
@@ -42,6 +38,7 @@ public:
                 : _type(type)
         {
         }
+
         virtual ~Formula()
         {
         }

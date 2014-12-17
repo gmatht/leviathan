@@ -1,8 +1,7 @@
 #pragma once
 
 #include "formula.hpp"
-
-#include <ostream>
+#include <iostream>
 
 namespace LTL
 {
@@ -24,7 +23,7 @@ class Visitor
         friend class Then;
         friend class Iff;
         friend class Until;
-
+        
 protected:
         virtual void visit(const True* t) = 0;
         virtual void visit(const False* f) = 0;

@@ -1,5 +1,4 @@
 #include "visitor.hpp"
-#include <iostream>
 
 namespace LTL
 {
@@ -62,7 +61,6 @@ BINARY_VISIT(Then, "\u2192")
 BINARY_VISIT(Iff, "\u2194")
 BINARY_VISIT(Until, "\u222a")
 
-// TODO: Check if it is worth to look for subformulas to further simplify
 FormulaPtr Simplifier::simplify(FormulaPtr formula)
 {
         FormulaPtr toSimplify = formula;
@@ -226,6 +224,7 @@ void Simplifier::visit(const Always* a)
 
 void Simplifier::visit(const Eventually* e)
 {
+
         e->formula()->accept(*this);
         if (isa<True>(result))
         {
@@ -240,7 +239,7 @@ void Simplifier::visit(const Eventually* e)
         else if (isa<Always>(result) && isa<Eventually>(fast_cast<Always>(result)->formula()))
                 rulesApplied = true;
         else if (isa<Eventually>(result))
-                rulesApplied = true; // TODO: Is this true?
+                rulesApplied = true;
         else if (isa<Tomorrow>(result))
         {
                 result = make_tomorrow(make_eventually(fast_cast<Tomorrow>(result)->formula()));
@@ -264,8 +263,6 @@ void Simplifier::visit(const Eventually* e)
 
 void Simplifier::visit(const Conjunction* c)
 {
-        // TODO: Distributive property? Is it worth?
-
         c->left()->accept(*this);
         FormulaPtr left = result;
         c->right()->accept(*this);
@@ -308,8 +305,6 @@ void Simplifier::visit(const Conjunction* c)
 
 void Simplifier::visit(const Disjunction* d)
 {
-        // TODO: Distributive property? Is it worth?
-
         d->left()->accept(*this);
         FormulaPtr left = result;
         d->right()->accept(*this);
