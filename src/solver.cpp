@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <csignal>
 #include <atomic>
+#include <random>
 
 namespace LTL
 {
@@ -252,6 +253,15 @@ static std::tuple<std::vector<FormulaPtr>, uint64_t> initialize(const FormulaPtr
         until_bitset.resize(number_of_formulas);
         nuntil_bitset.resize(number_of_formulas);
         res.resize(number_of_formulas);
+        not_bitset.reset();
+        tom_bitset.reset();
+        alw_bitset.reset();
+        ev_bitset.reset();
+        and_bitset.reset();
+        or_bitset.reset();
+        until_bitset.reset();
+        nuntil_bitset.reset();
+        res.reset();
         lhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
         rhs_set = std::vector<uint64_t>(number_of_formulas, MAX_FORMULA);
 
@@ -602,6 +612,8 @@ static inline bool eventualities_satisfied(const Frame& frame, const Frame* curr
 
 std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model)
 {
+        // TODO: Produce EVERY solution
+
         std::signal(SIGTSTP, signal_handler);
 
         FormulaPtr simplified = simplifier.simplify(formula);
@@ -623,6 +635,12 @@ std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const Formula
         stack.emplace(frameID, start);
 
         bool rulesApplied;
+
+        std::mt19937 mt((std::random_device())());
+        std::uniform_int_distribution<uint32_t> rand(0, 100);
+
+        // Heuristics: MAX DEPTH
+        //uint64_t max_depth = 2500;
 
 loop:
         if (wants_info.load())
@@ -712,17 +730,24 @@ loop:
                 // LOOP rule
                 const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
+
+                // Heuristics: PARTIAL LOOKBACK
+                //uint64_t minFrame = 0;
+
+                /* Heuristics: OCCASIONAL LOOKBACK
+                if (rand(mt) > 5)
+                        goto step_rule;
+                */
+
+                // Heuristics: PARTIAL LOOKBACK
+                //else
+                        //minFrame = static_cast<uint64_t>(static_cast<float>(rand(mt)) / 100.0 * currFrame->id);
+
                 while (currFrame)
                 {
-                        /* TODO: Investigate the option of early invalidation of the current frame. Heuristics to find the right formula(s)? Most Used Locations?
-                        if (frame.formulas[40] && !currFrame->formulas[40])
-                        {
-                                currFrame = currFrame->chain;
-                                break;
-                        }
-                        */
-
-                        // TODO: Heuristics: don't always backtrack the entire stack. Once in n times? Random guess?
+                        // Heuristics: PARTIAL LOOKBACK
+                        //if (currFrame->id < minFrame)
+                                //break;
 
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
@@ -755,24 +780,51 @@ loop:
                         currFrame = currFrame->chain;
                 }
 
-                // STEP rule application
+                // REP rule application
                 if (repFrame1 && repFrame2)
                 {
                         rollback_to_choice_point(stack, frameID);
                         goto loop;
                 }
 
+// Heuristics: OCCASIONAL LOOKBACK
+//step_rule:
+
+                /* Heuristics: MAX DEPTH
+                if (frameID > max_depth)
+                {
+                        rollback_to_choice_point(stack, frameID);
+                        goto loop;
+                }
+                */
+
                 // STEP rule
                 Frame newFrame(++frameID, frame.eventualities, &frame);
                 res = frame.formulas;
                 res &= tom_bitset;
 
+                /* This doesn't work for w/e reason
+                size_t p = res.find_first();
+                while (p != Bitset::npos)
+                {
+                        assert(tom_bitset[p]);
+                        assert(frame.formulas[p]);
+                
+                        newFrame.formulas[lhs_set[p]] = true;
+                        p = res.find_next(p + 1);
+                }
+                */
+
                 for (uint64_t i = 0; i < number_of_formulas; ++i)
                 {
                         if (res[i])
+                        {
+                                assert(frame.formulas[i]);
+                                assert(tom_bitset[i]);
                                 newFrame.formulas[lhs_set[i]] = true;
+                        }
                 }
-                
+
                 stack.push(newFrame);
         }
 

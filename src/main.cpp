@@ -64,7 +64,24 @@ void readableOutput(std::string const&f, bool modelFlag)
     auto t2 = Clock::now();
     
     std::cout << "Is satisfiable: " << is_sat << std::endl;
-    
+
+    /* Heuristics: OPTIMIZE MODEL
+    std::vector<int64_t> toRemove;
+    for (int64_t i = loopTo; i >= 0; --i) 
+    {
+            if (std::all_of(model[loopTo].begin(), model[loopTo].end(), [&] (LTL::FormulaPtr f)
+            {
+                    if (model[i].find(f) != model[i].end())
+                        return true;
+                    return false;
+            }))
+                    toRemove.push_back(i);
+    }
+
+    for (auto i : toRemove)
+            model.erase(model.begin() + i);
+    */
+
     if (modelFlag && is_sat)
     {
         std::cout << "Model has " << model.size() << " states" << std::endl;
