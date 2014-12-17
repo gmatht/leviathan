@@ -35,7 +35,6 @@ std::vector<std::string> readFile(std::istream& input) {
 void readableOutput(std::string const&f, bool modelFlag)
 {
     LTL::PrettyPrinter printer;
-    //std::cout << "Parsing formula: " << f << std::endl;
     std::cout << "Parsing formula" << std::endl;
     
     LTL::FormulaPtr formula = nullptr;
@@ -66,6 +65,7 @@ void readableOutput(std::string const&f, bool modelFlag)
     std::cout << "Is satisfiable: " << is_sat << std::endl;
 
     /* Heuristics: OPTIMIZE MODEL
+    // TODO: Optimize away every 2 equal sets BEFORE the loop state
     std::vector<int64_t> toRemove;
     for (int64_t i = loopTo; i >= 0; --i) 
     {

@@ -767,15 +767,14 @@ loop:
                                         else
                                                 return std::tuple<bool, std::vector<FormulaSet>, uint64_t>(true, {}, 0);
                                 }
-                                else
-                                // STEP rule check
-                                if (frame.formulas == currFrame->formulas)
+                                else  if (frame.formulas == currFrame->formulas) // STEP rule check
                                 {
                                         if (!repFrame1)
                                                 repFrame1 = currFrame;
                                         else if (!repFrame2)
                                                 repFrame2 = currFrame;
                                 }
+                                //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completly the same in terms of performance
                         }
                         currFrame = currFrame->chain;
                 }

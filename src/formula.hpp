@@ -217,36 +217,10 @@ inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), static_cast<Ret
         return static_cast<ReturnT*>(ptr.get());
 }
 
-#define UNARY_LESS(_Type)  \
-        if (isa<_Type>(a)) \
-                return fast_cast<_Type>(a)->formula() < fast_cast<_Type>(b)->formula();
-
-#define BINARY_LESS(_Type)                                    \
-        if (isa<_Type>(a))                                    \
-        {                                                     \
-                const _Type* aPtr = fast_cast<_Type>(a);      \
-                const _Type* bPtr = fast_cast<_Type>(b);      \
-                                                              \
-                if (aPtr->left() < bPtr->left())              \
-                        return true;                          \
-                if (aPtr->left() == bPtr->left())             \
-                        return aPtr->right() < bPtr->right(); \
-                return false;                                 \
-        }
-
-bool operator<(const FormulaPtr a, const FormulaPtr b);
-bool operator>(const FormulaPtr a, const FormulaPtr b);
-bool operator<=(const FormulaPtr a, const FormulaPtr b);
-bool operator>=(const FormulaPtr a, const FormulaPtr b);
-bool operator==(const FormulaPtr a, const FormulaPtr b);
-bool operator!=(const FormulaPtr a, const FormulaPtr b);
-
 using FormulaSet = std::set<FormulaPtr>;
 
-bool operator<(const FormulaSet& a, const FormulaSet& b);
-bool operator==(const FormulaSet& a, const FormulaSet& b);
-bool operator!=(const FormulaSet& a, const FormulaSet& b);
 }
+
 }
 
 template <class Cont>

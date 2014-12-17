@@ -4,4 +4,3 @@
 - Remove old code in formula.cpp
 - Improve the simplification step
 - Better error handling during parsing
-- Implement dynamic bitset with avx2 instruction
