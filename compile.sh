@@ -6,12 +6,12 @@ j="0"
  
 function usage()
 {
-echo "if this was a real script you would see something useful here"
+echo "Usage:"
 echo ""
-echo "./simple_args_parsing.sh"
-echo "\t-h --help"
-echo "\t--environment=$ENVIRONMENT"
-echo "\t--db-path=$DB_PATH"
+echo -e "\t-h --help \t\t Show this message"
+echo -e "\t-c --compiler \t\t Set the compiler toolchain. Supported values are \"clang\" and \"gcc\" (default is \"clang\")"
+echo -e "\t-b --build \t\t Set the build type. Supported values are \"Release\" and \"Debug\" (default is \"Release\")"
+echo -e "\t-j --cores \t\t Set the number of parallel builds (default is available number of cores)"
 echo ""
 }
  

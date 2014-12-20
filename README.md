@@ -35,3 +35,6 @@ The compile script can accept parameters to define the build type (Debug or Rele
 Use "./compile.sh --help" to view  complete information about the script.
 The binaries are created in the "bin" folder.
 For every other platform/build system a CMake file is provided.
+
+## Note
+Currently the GCC build is broken.

@@ -15,10 +15,7 @@ namespace LTL
 {
 namespace detail
 {
-/*
-const uint64_t MAX_FRAME = std::numeric_limits<uint64_t>::max();
-const uint64_t MAX_FORMULA = std::numeric_limits<uint64_t>::max();
-*/
+
 template <class T, class S>
 inline const S& Container(const std::stack<T, S>& s)
 {
@@ -31,10 +28,6 @@ inline const S& Container(const std::stack<T, S>& s)
         };
         return Stack::Container(s);
 }
-
-//std::tuple<bool, std::vector<FormulaSet>, uint64_t> is_satisfiable(const FormulaPtr formula, bool model);
-
-/* New stuff */
 
 template<typename Derived>
 class Identifiable
@@ -247,7 +240,7 @@ public:
         Solver& operator=(const Solver&) = delete;
         Solver& operator=(const Solver&&) = delete;
 
-        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrace_probability = 100, uint32_t backtrace_percentage = 100);
+        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrace_probability = 100, uint32_t backtrace_percentage = 100 /* Currently not used */);
 
         inline State state() const
         {
