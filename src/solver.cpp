@@ -294,7 +294,7 @@ bool Solver::_apply_conjunction_rule()
         Frame& frame = _stack.top();
         _bitset.temporary = frame.formulas;
         _bitset.temporary &= _bitset.conjunction;
-        _bitset.temporary &= frame.toProcess;
+        _bitset.temporary &= frame.to_process;
 
         // TODO: This could be avoided as it's ~ a duplicate of find_first(), check if it is worth
         if (!_bitset.temporary.any())
@@ -306,11 +306,11 @@ bool Solver::_apply_conjunction_rule()
         {
                 assert(_bitset.conjunction[one]);
                 assert(frame.formulas[one]);
-                assert(frame.toProcess[one]);
+                assert(frame.to_process[one]);
 
                 frame.formulas[_lhs[one]] = true;
                 frame.formulas[_rhs[one]] = true;
-                frame.toProcess[one] = false;
+                frame.to_process[one] = false;
                 one = _bitset.temporary.find_next(one + 1);
         }
 
@@ -322,7 +322,7 @@ bool Solver::_apply_always_rule()
         Frame& frame = _stack.top();
         _bitset.temporary = frame.formulas;
         _bitset.temporary &= _bitset.always;
-        _bitset.temporary &= frame.toProcess;
+        _bitset.temporary &= frame.to_process;
 
         if (!_bitset.temporary.any())
                 return false;
@@ -332,12 +332,12 @@ bool Solver::_apply_always_rule()
         {
                 assert(_bitset.always[one]);
                 assert(frame.formulas[one]);
-                assert(frame.toProcess[one]);
+                assert(frame.to_process[one]);
 
                 frame.formulas[_lhs[one]] = true;
                 assert(_bitset.tomorrow[one + 1] && _lhs[one + 1] == FormulaID(one));
                 frame.formulas[one + 1] = true;
-                frame.toProcess[one] = false;
+                frame.to_process[one] = false;
                 one = _bitset.temporary.find_next(one + 1);
         }
 
@@ -350,16 +350,16 @@ bool Solver::_apply_##rule##_rule() \
         Frame& frame = _stack.top(); \
         _bitset.temporary = frame.formulas; \
         _bitset.temporary &= _bitset.rule; \
-        _bitset.temporary &= frame.toProcess; \
+        _bitset.temporary &= frame.to_process; \
 \
         size_t one = _bitset.temporary.find_first(); \
         if (one != Bitset::npos) \
         { \
                 assert(_bitset.rule[one]); \
                 assert(frame.formulas[one]); \
-                assert(frame.toProcess[one]); \
+                assert(frame.to_process[one]); \
 \
-                frame.toProcess[one] = false; \
+                frame.to_process[one] = false; \
                 frame.choosenFormula = FormulaID(one); \
                 frame.choice = true; \
                 return true; \
@@ -382,8 +382,6 @@ Solver::Result Solver::solution()
 
         _state = State::RUNNING;
         bool rules_applied;
-
-        PrettyPrinter printer;
 
 loop:
         while (!_stack.empty())
@@ -436,6 +434,7 @@ loop:
 
                         if (_apply_until_rule())
                         {
+                                // TODO: Investigate if this is the right place to generate an eventuality
                                 if (__builtin_expect(frame.eventualities.find(_rhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[_rhs[frame.choosenFormula]] = FrameID::max();
 
@@ -464,39 +463,24 @@ loop:
                 const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
 
-                // Heuristics: PARTIAL LOOKBACK
-                //uint64_t minFrame = 0;
+                FrameID min_frame;
 
                 // Heuristics: OCCASIONAL LOOKBACK
-                //if (_rand(_mt) > _backtrace_probability)
-                        //goto step_rule;
-
+                if (_rand(_mt) > _backtrace_probability)
+                        goto step_rule;
+                
                 // Heuristics: PARTIAL LOOKBACK
-                //else
-                        //minFrame = static_cast<uint64_t>(static_cast<float>(rand(mt)) / 100.0 * currFrame->id);
-
-                /*
-                std::cout << "Checking LOOP/REP rule" << std::endl;
-                std::cout << "Current set of formulas:" << std::endl;
-                for (uint32_t i = 0; i < _number_of_formulas; ++i)
-                        if (frame.formulas[i])
-                                printer.print(_subformulas[i], true);
-                */
+                // TODO: Not worth to lookback a certain %, move to min/max range lookback
+                min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
 
                 while (currFrame)
                 {
                         // Heuristics: PARTIAL LOOKBACK
-                        //if (currFrame->id < minFrame)
-                                //break;
+                        if (currFrame->id < min_frame)
+                                break;
 
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
-                                /*
-                                std::cout << "Found candidate for LOOP rule with set of formulas:" << std::endl;
-                                for (uint32_t i = 0; i < _number_of_formulas; ++i)
-                                        if (frame.formulas[i])
-                                                printer.print(_subformulas[i], true);
-                                */
                                 // TODO: Can this be done in a cheaper way? Probably yes
                                 // if (eventualities_satisfied(frame, currFrame))
                                 if (std::all_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&] (const std::pair<FormulaID, FrameID>& p)
@@ -505,8 +489,6 @@ loop:
                                         return ev->second != FrameID::max() && ev->second >= currFrame->id;
                                 }))
                                 {
-                                        std::cout << "Applying LOOP rule" << std::endl;
-
                                         _result = Result::SATISFIABLE;
                                         _state = State::PAUSED;
                                         return _result;
@@ -518,7 +500,7 @@ loop:
                                         else if (!repFrame2)
                                                 repFrame2 = currFrame;
                                 }
-                                //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completly the same in terms of performance
+                                //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completely the same in terms of performance
                         }
                         currFrame = currFrame->chain;
                 }
@@ -526,16 +508,14 @@ loop:
                 // REP rule application
                 if (repFrame1 && repFrame2)
                 {
-                        std::cout << "Applying REP rule" << std::endl;
-
                         _rollback_to_latest_choice();
                         goto loop;
                 }
 
 // Heuristics: OCCASIONAL LOOKBACK
-//step_rule:
+step_rule:
 
-                if (frame.id > _maximum_depth)
+                if (__builtin_expect(frame.id >= _maximum_depth, 0))
                 {
                         _rollback_to_latest_choice();
                         goto loop;
@@ -592,7 +572,7 @@ void Solver::_rollback_to_latest_choice()
 {
         while (!_stack.empty())
         {
-                if (_stack.top().choice && _stack.top().choosenFormula != FormulaID::max()) // Only if i still have an available choice to do
+                if (_stack.top().choice && _stack.top().choosenFormula != FormulaID::max())
                 {
                         Frame& top = _stack.top();;
                         Frame new_frame(top.id, top);

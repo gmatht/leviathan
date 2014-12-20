@@ -88,7 +88,7 @@ void readableOutput(std::string const&f, bool modelFlag)
     }
     */
 
-    LTL::Solver solver(formula);
+    LTL::Solver solver(formula, LTL::FrameID::max(), 5);
     std::cout << "Checking satisfiability..." << std::endl;
     auto t1 = Clock::now();
     solver.solution();
@@ -118,7 +118,7 @@ void parsableOutput(std::string const&f) {
 
 int main(int argc, char* argv[])
 {
-    TCLAP::CmdLine cmd("A simple LTL satisfiability checker", ' ', "0.1");
+    TCLAP::CmdLine cmd("A simple LTL satisfiability checker", ' ', "0.2");
     TCLAP::ValueArg<std::string> filenameArg("f", "filename", "The name of the file to load the formulas from",
                                              false, "test", "string", cmd);
     TCLAP::ValueArg<std::string> ltlArg("l", "ltl", "The formula to test", false, "p && Xq", "string", cmd);
