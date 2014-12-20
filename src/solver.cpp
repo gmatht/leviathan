@@ -1,6 +1,7 @@
 #include "solver.hpp"
 
 #include "generator.hpp"
+#include "utility.hpp"
 #include <stack>
 #include <iostream>
 #include <cassert>
@@ -13,19 +14,22 @@ namespace LTL
 namespace detail
 {
 
-Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrace_probability, uint32_t backtrace_percentage) : _start_index(0)
+Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack)
+        : _formula(formula), _maximum_depth(maximum_depth), _backtrack_probability(backtrack_probability), _minimum_backtrack(minimum_backtrack),
+          _maximum_backtrack(maximum_backtrack), _state(State::UNINITIALIZED), _result(Result::UNDEFINED), _start_index(0)
 {
-        _formula = formula;
-        _maximum_depth = maximum_depth;
-        _backtrace_probability = backtrace_probability;
-        _backtrace_percentage = backtrace_percentage;
-        // TODO: Notice the user of the choosen parameters don't make sense and we switched to default
+        if (_backtrack_probability > 100)
+                _backtrack_probability = 100;
 
-        _state = State::UNINITIALIZED;
-        _result = Result::UNDEFINED;
+        if (_maximum_backtrack > 100)
+                _maximum_backtrack = 100;
+        
+        if (_minimum_backtrack > _maximum_backtrack)
+                _minimum_backtrack = _maximum_backtrack;
 
         _mt = std::mt19937((std::random_device())());
-        _rand = std::uniform_int_distribution<uint32_t>(0, 100);
+        _backtrack_probability_rand = std::uniform_int_distribution<uint32_t>(0, 100);
+        _backtrack_percentage_rand = std::uniform_int_distribution<uint32_t>(_minimum_backtrack, _maximum_backtrack);
 
         _initialize();
 }
@@ -468,12 +472,11 @@ loop:
                 //FrameID min_frame;
 
                 // Heuristics: OCCASIONAL LOOKBACK
-                if (_rand(_mt) > _backtrace_probability)
+                if (_backtrack_probability_rand(_mt) > _backtrack_probability)
                         goto step_rule;
                 
                 // Heuristics: PARTIAL LOOKBACK
-                // TODO: Not worth to lookback a certain %, move to min/max range lookback
-                //min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
+                //min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_backtrack_percentage_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
 
                 while (currFrame)
                 {
@@ -561,7 +564,7 @@ step_rule:
         return _result;
 }
 
-// TODO: Eventuality could not be handled correctly in the case of until formulas
+// TODO: Eventualities are potentially not handled correctly in the case of until formulas
  void Solver::_update_eventualities_satisfaction()
  {
         Frame& frame = _stack.top();
@@ -631,8 +634,50 @@ void Solver::_rollback_to_latest_choice()
         }
 }
 
-Model Solver::model()
+ModelPtr Solver::model()
 {
+    if (_state != State::PAUSED || _state != State::DONE)
+            return nullptr;
+
+    if (_result == Result::UNSATISFIABLE)
+            return nullptr;
+
+    /*
+    bool is_sat;
+    std::vector<LTL::FormulaSet> model;
+    uint64_t loopTo;
+    
+    std::cout << "Checking satisfiability..." << std::endl;
+    
+    auto t1 = Clock::now();
+    std::tie(is_sat, model, loopTo) = LTL::is_satisfiable(formula, modelFlag);
+    auto t2 = Clock::now();
+    
+    std::cout << "Is satisfiable: " << is_sat << std::endl;
+
+    if (modelFlag && is_sat)
+    {
+        std::cout << "Model has " << model.size() << " states" << std::endl;
+        
+        std::cout << "Exhibited model: " << std::endl;
+        uint64_t i = 0;
+        for (const auto& s : model)
+        {
+            std::cout << "State " << i << ": " << std::endl;
+            
+            for (const LTL::FormulaPtr _f : s)
+            {
+                printer.print(_f);
+                std::cout << ", ";
+            }
+            std::cout << std::endl;
+            
+            ++i;
+        }
+        std::cout << "The model is looping to state: " << loopTo << std::endl;
+    }
+    */
+    
         // TODO: Optimize model to compensate heuristics
         /* Heuristics: OPTIMIZE MODEL
         // TODO: Optimize away every 2 equal sets BEFORE the loop state
@@ -652,7 +697,7 @@ Model Solver::model()
                 model.erase(model.begin() + i);
         */
 
-        return {};
+        return nullptr;
 }
 
 }

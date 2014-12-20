@@ -37,4 +37,5 @@ The binaries are created in the "bin" folder.
 For every other platform/build system a CMake file is provided.
 
 ## Note
-Currently the GCC build is broken.
+Setting together the maximum model size AND the backtrack probability could potentially result in a false negative result.
+The minimum/maximum backtrack value are currently unused.

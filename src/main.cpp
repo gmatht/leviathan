@@ -4,6 +4,7 @@
 #include <vector>
 #include <chrono>
 #include <tuple>
+#include <limits>
 
 using namespace std::chrono;
 
@@ -32,7 +33,7 @@ std::vector<std::string> readFile(std::istream& input) {
     return lines;
 }
 
-void readableOutput(std::string const&f, bool modelFlag)
+void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_t backtrack_probability, uint32_t min_backtrack, uint32_t max_backtrack)
 {
     LTL::PrettyPrinter printer;
     std::cout << "Parsing formula" << std::endl;
@@ -51,44 +52,8 @@ void readableOutput(std::string const&f, bool modelFlag)
         std::cout << "Error while parsing! Skipping formula: " << f << std::endl;
         return;
     }
-    
-    /*
-    bool is_sat;
-    std::vector<LTL::FormulaSet> model;
-    uint64_t loopTo;
-    
-    std::cout << "Checking satisfiability..." << std::endl;
-    
-    auto t1 = Clock::now();
-    std::tie(is_sat, model, loopTo) = LTL::is_satisfiable(formula, modelFlag);
-    auto t2 = Clock::now();
-    
-    std::cout << "Is satisfiable: " << is_sat << std::endl;
 
-    if (modelFlag && is_sat)
-    {
-        std::cout << "Model has " << model.size() << " states" << std::endl;
-        
-        std::cout << "Exhibited model: " << std::endl;
-        uint64_t i = 0;
-        for (const auto& s : model)
-        {
-            std::cout << "State " << i << ": " << std::endl;
-            
-            for (const LTL::FormulaPtr _f : s)
-            {
-                printer.print(_f);
-                std::cout << ", ";
-            }
-            std::cout << std::endl;
-            
-            ++i;
-        }
-        std::cout << "The model is looping to state: " << loopTo << std::endl;
-    }
-    */
-
-    LTL::Solver solver(formula);
+    LTL::Solver solver(formula, LTL::FrameID(depth), backtrack_probability, min_backtrack, max_backtrack);
     std::cout << "Checking satisfiability..." << std::endl;
     auto t1 = Clock::now();
     solver.solution();
@@ -127,9 +92,14 @@ int main(int argc, char* argv[])
                               cmd, false);
     TCLAP::SwitchArg parsableArg("p", "parsable", "Generates machine-parsable output. It implies -m",
                                  cmd, false);
+
+    TCLAP::ValueArg<uint64_t> depthArg("", "maximum-depth", "The maximum depth to descend into the tableaux (aka the maximum size of the model)", false, std::numeric_limits<uint64_t>::max(), "uint64_t", cmd);
+    TCLAP::ValueArg<uint32_t> backtrackPropArg("", "backtrack-probability", "The probability of doing a complete backtrack of the tableaux to check the LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
+    TCLAP::ValueArg<uint32_t> minBacktrackArg("", "min-backtrack", "The minimum percentage of the tableaux depth to backtrack during the check of LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
+    TCLAP::ValueArg<uint32_t> maxBacktrackArg("", "max-backtrack", "The maximum percentage of the tableaux depth to backtrack during the check of LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
     
     cmd.parse(argc, argv);
-    
+
     std::vector<std::string> formulas;
     
     if (filenameArg.isSet() && filenameArg.getValue() != "-") {
@@ -159,7 +129,7 @@ int main(int argc, char* argv[])
         if(parsableFlag)
             parsableOutput(f);
         else
-            readableOutput(f, modelFlag); // For some definition of "readable"
+            readableOutput(f, modelFlag, depthArg.getValue(), backtrackPropArg.getValue(), minBacktrackArg.getValue(), maxBacktrackArg.getValue()); // For some definition of "readable"
     }
     
     //std::this_thread::sleep_until(time_point<system_clock>::max());

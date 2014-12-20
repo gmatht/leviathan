@@ -1,8 +1,10 @@
 #pragma once
 
-#include "boost/dynamic_bitset.hpp"
 #include "boost/pool/pool_alloc.hpp"
 #include "formula.hpp"
+#include "identifiable.hpp"
+#include "frame.hpp"
+#include "model.hpp"
 #include <vector>
 #include <tuple>
 #include <limits>
@@ -16,200 +18,6 @@ namespace LTL
 namespace detail
 {
 
-template <class T, class S>
-inline const S& Container(const std::stack<T, S>& s)
-{
-        struct Stack : private std::stack<T, S>
-        {
-                static const S& Container(const std::stack<T, S>& _s)
-                {
-                        return _s.*&Stack::c;
-                }
-        };
-        return Stack::Container(s);
-}
-
-template<typename Derived>
-class Identifiable
-{
-public:
-        constexpr Identifiable() : _id(0) {}
-        constexpr explicit Identifiable(uint64_t id) : _id(id) {}
-        constexpr Identifiable(const Derived& d) : _id(d._id) {}
-
-        inline constexpr Derived& operator=(const Derived& d)
-        {
-                _id = d._id;
-        }
-
-        inline constexpr operator bool() const
-        {
-                return _id;
-        }
-
-        inline constexpr operator uint64_t() const
-        {
-                return _id;
-        }
-
-        inline constexpr friend bool operator==(const Derived& d1, const Derived& d2)
-        {
-                return d1._id == d2._id;
-        }
-
-        inline constexpr friend bool operator!=(const Derived& d1, const Derived& d2)
-        {
-                return d1._id != d2._id;
-        }
-
-        inline constexpr Derived& operator++()
-        {
-                ++_id;
-                return *this;
-        }
-
-        inline constexpr Derived operator++(int)
-        {
-                Derived temp(*this);
-                ++_id;
-                return temp;
-        }
-
-        inline constexpr friend bool operator<(const Derived& d1, const Derived& d2)
-        {
-                return d1._id < d2._id;
-        }
-
-        inline constexpr friend bool operator>(const Derived& d1, const Derived& d2)
-        {
-                return d1._id > d2._id;
-        }
-
-        inline constexpr friend bool operator<=(const Derived& d1, const Derived& d2)
-        {
-                return d1._id <= d2._id;
-        }
-
-        inline constexpr friend bool operator>=(const Derived& d1, const Derived& d2)
-        {
-                return d1._id >= d2._id;
-        }
-
-        template<typename T>
-        inline constexpr friend Derived operator+(const Derived& d, T c)
-        {
-                return Derived(d._id + c);
-        }
-
-        inline static constexpr Derived max()
-        {
-                return Derived(std::numeric_limits<uint64_t>::max());
-        }
-
-        inline static constexpr Derived min()
-        {
-                return Derived(std::numeric_limits<uint64_t>::max());
-        }
-
-private:
-        uint64_t _id;
-};
-
-class FrameID : public Identifiable<FrameID>
-{
-public:
-        constexpr FrameID() {}
-        constexpr explicit FrameID(uint64_t id) : Identifiable(id) {}
-        constexpr FrameID(const FrameID& id) : Identifiable(id) {}
-};
-
-class FormulaID : public Identifiable<FormulaID>
-{
-public:
-        constexpr FormulaID() {}
-        constexpr explicit FormulaID(uint64_t id) : Identifiable(id) {}
-        constexpr FormulaID(const FormulaID& id) : Identifiable(id) {}
-};
-
-}
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, LTL::detail::Identifiable<T> id)
-{
-        return os << (uint64_t)id;
-}
-
-namespace std
-{
-        template<>
-        struct hash<LTL::detail::FormulaID>
-        {
-                size_t operator()(LTL::detail::FormulaID id) const
-                {
-                        return hash<uint64_t>()(static_cast<uint64_t>(id));
-                }
-        };
-}
-
-namespace LTL
-{
-namespace detail
-{
-
-using Bitset = boost::dynamic_bitset<uint64_t>;
-
-struct Frame
-{
-        Bitset formulas;
-        Bitset to_process;
-        std::unordered_map<FormulaID, FrameID> eventualities;
-        const FrameID id;
-        FormulaID choosenFormula;
-        bool choice;
-        const Frame* chain;
-
-        // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
-        Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas)
-                : formulas(number_of_formulas)
-                , to_process(number_of_formulas)
-                , eventualities()
-                , id(_id)
-                , choosenFormula(FormulaID::max())
-                , choice(false)
-                , chain(nullptr)
-        {
-                formulas.set(_formula);
-                to_process.set();
-        }
-
-        // Builds a frame with the same formulas of the given frame in it -> Choice point
-        Frame(const FrameID _id, const Frame& _frame)
-                : formulas(_frame.formulas)
-                , to_process(_frame.to_process)
-                , eventualities(_frame.eventualities)
-                , id(_id)
-                , choosenFormula(FormulaID::max())
-                , choice(false)
-                , chain(_frame.chain)
-        {
-        }
-
-        // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
-        Frame(const FrameID _id, uint64_t number_of_formulas, const std::unordered_map<FormulaID, FrameID>& _eventualities, const Frame* chainPtr)
-                : formulas(number_of_formulas)
-                , to_process(number_of_formulas)
-                , eventualities(_eventualities)
-                , id(_id)
-                , choosenFormula(FormulaID::max())
-                , choice(false)
-                , chain(chainPtr)
-        {
-                to_process.set();
-        }
-};
-
-struct Model {};
 using Stack = std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>;
 
 class Solver
@@ -240,7 +48,7 @@ public:
         Solver& operator=(const Solver&) = delete;
         Solver& operator=(const Solver&&) = delete;
 
-        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrace_probability = 100, uint32_t backtrace_percentage = 100 /* Currently not used */);
+        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100);
 
         inline State state() const
         {
@@ -257,25 +65,31 @@ public:
                 return _maximum_depth;
         }
 
-        inline uint8_t backtrace_probability() const
+        inline uint8_t backtrack_probability() const
         {
-                return _backtrace_probability;
+                return _backtrack_probability;
         }
 
-        inline uint8_t backtrace_percentage() const
+        inline uint8_t minimum_backtrack() const
         {
-                return _backtrace_percentage;
+                return _minimum_backtrack;
+        }
+
+        inline uint8_t maximum_backtrack() const
+        {
+                return _maximum_backtrack;
         }
 
         Result solution();
-        Model model();
+        ModelPtr model();
 
 private:
         FormulaPtr _formula;
 
         FrameID _maximum_depth;
-        uint32_t _backtrace_probability;
-        uint32_t _backtrace_percentage;
+        uint32_t _backtrack_probability;
+        uint32_t _minimum_backtrack;
+        uint32_t _maximum_backtrack;
 
         State _state;
         Result _result;
@@ -304,12 +118,11 @@ private:
         Stack _stack;
 
         std::mt19937 _mt;
-        std::uniform_int_distribution<uint32_t> _rand;
+        std::uniform_int_distribution<uint32_t> _backtrack_probability_rand;
+        std::uniform_int_distribution<uint32_t> _backtrack_percentage_rand;
 
-        void _initialize();                     // Initialize the Solver state
+        void _initialize();
         void _add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs);
-
-        void _next_model();             // Start from the current Solver state and calculates a new model (if any)
 
         inline bool _check_contradiction_rule();
         inline bool _apply_conjunction_rule();

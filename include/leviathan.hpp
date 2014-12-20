@@ -3,6 +3,7 @@
 #include "../src/formula.hpp"
 #include "../src/parser/parser.hpp"
 #include "../src/solver.hpp"
+#include "../src/identifiable.hpp"
 #include "../src/visitor.hpp"
 
 namespace LTL
