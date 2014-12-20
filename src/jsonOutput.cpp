@@ -171,6 +171,7 @@ private:
 
 void jsonOutput(std::string const&f)
 {
+    /*
     bool parseError = false;
     LTL::FormulaPtr formula;
     std::vector<LTL::FormulaSet> model;
@@ -189,5 +190,6 @@ void jsonOutput(std::string const&f)
     solveTime = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
     
     JsonOutput(false, model, loopTo, solveTime).print(std::cout);
+    */
 }
 

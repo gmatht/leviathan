@@ -64,5 +64,55 @@ ACCEPT_VISITOR(Then)
 ACCEPT_VISITOR(Iff)
 ACCEPT_VISITOR(Until)
 
+bool operator==(const FormulaPtr f1, const FormulaPtr f2)
+{
+        if (f1->type() != f2->type())
+                return false;
+
+        if (isa<Atom>(f1))
+                return fast_cast<Atom>(f1)->name() == fast_cast<Atom>(f2)->name();
+
+        if (isa<Negation>(f1))
+                return fast_cast<Negation>(f1)->formula() == fast_cast<Negation>(f2)->formula();
+
+        if (isa<Tomorrow>(f1))
+                return fast_cast<Tomorrow>(f1)->formula() == fast_cast<Tomorrow>(f2)->formula();
+
+        if (isa<Always>(f1))
+                return fast_cast<Always>(f1)->formula() == fast_cast<Always>(f2)->formula();
+
+        if (isa<Eventually>(f1))
+                return fast_cast<Eventually>(f1)->formula() == fast_cast<Eventually>(f2)->formula();
+
+        if (isa<Conjunction>(f1))
+                return fast_cast<Conjunction>(f1)->left() == fast_cast<Conjunction>(f2)->left() &&
+                             fast_cast<Conjunction>(f1)->right() == fast_cast<Conjunction>(f2)->right();
+
+        if (isa<Disjunction>(f1))
+                return fast_cast<Disjunction>(f1)->left() == fast_cast<Disjunction>(f2)->left() &&
+                             fast_cast<Disjunction>(f1)->right() == fast_cast<Disjunction>(f2)->right();
+
+        if (isa<Iff>(f1))
+                return fast_cast<Iff>(f1)->left() == fast_cast<Iff>(f2)->left() &&
+                             fast_cast<Iff>(f1)->right() == fast_cast<Iff>(f2)->right();
+
+        if (isa<Then>(f1))
+                return fast_cast<Then>(f1)->left() == fast_cast<Then>(f2)->left() &&
+                             fast_cast<Then>(f1)->right() == fast_cast<Then>(f2)->right();
+
+        if (isa<Until>(f1))
+                return fast_cast<Until>(f1)->left() == fast_cast<Until>(f2)->left() &&
+                             fast_cast<Until>(f1)->right() == fast_cast<Until>(f2)->right();
+
+        assert(isa<True>(f1) || isa<False>(f1));
+
+        return true;
+}
+
+bool operator!=(const FormulaPtr f1, const FormulaPtr f2)
+{
+        return !(f1 == f2);
+}
+
 }
 }

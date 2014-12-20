@@ -4,6 +4,7 @@
 #include <memory>
 #include <set>
 #include <cstdint>
+#include <cassert>
 
 namespace LTL
 {
@@ -216,8 +217,10 @@ inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), static_cast<Ret
 
 using FormulaSet = std::set<FormulaPtr>;
 
-}
+bool operator==(const FormulaPtr f1, const FormulaPtr f2);
+bool operator!=(const FormulaPtr f1, const FormulaPtr f2);
 
+}
 }
 
 template <class Cont>

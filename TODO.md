@@ -1,7 +1,6 @@
 # TODO
 
-- Refactor the code (especially the solver)
-- Remove old code in formula.cpp
+- Check the TODOs in the code
 - Improve the simplification step
 - Better error handling during parsing
 - Logging system

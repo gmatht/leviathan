@@ -13,14 +13,9 @@ namespace detail
 class Generator : public Visitor
 {
 public:
-        Generator()
-                : _formulas()
-                , simplifier()
-        {
-        }
-        ~Generator()
-        {
-        }
+        Generator() : _formulas() , simplifier() { }
+
+        ~Generator() { }
 
         void generate(const FormulaPtr f);
         

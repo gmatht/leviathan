@@ -9,7 +9,10 @@ namespace LTL
 {
 
 using detail::parse;
-using detail::is_satisfiable;
+
+using detail::Solver;
+using detail::Model;
+using detail::FrameID;
 
 using detail::FormulaPtr;
 using detail::PrettyPrinter;

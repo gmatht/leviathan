@@ -52,6 +52,7 @@ void readableOutput(std::string const&f, bool modelFlag)
         return;
     }
     
+    /*
     bool is_sat;
     std::vector<LTL::FormulaSet> model;
     uint64_t loopTo;
@@ -63,24 +64,6 @@ void readableOutput(std::string const&f, bool modelFlag)
     auto t2 = Clock::now();
     
     std::cout << "Is satisfiable: " << is_sat << std::endl;
-
-    /* Heuristics: OPTIMIZE MODEL
-    // TODO: Optimize away every 2 equal sets BEFORE the loop state
-    std::vector<int64_t> toRemove;
-    for (int64_t i = loopTo; i >= 0; --i) 
-    {
-            if (std::all_of(model[loopTo].begin(), model[loopTo].end(), [&] (LTL::FormulaPtr f)
-            {
-                    if (model[i].find(f) != model[i].end())
-                        return true;
-                    return false;
-            }))
-                    toRemove.push_back(i);
-    }
-
-    for (auto i : toRemove)
-            model.erase(model.begin() + i);
-    */
 
     if (modelFlag && is_sat)
     {
@@ -103,7 +86,20 @@ void readableOutput(std::string const&f, bool modelFlag)
         }
         std::cout << "The model is looping to state: " << loopTo << std::endl;
     }
-    
+    */
+
+    LTL::Solver solver(formula);
+    std::cout << "Checking satisfiability..." << std::endl;
+    auto t1 = Clock::now();
+    solver.solution();
+    auto t2 = Clock::now();
+
+    std::cout << "Is satisfiable: ";
+    if (solver.satisfiability() == LTL::Solver::Result::SATISFIABLE)
+            std::cout << "True" << std::endl;
+    else
+            std::cout << "False" << std::endl;
+
     std::cout << "Time taken: ";
     auto time = (t2 - t1).count();
     if (time > 5000000000)
