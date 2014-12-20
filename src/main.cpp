@@ -88,7 +88,7 @@ void readableOutput(std::string const&f, bool modelFlag)
     }
     */
 
-    LTL::Solver solver(formula, LTL::FrameID::max(), 5);
+    LTL::Solver solver(formula);
     std::cout << "Checking satisfiability..." << std::endl;
     auto t1 = Clock::now();
     solver.solution();

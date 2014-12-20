@@ -463,7 +463,7 @@ loop:
                 const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
 
-                FrameID min_frame;
+                //FrameID min_frame;
 
                 // Heuristics: OCCASIONAL LOOKBACK
                 if (_rand(_mt) > _backtrace_probability)
@@ -471,13 +471,13 @@ loop:
                 
                 // Heuristics: PARTIAL LOOKBACK
                 // TODO: Not worth to lookback a certain %, move to min/max range lookback
-                min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
+                //min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
 
                 while (currFrame)
                 {
                         // Heuristics: PARTIAL LOOKBACK
-                        if (currFrame->id < min_frame)
-                                break;
+                        //if (currFrame->id < min_frame)
+                                //break;
 
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
@@ -493,7 +493,8 @@ loop:
                                         _state = State::PAUSED;
                                         return _result;
                                 }
-                                else  if (frame.formulas == currFrame->formulas) // STEP rule check
+                                
+                                if (frame.formulas == currFrame->formulas) // STEP rule check
                                 {
                                         if (!repFrame1)
                                                 repFrame1 = currFrame;
@@ -527,17 +528,17 @@ step_rule:
                 _bitset.temporary &= _bitset.tomorrow;
 
                 /* TODO: This doesn't work for w/e reason. Investigate
-                size_t p = res.find_first();
+                size_t p = _bitset.temporary.find_first();
                 while (p != Bitset::npos)
                 {
-                        assert(tom_bitset[p]);
+                        assert(_bitset.tomorrow[p]);
                         assert(frame.formulas[p]);
                 
-                        newFrame.formulas[lhs_set[p]] = true;
-                        p = res.find_next(p + 1);
+                        new_frame.formulas[_lhs[p]] = true;
+                        p = _bitset.temporary.find_next(p + 1);
                 }
                 */
-
+                
                 for (uint64_t i = 0; i < _number_of_formulas; ++i)
                 {
                         if (_bitset.temporary[i])
