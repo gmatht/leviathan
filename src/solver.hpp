@@ -25,14 +25,14 @@ class Solver
 public:
         enum class Result : uint8_t
         {
-                UNDEFINED,
+                UNDEFINED = 0,
                 SATISFIABLE,
                 UNSATISFIABLE
         };
 
         enum class State : uint8_t
         {
-                UNINITIALIZED,
+                UNINITIALIZED = 0,
                 INITIALIZED,
                 RUNNING,
                 PAUSED,
@@ -113,6 +113,7 @@ private:
 
         size_t _number_of_formulas;
         FormulaID _start_index;
+        FrameID _loop_state;
 
         std::vector<FormulaPtr> _subformulas;
         Stack _stack;

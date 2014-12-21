@@ -13,6 +13,9 @@ using detail::parse;
 
 using detail::Solver;
 using detail::Model;
+using detail::ModelPtr;
+using detail::State;
+using detail::Literal;
 using detail::FrameID;
 
 using detail::FormulaPtr;

@@ -16,7 +16,7 @@ namespace detail
 
 Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack)
         : _formula(formula), _maximum_depth(maximum_depth), _backtrack_probability(backtrack_probability), _minimum_backtrack(minimum_backtrack),
-          _maximum_backtrack(maximum_backtrack), _state(State::UNINITIALIZED), _result(Result::UNDEFINED), _start_index(0)
+          _maximum_backtrack(maximum_backtrack), _state(State::UNINITIALIZED), _result(Result::UNDEFINED), _start_index(0), _loop_state(0)
 {
         if (_backtrack_probability > 100)
                 _backtrack_probability = 100;
@@ -403,6 +403,7 @@ loop:
                         {
                                 _state = State::PAUSED;
                                 _result = Result::SATISFIABLE;
+                                _loop_state = frame.chain->id;
                                 return _result;
                         }
 
@@ -496,6 +497,7 @@ loop:
                                 {
                                         _result = Result::SATISFIABLE;
                                         _state = State::PAUSED;
+                                        _loop_state = currFrame->id;
                                         return _result;
                                 }
                                 
@@ -636,48 +638,46 @@ void Solver::_rollback_to_latest_choice()
 
 ModelPtr Solver::model()
 {
-    if (_state != State::PAUSED || _state != State::DONE)
-            return nullptr;
+        if (_state != State::PAUSED && _state != State::DONE)
+                return nullptr;
 
-    if (_result == Result::UNSATISFIABLE)
-            return nullptr;
+        if (_result == Result::UNSATISFIABLE || _result == Result::UNDEFINED)
+                return nullptr;
 
-    /*
-    bool is_sat;
-    std::vector<LTL::FormulaSet> model;
-    uint64_t loopTo;
-    
-    std::cout << "Checking satisfiability..." << std::endl;
-    
-    auto t1 = Clock::now();
-    std::tie(is_sat, model, loopTo) = LTL::is_satisfiable(formula, modelFlag);
-    auto t2 = Clock::now();
-    
-    std::cout << "Is satisfiable: " << is_sat << std::endl;
+        ModelPtr model = std::make_shared<Model>();
 
-    if (modelFlag && is_sat)
-    {
-        std::cout << "Model has " << model.size() << " states" << std::endl;
-        
-        std::cout << "Exhibited model: " << std::endl;
-        uint64_t i = 0;
-        for (const auto& s : model)
+        if (_subformulas.size() == 1 && isa<True>(_subformulas[0]))
         {
-            std::cout << "State " << i << ": " << std::endl;
-            
-            for (const LTL::FormulaPtr _f : s)
-            {
-                printer.print(_f);
-                std::cout << ", ";
-            }
-            std::cout << std::endl;
-            
-            ++i;
+                model->loop_state = 0;
+                model->states.push_back({ Literal("\u22a4") });
+                return model;
         }
-        std::cout << "The model is looping to state: " << loopTo << std::endl;
-    }
-    */
-    
+
+        uint64_t i = 0;
+        for (const auto& frame : Container(_stack))
+        {
+                if (frame.choice)
+                        continue;
+
+                LTL::detail::State state;
+                for (uint64_t j = 0; j < _number_of_formulas; ++j)
+                {
+                        if (frame.formulas[j])
+                        {
+                                if (_atom_set.find(FormulaID(j)) != _atom_set.end())
+                                        state.insert(Literal(_atom_set.find(FormulaID(j))->second));
+                                else if (_bitset.negation[j] && _atom_set.find(_lhs[j]) != _atom_set.end())
+                                        state.insert(Literal(_atom_set.find(FormulaID(_lhs[j]))->second, false));
+                        }
+                }
+                
+                model->states.push_back(state);
+                ++i;
+        }
+        
+        model->states.pop_back();
+        model->loop_state = _loop_state;
+
         // TODO: Optimize model to compensate heuristics
         /* Heuristics: OPTIMIZE MODEL
         // TODO: Optimize away every 2 equal sets BEFORE the loop state
@@ -697,7 +697,7 @@ ModelPtr Solver::model()
                 model.erase(model.begin() + i);
         */
 
-        return nullptr;
+        return model;
 }
 
 }

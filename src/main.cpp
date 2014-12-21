@@ -73,6 +73,23 @@ void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_
         std::cout << duration_cast<milliseconds>(t2 - t1).count() << " ms" << std::endl;
     else
         std::cout << duration_cast<microseconds>(t2 - t1).count() << " us" << std::endl;
+
+    if (modelFlag && solver.satisfiability() == LTL::Solver::Result::SATISFIABLE)
+    {
+            LTL::ModelPtr model = solver.model();
+
+            uint64_t i = 0;
+            for (auto& state : model->states)
+            {
+                    std::cout << "State " << i << ":" << std::endl;
+                    for (auto& lit : state)
+                            std::cout << (lit.positive() ? "" : "\u00AC") << lit.atomic_formula() << ", ";
+                    std::cout << std::endl;
+                    ++i;
+            }
+
+            std::cout << "The model is looping to state " << model->loop_state << std::endl;
+    }
     
     std::cout << std::endl;
 }
