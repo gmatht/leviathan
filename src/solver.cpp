@@ -216,7 +216,7 @@ void Solver::_initialize()
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
 
-        _stack.emplace(FrameID(0), _start_index, _number_of_formulas);
+        _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas));
         _state = State::INITIALIZED;
 }
 
@@ -422,7 +422,7 @@ loop:
                         {
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
-                                _stack.push(new_frame);
+                                _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
@@ -434,7 +434,7 @@ loop:
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
-                                _stack.push(new_frame);
+                                _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
@@ -447,7 +447,7 @@ loop:
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
-                                _stack.push(new_frame);
+                                _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
@@ -458,7 +458,7 @@ loop:
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
-                                _stack.push(new_frame);
+                                _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
@@ -556,7 +556,7 @@ step_rule:
                         }
                 }
 
-                _stack.push(new_frame);
+                _stack.push(std::move(new_frame));
         }
 
         _state = State::DONE;
@@ -627,7 +627,7 @@ void Solver::_rollback_to_latest_choice()
                         }
 
                         top.choosenFormula = FormulaID::max();
-                        _stack.push(new_frame);
+                        _stack.push(std::move(new_frame));
 
                         return;
                 }
@@ -638,7 +638,7 @@ void Solver::_rollback_to_latest_choice()
 
 ModelPtr Solver::model()
 {
-        if (_state != State::PAUSED && _state != State::DONE)
+        if (_state != State::PAUSED)
                 return nullptr;
 
         if (_result == Result::UNSATISFIABLE || _result == Result::UNDEFINED)
@@ -678,9 +678,8 @@ ModelPtr Solver::model()
         model->states.pop_back();
         model->loop_state = _loop_state;
 
-        // TODO: Optimize model to compensate heuristics
+        // TODO: Optimize model to compensate heuristics. How to do it conservatively?
         /* Heuristics: OPTIMIZE MODEL
-        // TODO: Optimize away every 2 equal sets BEFORE the loop state
         std::vector<int64_t> toRemove;
         for (int64_t i = loopTo; i >= 0; --i) 
         {

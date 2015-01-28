@@ -293,12 +293,6 @@ void Simplifier::visit(const Conjunction* c)
                 result = make_false();
                 rulesApplied = true;
         }
-        else if (isa<Tomorrow>(left) && isa<Tomorrow>(right))
-        {
-                result = make_tomorrow(make_conjunction(fast_cast<Tomorrow>(left)->formula(),
-                                                        fast_cast<Tomorrow>(right)->formula()));
-                rulesApplied = true;
-        }
         else
                 result = make_conjunction(left, right);
 }

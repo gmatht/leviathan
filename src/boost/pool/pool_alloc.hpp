@@ -206,8 +206,15 @@ class pool_allocator
     { return &s; }
     static size_type max_size()
     { return (std::numeric_limits<size_type>::max)(); }
+    /*
     static void construct(const pointer ptr, const value_type & t)
     { new (ptr) T(t); }
+    static void construct(const pointer ptr, value_type && t)
+    { new (ptr) T(std::move(t)); }
+    */
+    template<typename ...Args>
+    static void construct(const pointer ptr, Args&& ...args)
+    { new (ptr) T(std::forward<Args> (args)...); }
     static void destroy(const pointer ptr)
     {
       ptr->~T();
@@ -395,9 +402,16 @@ class fast_pool_allocator
     { return &s; }
     static size_type max_size()
     { return (std::numeric_limits<size_type>::max)(); }
-    void construct(const pointer ptr, const value_type & t)
+    /*
+    static void construct(const pointer ptr, const value_type & t)
     { new (ptr) T(t); }
-    void destroy(const pointer ptr)
+    static void construct(const pointer ptr, value_type && t)
+    { new (ptr) T(std::move(t)); }
+    */
+    template<typename ...Args>
+    static void construct(const pointer ptr, Args&& ...args)
+    { new (ptr) T(std::forward<Args> (args)...); }
+    static void destroy(const pointer ptr)
     { //! Destroy ptr using destructor.
       ptr->~T();
       (void) ptr; // Avoid unused variable warning.
