@@ -49,7 +49,7 @@ void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_
         std::cout << "Parsing time:  " << duration_cast<microseconds>(p2 - p1).count() << " us" << std::endl;
     else
     {
-        std::cout << "Error while parsing! Skipping formula: " << f << std::endl;
+        std::cout << "Syntax error! Skipping formula: " << f << std::endl;
         return;
     }
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<uint32_t> backtrackPropArg("", "backtrack-probability", "The probability of doing a complete backtrack of the tableaux to check the LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
     TCLAP::ValueArg<uint32_t> minBacktrackArg("", "min-backtrack", "The minimum percentage of the tableaux depth to backtrack during the check of LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
     TCLAP::ValueArg<uint32_t> maxBacktrackArg("", "max-backtrack", "The maximum percentage of the tableaux depth to backtrack during the check of LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
-    
+
     cmd.parse(argc, argv);
 
     std::vector<std::string> formulas;

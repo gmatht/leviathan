@@ -2,6 +2,7 @@
 
 #include "boost/dynamic_bitset.hpp"
 #include "identifiable.hpp"
+#include "tag_ptr.hpp"
 #include <unordered_map>
 #include <cstdint>
 #include <iostream>
@@ -14,10 +15,15 @@ namespace detail
 using Bitset = boost::dynamic_bitset<uint64_t>;
 
 // TODO: Move from an unordered_map-based representation of eventualities to a bitset-based representation
-// TODO: Check Frame size and alignment
-// TODO: Investigate why move constructor isn't used
 struct Frame
 {
+        enum class Type : uint8_t
+        {
+                STEP = 0,
+                CHOICE = 1,
+                SAT = 2
+        };
+
         Bitset formulas;
         Bitset to_process;
         std::unordered_map<FormulaID, FrameID> eventualities;

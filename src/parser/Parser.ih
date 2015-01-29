@@ -8,7 +8,7 @@
 
 inline void Parser::error(char const *msg)
 {
-    std::cerr << msg << '\n';
+    _error = true;
 }
 
 // $insert lex
