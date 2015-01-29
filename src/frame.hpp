@@ -17,7 +17,7 @@ using Bitset = boost::dynamic_bitset<uint64_t>;
 // TODO: Move from an unordered_map-based representation of eventualities to a bitset-based representation
 struct Frame
 {
-        enum class Type : uint8_t
+        enum Type : uint8_t
         {
                 STEP = 0,
                 CHOICE = 1,

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "utils/meta.h"
 
 namespace LTL
 {
@@ -10,6 +11,8 @@ namespace detail
 template<typename T>
 class tag_ptr
 {
+        static_assert(alignof(T) >= 4, "The type T must be aligned at least to 4 byte");
+
 public:
         tag_ptr() : _ptr(nullptr) {}
         tag_ptr(T* ptr, uint8_t value = 0) : _ptr(ptr) { data(value); }
@@ -18,8 +21,8 @@ public:
 
         tag_ptr& operator=(const tag_ptr& o) { _ptr = o.get(); }
         
-        operator bool() const { return static_cast<bool>(static_cast<uint64_t>(_ptr) & ~static_cast<uint64_t>(3)); }
-        T* get() const { return (T*)(static_cast<uint64_t>(_ptr) & ~static_cast<uint64_t>(3)); }
+        operator bool() const { return static_cast<bool>(static_cast<uintptr_t>(_ptr) & ~static_cast<uintptr_t>(3)); }
+        T* get() const { return reinterpret_cast<T*>(_ptr_bits & ~static_cast<uintptr_t>(3)); }
 
         void reset() { _ptr = nullptr; }
         void swap(tag_ptr& o)
@@ -29,14 +32,18 @@ public:
                 o._ptr = tmp;
         }
 
-        uint8_t data() const { return static_cast<uint8_t>(static_cast<uint64_t>(_ptr) & static_cast<uint64_t>(3)); }
-        void data(uint8_t value) { _ptr = static_cast<T*>(static_cast<uint64_t>(get()) | static_cast<uint64_t>(value & static_cast<uint8_t>(3))); };
+        uint8_t data() const { return static_cast<uint8_t>(_ptr_bits & static_cast<uintptr_t>(3)); }
+        void data(uint8_t value) { _ptr_bits = reinterpret_cast<uintptr_t>(get()) | static_cast<uintptr_t>(value & static_cast<uint8_t>(3)); };
 
         T& operator*() const { return *_ptr; }
         T* operator->() const { return _ptr; }
 
 private:
-        T* _ptr;
+        union
+        {
+                T* _ptr;
+                uintptr_t _ptr_bits;
+        };
 };
 
 template<typename T, typename... Args>
