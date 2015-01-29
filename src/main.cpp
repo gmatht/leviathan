@@ -13,6 +13,7 @@ using namespace std::chrono;
 #include "jsonOutput.hpp"
 
 using Clock = high_resolution_clock;
+const std::string leviathan_version = "0.2.1";
 
 std::vector<std::string> readFile(std::istream &input);
 void readableOutput(std::string const&f, bool modelFlag);
@@ -100,7 +101,7 @@ void parsableOutput(std::string const&f) {
 
 int main(int argc, char* argv[])
 {
-    TCLAP::CmdLine cmd("A simple LTL satisfiability checker", ' ', "0.2");
+    TCLAP::CmdLine cmd("A simple LTL satisfiability checker", ' ', leviathan_version);
     TCLAP::ValueArg<std::string> filenameArg("f", "filename", "The name of the file to load the formulas from",
                                              false, "test", "string", cmd);
     TCLAP::ValueArg<std::string> ltlArg("l", "ltl", "The formula to test", false, "p && Xq", "string", cmd);

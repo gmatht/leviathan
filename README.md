@@ -3,6 +3,7 @@ An implementation of a Tableau method for LTL formula satisfiability checking ba
 
 * Author: Matteo Bertello
 * Email: bertello.matteo@gmail.com
+*Vertsion: 0.2.1
 
 ## License
 Copyright (c) 2014, Matteo Bertello
