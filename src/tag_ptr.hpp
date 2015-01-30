@@ -1,18 +1,33 @@
 #pragma once
 
 #include <cstdint>
-#include "utils/meta.h"
 
 namespace LTL
 {
 namespace detail
 {
 
+template<size_t V>
+struct log2
+{
+    enum
+    {
+        value = log2<V / 2>::value + 1
+    };
+};
+
+template<>
+struct log2<1>
+{
+        enum
+        {
+                value = 0
+        };
+};
+
 template<typename T>
 class tag_ptr
 {
-        static_assert(alignof(T) >= 4, "The type T must be aligned at least to 4 byte");
-
 public:
         tag_ptr() : _ptr(nullptr) {}
         tag_ptr(T* ptr, uint8_t value = 0) : _ptr(ptr) { data(value); }
@@ -21,8 +36,8 @@ public:
 
         tag_ptr& operator=(const tag_ptr& o) { _ptr = o.get(); }
         
-        operator bool() const { return static_cast<bool>(static_cast<uintptr_t>(_ptr) & ~static_cast<uintptr_t>(3)); }
-        T* get() const { return reinterpret_cast<T*>(_ptr_bits & ~static_cast<uintptr_t>(3)); }
+        operator bool() const { return static_cast<bool>(_ptr_bits & ~static_cast<uintptr_t>(data_mask)); }
+        T* get() const { return reinterpret_cast<T*>(_ptr_bits & ~data_mask); }
 
         void reset() { _ptr = nullptr; }
         void swap(tag_ptr& o)
@@ -32,11 +47,14 @@ public:
                 o._ptr = tmp;
         }
 
-        uint8_t data() const { return static_cast<uint8_t>(_ptr_bits & static_cast<uintptr_t>(3)); }
-        void data(uint8_t value) { _ptr_bits = reinterpret_cast<uintptr_t>(get()) | static_cast<uintptr_t>(value & static_cast<uint8_t>(3)); };
+        uint8_t data() const { return static_cast<uint8_t>(_ptr_bits & static_cast<uintptr_t>(data_mask)); }
+        void data(uint8_t value) { _ptr_bits = reinterpret_cast<uintptr_t>(get()) | static_cast<uintptr_t>(value & data_mask); };
 
         T& operator*() const { return *_ptr; }
         T* operator->() const { return _ptr; }
+
+        static constexpr uint8_t data_bits = log2<alignof(T)>::value;
+        static constexpr uint8_t data_mask = alignof(T) - (uint8_t)1;
 
 private:
         union
