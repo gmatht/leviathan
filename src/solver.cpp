@@ -441,7 +441,6 @@ loop:
 
                         if (_apply_until_rule())
                         {
-                                // TODO: Investigate if this is the right place to generate an eventuality
                                 if (__builtin_expect(frame.eventualities.find(_rhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
                                         frame.eventualities[_rhs[frame.choosenFormula]] = FrameID::max();
 
@@ -454,7 +453,11 @@ loop:
 
                         if (_apply_not_until_rule())
                         {
-                                // TODO: This should generate an eventuality
+                                if (__builtin_expect(frame.eventualities.find(_lhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
+                                        frame.eventualities[_lhs[frame.choosenFormula]] = FrameID::max();
+                                if (__builtin_expect(frame.eventualities.find(_rhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
+                                        frame.eventualities[_rhs[frame.choosenFormula]] = FrameID::max();
+
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;

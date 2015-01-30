@@ -34,7 +34,7 @@ public:
         tag_ptr(const tag_ptr& o) : _ptr(o._ptr) {}
         virtual ~tag_ptr() {}
 
-        tag_ptr& operator=(const tag_ptr& o) { _ptr = o.get(); }
+        tag_ptr& operator=(const tag_ptr& o) { _ptr = o._ptr; }
         
         operator bool() const { return static_cast<bool>(_ptr_bits & ~static_cast<uintptr_t>(data_mask)); }
         T* get() const { return reinterpret_cast<T*>(_ptr_bits & ~data_mask); }
