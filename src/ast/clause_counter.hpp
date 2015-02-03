@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include "visitor.hpp"
 
 namespace LTL
@@ -8,17 +7,13 @@ namespace LTL
 namespace detail
 {
 
-class Visitor;
-
-class PrettyPrinter : public Visitor
+class ClauseCounter : public Visitor
 {
 public:
-    PrettyPrinter(std::ostream &out = std::cout) : _out(out) { }
+    ClauseCounter() : _count(1) { }
+    virtual ~ClauseCounter() = default;
     
-    virtual ~PrettyPrinter() = default;
-    
-    std::ostream& print(const FormulaPtr formula, bool newLine = false);
-    std::ostream& print(const Formula   *formula, bool newLine = false);
+    uint64_t count(const FormulaPtr formula);
 
 protected:
     virtual void visit(const True* t) override;
@@ -33,9 +28,9 @@ protected:
     virtual void visit(const Then* then) override;
     virtual void visit(const Iff* iff) override;
     virtual void visit(const Until* until) override;
-    
+
 private:
-        std::ostream &_out;
+    uint64_t _count;
 };
 
 }

@@ -26,6 +26,7 @@ set (src
     ${src_dir}/ast/generator.cpp
     ${src_dir}/ast/simplifier.cpp
     ${src_dir}/ast/pretty_printer.cpp
+    ${src_dir}/ast/clause_counter.cpp
     ${src_dir}/solver.cpp
     ${src_dir}/parser/lex.cc
     ${src_dir}/parser/parse.cc

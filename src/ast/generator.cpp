@@ -1,5 +1,4 @@
 #include "generator.hpp"
-
 #include <cassert>
 
 namespace LTL
@@ -106,5 +105,6 @@ void Generator::visit(const Until* t)
         t->left()->accept(*this);
         t->right()->accept(*this);
 }
+
 }
 }
