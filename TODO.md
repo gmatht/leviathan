@@ -1,6 +1,6 @@
 # TODO
 
 - Check the TODOs in the code
+- better error handling during parsing
 - Improve the simplification step
-- Better error handling during parsing
 - Logging system

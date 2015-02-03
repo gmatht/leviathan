@@ -299,7 +299,6 @@ bool Solver::_apply_conjunction_rule()
         _bitset.temporary &= _bitset.conjunction;
         _bitset.temporary &= frame.to_process;
 
-        // TODO: This could be avoided as it's ~ a duplicate of find_first(), check if it is worth
         if (!_bitset.temporary.any())
                 return false;
 
@@ -569,7 +568,6 @@ step_rule:
         return _result;
 }
 
-// TODO: Eventualities are potentially not handled correctly in the case of until formulas
  void Solver::_update_eventualities_satisfaction()
  {
         Frame& frame = _stack.top();

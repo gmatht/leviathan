@@ -110,6 +110,7 @@ private:
         std::vector<FormulaID> _lhs;
         std::vector<FormulaID> _rhs;
         std::unordered_map<FormulaID, std::string> _atom_set;
+        std::vector<uint64_t> _clause_size;
 
         size_t _number_of_formulas;
         FormulaID _start_index;
