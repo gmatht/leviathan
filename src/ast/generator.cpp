@@ -10,7 +10,7 @@ namespace detail
 
 void Generator::generate(const FormulaPtr f)
 {
-        FormulaPtr simplified = simplifier.simplify(f);
+        FormulaPtr simplified = _simplifier.simplify(f);
 
         _formulas.push_back(simplified);
 
@@ -36,8 +36,8 @@ void Generator::visit(const Negation* t)
         {
                 _formulas.push_back(make_tomorrow(make_negation(t->formula())));
 
-                auto lneg = simplifier.simplify(make_negation(fast_cast<Until>(t->formula())->left()));
-                auto rneg = simplifier.simplify(make_negation(fast_cast<Until>(t->formula())->right()));
+                auto lneg = _simplifier.simplify(make_negation(fast_cast<Until>(t->formula())->left()));
+                auto rneg = _simplifier.simplify(make_negation(fast_cast<Until>(t->formula())->right()));
 
                 _formulas.push_back(lneg);
                 _formulas.push_back(rneg);

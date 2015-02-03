@@ -1,7 +1,7 @@
 #pragma once
 
 #include "formula.hpp"
-#include "visitor.hpp"
+#include "simplifier.hpp"
 #include <vector>
 
 namespace LTL
@@ -13,7 +13,7 @@ namespace detail
 class Generator : public Visitor
 {
 public:
-        Generator() : _formulas() , simplifier() { }
+        Generator() : _formulas() , _simplifier() { }
 
         ~Generator() { }
 
@@ -40,7 +40,7 @@ protected:
 
 private:
         std::vector<FormulaPtr> _formulas;
-        Simplifier simplifier;
+        Simplifier _simplifier;
 };
 }
 }

@@ -1,12 +1,12 @@
 //
-//  jsonOutput.cpp
+//  json_output.cpp
 //  leviathan
 //
 //  Created by Nicola Gigante on 28/10/14.
 //
 //
 
-#include "jsonOutput.hpp"
+#include "json_output.hpp"
 
 #include <vector>
 #include <chrono>

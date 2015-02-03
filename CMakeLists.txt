@@ -22,10 +22,11 @@ set (src_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (bin_dir ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 set (src
-    ${src_dir}/formula.cpp
-    ${src_dir}/generator.cpp
+    ${src_dir}/ast/formula.cpp
+    ${src_dir}/ast/generator.cpp
+    ${src_dir}/ast/simplifier.cpp
+    ${src_dir}/ast/pretty_printer.cpp
     ${src_dir}/solver.cpp
-    ${src_dir}/visitor.cpp
     ${src_dir}/parser/lex.cc
     ${src_dir}/parser/parse.cc
     ${src_dir}/parser/parser.cpp
@@ -33,14 +34,13 @@ set (src
 
 set (checker_src
     ${src_dir}/main.cpp
-    ${src_dir}/jsonOutput.cpp
+    ${src_dir}/json_output.cpp
 )
 
 include_directories (include)
 include_directories (${src_dir})
+include_directories (${src_dir}/ast)
 include_directories (${src_dir}/parser)
-include_directories (${src_dir}/tclap)
-include_directories (${src_dir}/dynamic_bitset)
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/c\\+\\+")
     set (CMAKE_CXX_COMPILER /usr/bin/clang++)

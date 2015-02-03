@@ -13,7 +13,6 @@ namespace detail
 {
 
 class Visitor;
-class PrettyPrinter;
 
 class Formula
 {
@@ -35,8 +34,7 @@ public:
         };
 
         Formula() = delete;
-        Formula(Type type)
-                : _type(type)
+        Formula(Type type) : _type(type)
         {
         }
 
@@ -199,6 +197,9 @@ DECLARE_BINARY(Disjunction, disjunction)
 DECLARE_BINARY(Then, then)
 DECLARE_BINARY(Iff, iff)
 DECLARE_BINARY(Until, until)
+
+#undef DECLARE_UNARY
+#undef DECLARE_BINARY
 
 template <typename T>
 inline bool isa(const FormulaPtr f)

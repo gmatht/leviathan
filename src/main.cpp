@@ -10,7 +10,7 @@ using namespace std::chrono;
 
 #include "tclap/CmdLine.h"
 #include "leviathan.hpp"
-#include "jsonOutput.hpp"
+#include "json_output.hpp"
 
 using Clock = high_resolution_clock;
 const std::string leviathan_version = "0.2.1";

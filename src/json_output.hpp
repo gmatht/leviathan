@@ -1,5 +1,5 @@
 //
-//  jsonOutput.h
+//  json_output.h
 //  leviathan
 //
 //  Created by Nicola Gigante on 28/10/14.
