@@ -25,6 +25,7 @@ public:
         inline CONSTEXPR Derived& operator=(const Derived& d)
         {
                 _id = d._id;
+		return *this;
         }
 
         inline CONSTEXPR operator bool() const
@@ -36,6 +37,11 @@ public:
         {
                 return _id;
         }
+
+	inline CONSTEXPR operator size_t() const
+	{
+		return _id;
+	}
 
         inline CONSTEXPR friend bool operator==(const Derived& d1, const Derived& d2)
         {
