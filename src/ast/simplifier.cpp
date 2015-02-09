@@ -237,6 +237,16 @@ void Simplifier::visit(const Conjunction* c)
                 result = make_false();
                 rulesApplied = true;
         }
+        else if (isa<Tomorrow>(left) && isa<Tomorrow>(right))
+        {
+                result = make_tomorrow(make_conjunction(fast_cast<Tomorrow>(left)->formula(), fast_cast<Tomorrow>(right)->formula()));
+                rulesApplied = true;
+        }
+        else if (isa<Always>(left) && isa<Always>(right))
+        {
+                result = make_always(make_conjunction(fast_cast<Always>(left)->formula(), fast_cast<Always>(right)->formula()));
+                rulesApplied = true;
+        }
         else
                 result = make_conjunction(left, right);
 }
@@ -273,11 +283,31 @@ void Simplifier::visit(const Disjunction* d)
                 result = make_true();
                 rulesApplied = true;
         }
+        else if (isa<Conjunction>(left)) // To CNF
+        {
+                result = make_conjunction(make_disjunction(fast_cast<Conjunction>(left)->left(), right) , make_disjunction(fast_cast<Conjunction>(left)->right(), right));
+                rulesApplied = true;
+        }
+        else if (isa<Conjunction>(right)) // To CNF
+        {
+                result = make_conjunction(make_disjunction(left, fast_cast<Conjunction>(right)->left()) , make_disjunction(left, fast_cast<Conjunction>(right)->right()));
+                rulesApplied = true;
+        }
         else if (isa<Always>(left) && isa<Eventually>(fast_cast<Always>(left)->formula()) && isa<Always>(right) && isa<Eventually>(fast_cast<Always>(right)->formula()))
         {
                 result = make_always(make_eventually(
                         make_disjunction(fast_cast<Eventually>(fast_cast<Always>(left)->formula())->formula(),
                                          fast_cast<Eventually>(fast_cast<Always>(right)->formula())->formula())));
+                rulesApplied = true;
+        }
+        else if (isa<Tomorrow>(left) && isa<Tomorrow>(right))
+        {
+                result = make_tomorrow(make_disjunction(fast_cast<Tomorrow>(left)->formula(), fast_cast<Tomorrow>(right)->formula()));
+                rulesApplied = true;
+        }
+        else if (isa<Eventually>(left) && isa<Eventually>(right))
+        {
+                result = make_eventually(make_disjunction(fast_cast<Eventually>(left)->formula(), fast_cast<Eventually>(right)->formula()));
                 rulesApplied = true;
         }
         else
@@ -314,7 +344,12 @@ void Simplifier::visit(const Until* u)
         u->right()->accept(*this);
         FormulaPtr right = result;
 
-        if (isa<False>(right))
+        if (left == right)
+        {
+                result = right;
+                rulesApplied = true;
+        }
+        else if (isa<False>(right))
         {
                 result = make_false();
                 rulesApplied = true;

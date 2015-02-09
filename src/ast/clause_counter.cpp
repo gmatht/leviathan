@@ -8,6 +8,9 @@ namespace detail
 
 uint64_t ClauseCounter::count(const FormulaPtr f)
 {
+        assert(isa<Disjunction>(f) && "The root of the formula is not a disjunction!");
+
+        _count = 1;
         f->accept(*this);
         return _count;
 }
@@ -35,10 +38,7 @@ void ClauseCounter::visit(const Always* t) { }
 
 void ClauseCounter::visit(const Eventually* t) { }
 
-void ClauseCounter::visit(const Conjunction* t)
-{
-        assert(false && "Formula is not in CNF!");
-}
+void ClauseCounter::visit(const Conjunction* t) { }
 
 void ClauseCounter::visit(const Disjunction* t)
 {

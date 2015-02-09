@@ -38,10 +38,12 @@ public:
                 return _id;
         }
 
-	inline CONSTEXPR operator size_t() const
-	{
-		return _id;
-	}
+#ifdef __APPLE__
+        inline CONSTEXPR operator size_t() const
+        {
+                return _id;
+        }
+#endif
 
         inline CONSTEXPR friend bool operator==(const Derived& d1, const Derived& d2)
         {

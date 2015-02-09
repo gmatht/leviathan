@@ -2,6 +2,8 @@
 
 #include "generator.hpp"
 #include "utility.hpp"
+#include "pretty_printer.hpp"
+#include "clause_counter.hpp"
 #include <stack>
 #include <iostream>
 #include <cassert>
@@ -159,7 +161,7 @@ void Solver::_initialize()
         _lhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
         _rhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
 
-        for (auto& f : _subformulas)
+        for (auto f : _subformulas)
         {
                 if (f == _formula)
                         _start_index = current_index;
@@ -216,8 +218,21 @@ void Solver::_initialize()
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
 
+        _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
+        ClauseCounter counter;
+        current_index = FormulaID(0);
+        for (auto f : _subformulas)
+        {
+                if (isa<Disjunction>(f))
+                        _clause_size[current_index] = counter.count(f);
+                
+                current_index++;
+        }
+
         _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas));
         _state = State::INITIALIZED;
+
+        std::cout << "Solver initialized!" << std::endl;
 }
 
 void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs)
