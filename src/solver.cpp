@@ -201,19 +201,10 @@ void Solver::_initialize()
                 }
 
                 if (left)
-                {
-                        lhs = FormulaID(static_cast<uint64_t>(std::find_if(_subformulas.begin(), _subformulas.end(), [&](FormulaPtr a)
-                        { return a == left; }) - _subformulas.begin()));
-                        assert(std::find_if(_subformulas.begin(), _subformulas.end(), [&](FormulaPtr a)
-                        { return a == left; }) != _subformulas.end());
-                }
+                        lhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), left, compareFunc) - _subformulas.begin()));
+                    
                 if (right)
-                {
-                        rhs = FormulaID(static_cast<uint64_t>(std::find_if(_subformulas.begin(), _subformulas.end(), [&](FormulaPtr a)
-                        { return a == right; }) - _subformulas.begin()));
-                        assert(std::find_if(_subformulas.begin(), _subformulas.end(), [&](FormulaPtr a)
-                        { return a == right; }) != _subformulas.end());
-                }
+                        rhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), right, compareFunc) - _subformulas.begin()));
 
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
