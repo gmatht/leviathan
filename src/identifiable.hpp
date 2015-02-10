@@ -30,20 +30,18 @@ public:
 
         inline CONSTEXPR operator bool() const
         {
-                return _id;
+                return static_cast<bool>(_id);
         }
 
-        inline CONSTEXPR operator uint64_t() const
+        inline CONSTEXPR operator unsigned long() const
         {
-                return _id;
+                return static_cast<unsigned long>(_id);
         }
 
-#ifdef __APPLE__
-        inline CONSTEXPR operator size_t() const
+        inline CONSTEXPR operator unsigned long long() const
         {
-                return _id;
+                return static_cast<unsigned long long>(_id);
         }
-#endif
 
         inline CONSTEXPR friend bool operator==(const Derived& d1, const Derived& d2)
         {
@@ -65,6 +63,19 @@ public:
         {
                 Derived temp(*this);
                 ++_id;
+                return temp;
+        }
+
+        inline CONSTEXPR Derived& operator--()
+        {
+                --_id;
+                return *this;
+        }
+
+        inline CONSTEXPR Derived operator--(int)
+        {
+                Derived temp(*this);
+                --_id;
                 return temp;
         }
 
@@ -92,6 +103,12 @@ public:
         inline CONSTEXPR friend Derived operator+(const Derived& d, T c)
         {
                 return Derived(d._id + c);
+        }
+
+        template<typename T>
+        inline CONSTEXPR friend Derived operator-(const Derived& d, T c)
+        {
+                return Derived(d._id - c);
         }
 
         inline static CONSTEXPR Derived max()
