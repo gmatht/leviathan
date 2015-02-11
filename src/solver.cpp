@@ -38,6 +38,8 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
 void Solver::_initialize()
 {
+        std::cout << (sizeof(Frame)) << std::endl;
+        std::cout << (sizeof(Bitset) * 2 + sizeof(std::vector<Eventuality>) + sizeof(FrameID) + sizeof(FormulaID) + sizeof(bool) + sizeof(Frame*)) << std::endl;
         std::cout << "Initializing solver..." << std::endl;
 
         _atom_set.clear();

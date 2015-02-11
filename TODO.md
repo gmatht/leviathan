@@ -1,7 +1,6 @@
 # TODO
 
-- Provare se è meglio allocare subito il vector con tutte le possibili eventualities o tenerne uno dinamico
-- Distinguish between STEP frame and UNKNOWN frame types
+- Test if having a dynamic vector for eventualities (with a pair<Formula, Frame>) is better than the fixed size option currently used
 - Check the TODOs in the code
 - better error handling during parsing
 - Improve the simplification step

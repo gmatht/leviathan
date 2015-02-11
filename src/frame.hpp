@@ -66,9 +66,10 @@ struct Frame
 {
         enum Type : uint8_t
         {
-                STEP = 0,
-                CHOICE = 1,
-                SAT = 2
+                UNKNOWN = 0,
+                STEP = 1,
+                CHOICE = 2,
+                SAT = 3
         };
 
         Bitset formulas;

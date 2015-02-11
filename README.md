@@ -3,7 +3,7 @@ An implementation of a Tableau method for LTL formula satisfiability checking ba
 
 * Author: Matteo Bertello
 * Email: bertello.matteo@gmail.com
-*Vertsion: 0.2.1
+*Version: 0.2.2
 
 ## License
 Copyright (c) 2014, Matteo Bertello
@@ -35,7 +35,7 @@ To compile the test application on Linux or Mac OS X run "./compile.sh".
 The compile script can accept parameters to define the build type (Debug or Release, defaults to Release), the number of cores to use during compilation (defaults to number of cores available), and whether to use Clang or GCC (defaults to Clang).
 Use "./compile.sh --help" to view  complete information about the script.
 The binaries are created in the "bin" folder.
-For every other platform/build system a CMake file is provided.
+For every other platform/build system a CMake file is provided (Mac OS X and Linux supported).
 
 ## Note
 Setting together the maximum model size AND the backtrack probability could potentially result in a false negative result.

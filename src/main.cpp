@@ -13,7 +13,7 @@ using namespace std::chrono;
 #include "json_output.hpp"
 
 using Clock = high_resolution_clock;
-const std::string leviathan_version = "0.2.1";
+const std::string leviathan_version = "0.2.2";
 
 std::vector<std::string> readFile(std::istream &input);
 void readableOutput(std::string const&f, bool modelFlag);
