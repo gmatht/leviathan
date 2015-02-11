@@ -77,7 +77,7 @@ struct Frame
         std::vector<Eventuality> eventualities;
         FrameID id;
         FormulaID choosenFormula;
-        bool choice;
+        Type type;
         Frame* chain;
 
         // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
@@ -87,7 +87,7 @@ struct Frame
                 , eventualities(number_of_eventualities)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
-                , choice(false)
+                , type(UNKNOWN)
                 , chain(nullptr)
         {
                 formulas.set(_formula);
@@ -101,7 +101,7 @@ struct Frame
                 , eventualities(_frame.eventualities)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
-                , choice(false)
+                , type(UNKNOWN)
                 , chain(_frame.chain)
         {
         }
@@ -113,7 +113,7 @@ struct Frame
                 , eventualities(_eventualities)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
-                , choice(false)
+                , type(UNKNOWN)
                 , chain(chainPtr)
         {
                 to_process.set();

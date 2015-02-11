@@ -38,19 +38,14 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
 void Solver::_initialize()
 {
-        std::cout << (sizeof(Frame)) << std::endl;
-        std::cout << (sizeof(Bitset) * 2 + sizeof(std::vector<Eventuality>) + sizeof(FrameID) + sizeof(FormulaID) + sizeof(bool) + sizeof(Frame*)) << std::endl;
         std::cout << "Initializing solver..." << std::endl;
-
         _atom_set.clear();
 
         std::cout << "Simplifing formula..." << std::endl;
-
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
 
         std::cout << "Generating subformulas..." << std::endl;
-
         Generator gen;
         gen.generate(_formula);
         _subformulas = gen.formulas();
@@ -221,7 +216,6 @@ void Solver::_initialize()
         }
 
         std::cout << "Generating eventualities..." << std::endl;
-
         _fw_eventualities_lut = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
         std::vector<FormulaPtr> eventualities;
         for (uint64_t i = 0; i < _subformulas.size(); ++i)
@@ -412,7 +406,7 @@ bool Solver::_apply_##rule##_rule() \
 \
                 frame.to_process[one] = false; \
                 frame.choosenFormula = FormulaID(one); \
-                frame.choice = true; \
+                frame.type = Frame::CHOICE; \
                 return true; \
         } \
 \
@@ -618,6 +612,7 @@ step_rule:
                         }
                 }
 
+                frame.type = Frame::STEP;
                 _stack.push(std::move(new_frame));
         }
 
@@ -644,7 +639,7 @@ void Solver::_rollback_to_latest_choice()
 {
         while (!_stack.empty())
         {
-                if (_stack.top().choice && _stack.top().choosenFormula != FormulaID::max())
+                if (_stack.top().type == Frame::CHOICE && _stack.top().choosenFormula != FormulaID::max())
                 {
                         Frame& top = _stack.top();;
                         Frame new_frame(top.id, top);
@@ -719,7 +714,7 @@ ModelPtr Solver::model()
         uint64_t i = 0;
         for (const auto& frame : Container(_stack))
         {
-                if (frame.choice)
+                if (frame.type == Frame::CHOICE || frame.type == Frame::SAT)
                         continue;
 
                 LTL::detail::State state;
