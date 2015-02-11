@@ -36,7 +36,7 @@ struct Frame
         Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas)
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
-                , eventualities()
+                , eventualities(0)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
                 , choice(false)
@@ -69,19 +69,6 @@ struct Frame
                 , chain(chainPtr)
         {
                 to_process.set();
-        }
-
-        Frame(const Frame& f) : formulas(f.formulas), to_process(f.to_process), eventualities(f.eventualities), id(f.id), choosenFormula(f.choosenFormula), choice(f.choice), chain(f.chain) {}
-        
-        Frame(Frame&& f)
-        {
-                std::swap(formulas, f.formulas);
-                std::swap(to_process, f.to_process);
-                std::swap(eventualities, f.eventualities);
-                id = f.id;
-                choosenFormula = f.choosenFormula;
-                choice = f.choice;
-                chain = f.chain;
         }
 };
 

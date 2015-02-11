@@ -72,6 +72,6 @@ add_executable (checker ${checker_src})
 target_link_libraries (checker leviathan)
 
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+" AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_link_libraries (checker -nodefaultlibs c++abi c c++ gcc gcc_s m)
-    target_link_libraries (leviathan -nodefaultlibs c++abi c c++ gcc gcc_s m)
+    target_link_libraries (checker c++abi c c++ gcc gcc_s m)
+    target_link_libraries (leviathan c++abi c c++ gcc gcc_s m)
 endif ()

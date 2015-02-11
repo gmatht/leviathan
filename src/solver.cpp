@@ -38,10 +38,16 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
 void Solver::_initialize()
 {
+        std::cout << "Initializing solver..." << std::endl;
+
         _atom_set.clear();
+
+        std::cout << "Simplifing formula..." << std::endl;
 
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
+
+        std::cout << "Generating subformulas..." << std::endl;
 
         Generator gen;
         gen.generate(_formula);
@@ -145,6 +151,9 @@ void Solver::_initialize()
         auto last = std::unique(_subformulas.begin(), _subformulas.end());
         _subformulas.erase(last, _subformulas.end());
 
+        std::cout << "Found " << _subformulas.size() << " subformulas" << std::endl;
+        std::cout << "Building data structure..." << std::endl;
+
         FormulaID current_index(0);
     
         _number_of_formulas = _subformulas.size();
@@ -168,6 +177,7 @@ void Solver::_initialize()
 
                 FormulaID lhs(0), rhs(0);
                 FormulaPtr left = nullptr, right = nullptr;
+
                 if (isa<Negation>(f))
                 {
                         if (isa<Until>(fast_cast<Negation>(f)->formula()))
@@ -202,12 +212,43 @@ void Solver::_initialize()
 
                 if (left)
                         lhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), left, compareFunc) - _subformulas.begin()));
-                    
                 if (right)
                         rhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), right, compareFunc) - _subformulas.begin()));
 
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
+
+        std::cout << "Generating eventualities..." << std::endl;
+
+        _fw_eventualities_lut = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
+        std::vector<FormulaPtr> eventualities;
+        for (uint64_t i = 0; i < _subformulas.size(); ++i)
+        {
+                if (_bitset.eventually[i])
+                        eventualities.push_back(_subformulas[_lhs[i]]);
+                else if (_bitset.until[i])
+                        eventualities.push_back(_subformulas[_rhs[i]]);
+                else if (_bitset.not_until[i])
+                {
+                        eventualities.push_back(_subformulas[_lhs[i]]);
+                        eventualities.push_back(_subformulas[_rhs[i]]);
+                }
+        }
+
+        std::sort(eventualities.begin(), eventualities.end(), compareFunc);
+        last = std::unique(eventualities.begin(), eventualities.end());
+        eventualities.erase(last, eventualities.end());
+
+        _bw_eventualities_lut = std::vector<FormulaID>(eventualities.size());
+        for (uint64_t i = 0; i < eventualities.size(); ++i)
+        {
+                uint64_t position = static_cast<uint64_t>(std::lower_bound(eventualities.begin(), eventualities.end(), eventualities[i], compareFunc) - eventualities.begin());
+                _fw_eventualities_lut[position] = FormulaID(i);
+                _bw_eventualities_lut[i] = FormulaID(position);
+        }
+
+        std::cout << "Found " << eventualities.size() << " eventualities" << std::endl;
+        std::cout << "Generating clauses..." << std::endl;
 
         _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
         ClauseCounter counter;

@@ -50,6 +50,11 @@ public:
 
         Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100);
 
+        inline FormulaPtr Formula() const
+        {
+                return _formula;
+        }
+
         inline State state() const
         {
                 return _state;
@@ -111,6 +116,8 @@ private:
         std::vector<FormulaID> _rhs;
         std::unordered_map<FormulaID, std::string> _atom_set;
         std::vector<uint64_t> _clause_size;
+        std::vector<FormulaID> _fw_eventualities_lut;
+        std::vector<FormulaID> _bw_eventualities_lut;
 
         size_t _number_of_formulas;
         FormulaID _start_index;
