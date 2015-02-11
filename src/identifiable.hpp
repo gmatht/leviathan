@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <limits>
 
 #if __GNUC__ >= 5 || __clang__
 #define CONSTEXPR  constexpr

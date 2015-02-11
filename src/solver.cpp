@@ -261,7 +261,7 @@ void Solver::_initialize()
                 current_index++;
         }
 
-        _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas));
+        _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas, _bw_eventualities_lut.size()));
         _state = State::INITIALIZED;
 
         std::cout << "Solver initialized!" << std::endl;
@@ -475,8 +475,9 @@ loop:
 
                         if (_apply_eventually_rule())
                         {
-                                if (__builtin_expect(frame.eventualities.find(_lhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
-                                        frame.eventualities[_lhs[frame.choosenFormula]] = FrameID::max();
+                                auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
+                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
+                                        ev = FrameID(Eventuality::NOT_SATISFIED);
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
@@ -487,8 +488,9 @@ loop:
 
                         if (_apply_until_rule())
                         {
-                                if (__builtin_expect(frame.eventualities.find(_rhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
-                                        frame.eventualities[_rhs[frame.choosenFormula]] = FrameID::max();
+                                auto& ev = frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]]; 
+                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
+                                        ev = FrameID(Eventuality::NOT_SATISFIED);
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
@@ -499,10 +501,12 @@ loop:
 
                         if (_apply_not_until_rule())
                         {
-                                if (__builtin_expect(frame.eventualities.find(_lhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
-                                        frame.eventualities[_lhs[frame.choosenFormula]] = FrameID::max();
-                                if (__builtin_expect(frame.eventualities.find(_rhs[frame.choosenFormula]) == frame.eventualities.end(), 0))
-                                        frame.eventualities[_rhs[frame.choosenFormula]] = FrameID::max();
+                                auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]]; 
+                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
+                                        ev = FrameID(Eventuality::NOT_SATISFIED);
+                                ev = frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]]; 
+                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
+                                        ev = FrameID(Eventuality::NOT_SATISFIED);
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
@@ -538,18 +542,25 @@ loop:
                         {
                                 // TODO: Can this be done in a cheaper way? Probably yes
                                 // if (eventualities_satisfied(frame, currFrame))
-                                if (std::all_of(currFrame->eventualities.begin(), currFrame->eventualities.end(), [&] (const std::pair<FormulaID, FrameID>& p)
+                                bool all_satisfied = true;
+                                for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
                                 {
-                                        const auto& ev = frame.eventualities.find(p.first);
-                                        return ev->second != FrameID::max() && ev->second >= currFrame->id;
-                                }))
+                                        const FrameID& sat_id = frame.eventualities[i];
+                                        if (!(sat_id < FrameID(Eventuality::NOT_SATISFIED) && sat_id >= currFrame->id))
+                                        {
+                                                all_satisfied = false;
+                                                break;
+                                        }
+                                }
+
+                                if (__builtin_expect(all_satisfied, 0))
                                 {
                                         _result = Result::SATISFIABLE;
                                         _state = State::PAUSED;
                                         _loop_state = currFrame->id;
                                         return _result;
                                 }
-                                
+
                                 //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completely the same in terms of performance
                                 if (frame.formulas == currFrame->formulas) // STEP rule check
                                 {
@@ -618,11 +629,13 @@ step_rule:
  void Solver::_update_eventualities_satisfaction()
  {
         Frame& frame = _stack.top();
-        for (auto& ev : frame.eventualities)
+
+        std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0] (FrameID& id) mutable
         {
-                if (frame.formulas[ev.first])
-                        ev.second = frame.id;
-        }
+                if (frame.formulas[i])
+                        id = frame.id;
+                ++i;
+        });
  }
 
 void Solver::_rollback_to_latest_choice()

@@ -14,6 +14,12 @@ namespace detail
 
 using Bitset = boost::dynamic_bitset<uint64_t>;
 
+enum Eventuality : uint64_t
+{
+        NOT_REQUESTED = std::numeric_limits<uint64_t>::max(),
+        NOT_SATISFIED = std::numeric_limits<uint64_t>::max() - 1
+};
+
 // TODO: Move from an unordered_map-based representation of eventualities to a bitset-based representation
 struct Frame
 {
@@ -26,17 +32,17 @@ struct Frame
 
         Bitset formulas;
         Bitset to_process;
-        std::unordered_map<FormulaID, FrameID> eventualities;
+        std::vector<FrameID> eventualities;
         FrameID id;
         FormulaID choosenFormula;
         bool choice;
         Frame* chain;
 
         // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
-        Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas)
+        Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas, uint64_t number_of_eventualities)
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
-                , eventualities(0)
+                , eventualities(number_of_eventualities)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
                 , choice(false)
@@ -59,7 +65,7 @@ struct Frame
         }
 
         // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
-        Frame(const FrameID _id, uint64_t number_of_formulas, const std::unordered_map<FormulaID, FrameID>& _eventualities, Frame* chainPtr)
+        Frame(const FrameID _id, uint64_t number_of_formulas, const std::vector<FrameID>& _eventualities, Frame* chainPtr)
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
                 , eventualities(_eventualities)
