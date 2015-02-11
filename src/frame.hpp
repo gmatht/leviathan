@@ -14,13 +14,54 @@ namespace detail
 
 using Bitset = boost::dynamic_bitset<uint64_t>;
 
-enum Eventuality : uint64_t
+class Eventuality
 {
-        NOT_REQUESTED = std::numeric_limits<uint64_t>::max(),
-        NOT_SATISFIED = std::numeric_limits<uint64_t>::max() - 1
+public:
+        Eventuality() : _id(NOT_REQUESTED) {}
+        Eventuality(FrameID id) : _id(id) {}
+
+        FrameID& id()
+        {
+                return _id;
+        }
+
+        FrameID id() const
+        {
+                return _id;
+        }
+
+        bool is_not_requested() const
+        {
+                return _id == FrameID(NOT_REQUESTED);
+        }
+
+        bool is_not_satisfied() const
+        {
+                return _id == FrameID(NOT_SATISFIED);
+        }
+
+        bool is_satisfied() const
+        {
+                return _id < FrameID(NOT_SATISFIED);
+        }
+
+        void set_not_satisfied()
+        {
+                _id = FrameID(NOT_SATISFIED);
+        }
+
+        void set_satisfied(const FrameID& id)
+        {
+                _id = id;
+        }
+
+private:
+        FrameID _id;
+
+        static constexpr uint64_t NOT_REQUESTED = std::numeric_limits<uint64_t>::max();
+        static constexpr uint64_t NOT_SATISFIED = std::numeric_limits<uint64_t>::max() - 1;
 };
 
-// TODO: Move from an unordered_map-based representation of eventualities to a bitset-based representation
 struct Frame
 {
         enum Type : uint8_t
@@ -32,7 +73,7 @@ struct Frame
 
         Bitset formulas;
         Bitset to_process;
-        std::vector<FrameID> eventualities;
+        std::vector<Eventuality> eventualities;
         FrameID id;
         FormulaID choosenFormula;
         bool choice;
@@ -65,7 +106,7 @@ struct Frame
         }
 
         // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
-        Frame(const FrameID _id, uint64_t number_of_formulas, const std::vector<FrameID>& _eventualities, Frame* chainPtr)
+        Frame(const FrameID _id, uint64_t number_of_formulas, const std::vector<Eventuality>& _eventualities, Frame* chainPtr)
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
                 , eventualities(_eventualities)

@@ -476,8 +476,8 @@ loop:
                         if (_apply_eventually_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
-                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
-                                        ev = FrameID(Eventuality::NOT_SATISFIED);
+                                if (__builtin_expect(ev.is_not_requested(), 0))
+                                        ev.set_not_satisfied();
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
@@ -489,8 +489,8 @@ loop:
                         if (_apply_until_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]]; 
-                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
-                                        ev = FrameID(Eventuality::NOT_SATISFIED);
+                                if (__builtin_expect(ev.is_not_requested(), 0))
+                                        ev.set_not_satisfied();
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
@@ -502,11 +502,11 @@ loop:
                         if (_apply_not_until_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]]; 
-                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
-                                        ev = FrameID(Eventuality::NOT_SATISFIED);
+                                if (__builtin_expect(ev.is_not_requested(), 0))
+                                        ev.set_not_satisfied();
                                 ev = frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]]; 
-                                if (__builtin_expect(static_cast<uint64_t>(ev) == Eventuality::NOT_REQUESTED, 0))
-                                        ev = FrameID(Eventuality::NOT_SATISFIED);
+                                if (__builtin_expect(ev.is_not_requested(), 0))
+                                        ev.set_not_satisfied();
 
                                 Frame new_frame(frame.id, frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
@@ -545,8 +545,8 @@ loop:
                                 bool all_satisfied = true;
                                 for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
                                 {
-                                        const FrameID& sat_id = frame.eventualities[i];
-                                        if (!(sat_id < FrameID(Eventuality::NOT_SATISFIED) && sat_id >= currFrame->id))
+                                        const Eventuality& ev = frame.eventualities[i];
+                                        if (!(ev.is_satisfied() && ev.id() >= currFrame->id))
                                         {
                                                 all_satisfied = false;
                                                 break;
@@ -630,10 +630,10 @@ step_rule:
  {
         Frame& frame = _stack.top();
 
-        std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0] (FrameID& id) mutable
+        std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0] (Eventuality& ev) mutable
         {
                 if (frame.formulas[i])
-                        id = frame.id;
+                        ev.set_satisfied(frame.id);
                 ++i;
         });
  }
