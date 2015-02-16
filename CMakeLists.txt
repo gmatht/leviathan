@@ -65,7 +65,7 @@ file (MAKE_DIRECTORY ${bin_dir})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${bin_dir})
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 
-add_library (leviathan SHARED ${src})
+add_library (leviathan ${src})
 target_link_libraries (leviathan boost_system)
 
 link_directories (${bin_dir})

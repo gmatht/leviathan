@@ -34,7 +34,7 @@ std::vector<std::string> readFile(std::istream& input) {
     return lines;
 }
 
-void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_t backtrack_probability, uint32_t min_backtrack, uint32_t max_backtrack)
+void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_t backtrack_probability, uint32_t min_backtrack, uint32_t max_backtrack, bool use_sat)
 {
     LTL::PrettyPrinter printer;
     std::cout << "Parsing formula" << std::endl;
@@ -54,7 +54,7 @@ void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_
         return;
     }
 
-    LTL::Solver solver(formula, LTL::FrameID(depth), backtrack_probability, min_backtrack, max_backtrack);
+    LTL::Solver solver(formula, LTL::FrameID(depth), backtrack_probability, min_backtrack, max_backtrack, use_sat);
     std::cout << "Checking satisfiability..." << std::endl;
     auto t1 = Clock::now();
     solver.solution();
@@ -110,6 +110,8 @@ int main(int argc, char* argv[])
                               cmd, false);
     TCLAP::SwitchArg parsableArg("p", "parsable", "Generates machine-parsable output. It implies -m",
                                  cmd, false);
+    TCLAP::SwitchArg satArg("s", "sat", "Uses sat solver to speed up propositional subformulas processing",
+                                 cmd, false);
 
     TCLAP::ValueArg<uint64_t> depthArg("", "maximum-depth", "The maximum depth to descend into the tableaux (aka the maximum size of the model)", false, std::numeric_limits<uint64_t>::max(), "uint64_t", cmd);
     TCLAP::ValueArg<uint32_t> backtrackPropArg("", "backtrack-probability", "The probability of doing a complete backtrack of the tableaux to check the LOOP and PRUNE rules (between 0 and 100)", false, 100, "uint32_t", cmd);
@@ -147,7 +149,7 @@ int main(int argc, char* argv[])
         if(parsableFlag)
             parsableOutput(f);
         else
-            readableOutput(f, modelFlag, depthArg.getValue(), backtrackPropArg.getValue(), minBacktrackArg.getValue(), maxBacktrackArg.getValue()); // For some definition of "readable"
+            readableOutput(f, modelFlag, depthArg.getValue(), backtrackPropArg.getValue(), minBacktrackArg.getValue(), maxBacktrackArg.getValue(), satArg.getValue()); // For some definition of "readable"
     }
     
     //std::this_thread::sleep_until(time_point<system_clock>::max());

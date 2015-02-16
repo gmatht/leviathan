@@ -50,7 +50,7 @@ public:
         Solver& operator=(const Solver&) = delete;
         Solver& operator=(const Solver&&) = delete;
 
-        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100);
+        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100, bool use_sat = false);
 
         inline FormulaPtr Formula() const
         {
@@ -97,6 +97,7 @@ private:
         uint32_t _backtrack_probability;
         uint32_t _minimum_backtrack;
         uint32_t _maximum_backtrack;
+        bool _use_sat_solver;
 
         State _state;
         Result _result;
@@ -148,7 +149,7 @@ private:
         inline void _rollback_to_latest_choice();
         inline void _update_eventualities_satisfaction();
 
-        inline bool _should_use_sat_solver() const;
+        inline bool _should_use_sat_solver();
 };
 
 }

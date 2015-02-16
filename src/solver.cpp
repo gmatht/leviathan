@@ -16,9 +16,9 @@ namespace LTL
 namespace detail
 {
 
-Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack)
+Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack, bool use_sat)
         : _formula(formula), _maximum_depth(maximum_depth), _backtrack_probability(backtrack_probability), _minimum_backtrack(minimum_backtrack),
-          _maximum_backtrack(maximum_backtrack), _state(State::UNINITIALIZED), _result(Result::UNDEFINED), _start_index(0), _loop_state(0)
+          _maximum_backtrack(maximum_backtrack), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED),  _start_index(0), _loop_state(0)
 {
         if (_backtrack_probability > 100)
                 _backtrack_probability = 100;
@@ -318,6 +318,7 @@ void Solver::_initialize()
                 }
                 else if (isa<Disjunction>(f))
                 {
+                        temp.clear();
                         collect(f);
                         Clause clause;
                         std::for_each(temp.begin(), temp.end(), [&] (const Minisat::Lit& lit) { clause.push(lit); });
@@ -429,7 +430,7 @@ bool Solver::_apply_conjunction_rule()
                 frame.formulas[_lhs[one]] = true;
                 frame.formulas[_rhs[one]] = true;
                 frame.to_process[one] = false;
-                one = _bitset.temporary.find_next(one + 1);
+                one = _bitset.temporary.find_next(one);
         }
 
         return true;
@@ -456,7 +457,7 @@ bool Solver::_apply_always_rule()
                 assert(_bitset.tomorrow[one + 1] && _lhs[one + 1] == FormulaID(one));
                 frame.formulas[one + 1] = true;
                 frame.to_process[one] = false;
-                one = _bitset.temporary.find_next(one + 1);
+                one = _bitset.temporary.find_next(one);
         }
 
         return true;
@@ -533,27 +534,62 @@ loop:
                         if (_apply_always_rule())
                                 rules_applied = true;
 
-                        if (_should_use_sat_solver())
+                        if (_should_use_sat_solver()) // Suboptimal, not-very-tested, experimental code
                         {
                                 frame.type = Frame::SAT;
 
-                                PrettyPrinter p;
                                 Minisat::Solver solver;
                                 solver.newVar();
                                 for (uint64_t i = 0; i < _subformulas.size(); ++i)
                                         solver.newVar();
 
-                                solver.addClause(_clauses[1]);
-                                solver.addClause(_clauses[4]);
-                                
-                                p.print(_subformulas[0]) << ": " << _clauses[0][0].x << std::endl;
-                                p.print(_subformulas[1]) << ": " << _clauses[1][0].x << std::endl;
-                                p.print(_subformulas[2]) << ": " << _clauses[2][0].x << std::endl;
+                                while (_apply_conjunction_rule());
 
-                                std::cout << solver.solve() << std::endl;
-                                p.print(_subformulas[0]) << ": " << solver.modelValue(_clauses[0][0]) << std::endl;
-                                p.print(_subformulas[1]) << ": " << solver.modelValue(_clauses[1][0]) << std::endl;
-                                p.print(_subformulas[2]) << ": " << solver.modelValue(_clauses[2][0]) << std::endl;
+                                _bitset.temporary = frame.formulas;
+                                _bitset.temporary &= ~_bitset.conjunction;
+
+                                /*
+                                // Clauses for the SAT solver
+                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
+                                {
+                                        if (_bitset.temporary[i])
+                                        {
+                                                p.print(_subformulas[i], true);
+                                                std::cout << _clauses[i].size() << std::endl;
+                                        }
+                                }
+                                */
+
+                                size_t one = _bitset.temporary.find_first();
+                                while (one != Bitset::npos)
+                                {
+                                        solver.addClause(_clauses[one]);
+                                        if (_bitset.disjunction[one])
+                                                frame.to_process[one] = false;
+                                        one = _bitset.temporary.find_next(one);
+                                }
+
+                                bool satisfiable = solver.solve();
+                                if (!satisfiable)
+                                {
+                                        _rollback_to_latest_choice();
+                                        goto loop;
+                                }
+
+                                Frame new_frame(frame.id, frame);
+                                one = _bitset.atom.find_first(); // TODO: Not only atoms
+                                while (one != Bitset::npos)
+                                {
+                                        if (Minisat::toInt(solver.modelValue(_clauses[one][0])) == 0)
+                                                new_frame.formulas[one] = true;
+                                        else if (Minisat::toInt(solver.modelValue(_clauses[one + 1][0])) == 0)
+                                                new_frame.formulas[one + 1] = true; // TODO: Is this correct?
+                                        
+                                        one = _bitset.atom.find_next(one);
+                                }
+
+                                _stack.push(std::move(new_frame));
+                                goto loop;
                         }
                         else
                                 frame.type = Frame::UNKNOWN;
@@ -854,14 +890,18 @@ ModelPtr Solver::model()
         return model;
 }
 
-bool Solver::_should_use_sat_solver() const
+bool Solver::_should_use_sat_solver()
 {
         assert(_stack.top().type == Frame::SAT || _stack.top().type == Frame::UNKNOWN);
 
-        // We want atoms, tomorrows and disjunction
+        if (!_use_sat_solver)
+                return false;
 
         //return _bitset.disjunction.any() && ((_stack.top().formulas & _stack.top().to_process).count() > 100);
-        return false;
+        _bitset.temporary = _stack.top().formulas;
+        _bitset.temporary &= _stack.top().to_process;
+        _bitset.temporary &= _bitset.disjunction;
+        return _bitset.temporary.any();
 }
 
 }
