@@ -23,6 +23,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #define Minisat_SolverTypes_h
 
 #include <assert.h>
+#include <iostream>
 
 #include "minisat/mtl/IntTypes.h"
 #include "minisat/mtl/Alg.h"
@@ -131,11 +132,9 @@ inline lbool toLbool(int   v) { return lbool((uint8_t)v);  }
   const lbool l_Undef((uint8_t)2);
 #endif
 
-
 //=================================================================================================
 // Clause -- a simple class for representing a clause:
 
-class Clause;
 typedef RegionAllocator<uint32_t>::Ref CRef;
 
 class Clause {
@@ -472,6 +471,8 @@ inline void Clause::strengthen(Lit p)
     remove(*this, p);
     calcAbstraction();
 }
+
+std::ostream& operator<<(std::ostream& os, Minisat::lbool b);
 
 //=================================================================================================
 }

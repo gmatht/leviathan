@@ -17,6 +17,7 @@ endif()
 
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/lex.cc LANGUAGE CXX)
 set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/parser/parser.cc LANGUAGE CXX)
+set_source_files_properties (${CMAKE_CURRENT_SOURCE_DIR}/src/minisat/core/Solver.cc LANGUAGE CXX)
 
 set (src_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (bin_dir ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -31,6 +32,7 @@ set (src
     ${src_dir}/parser/lex.cc
     ${src_dir}/parser/parse.cc
     ${src_dir}/parser/parser.cpp
+    ${src_dir}/minisat/core/Solver.cc
 )
 
 set (checker_src
@@ -54,7 +56,7 @@ if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
 endif()
 
 #-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -fPIC -fuse-ld=gold -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -fuse-ld=gold -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -flto -Ofast -g0")
 

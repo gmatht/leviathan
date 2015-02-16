@@ -5,6 +5,7 @@
 #include "identifiable.hpp"
 #include "frame.hpp"
 #include "model.hpp"
+#include "minisat/core/Solver.h"
 #include <vector>
 #include <tuple>
 #include <limits>
@@ -19,6 +20,7 @@ namespace detail
 {
 
 using Stack = std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>;
+using Clause = Minisat::vec<Minisat::Lit>;
 
 class Solver
 {
@@ -101,6 +103,7 @@ private:
 
         struct
         {
+                Bitset atom;
                 Bitset negation;
                 Bitset tomorrow;
                 Bitset always;
@@ -118,6 +121,7 @@ private:
         std::vector<uint64_t> _clause_size;
         std::vector<FormulaID> _fw_eventualities_lut;
         std::vector<FormulaID> _bw_eventualities_lut;
+        std::vector<Clause> _clauses;
 
         size_t _number_of_formulas;
         FormulaID _start_index;
@@ -143,6 +147,8 @@ private:
 
         inline void _rollback_to_latest_choice();
         inline void _update_eventualities_satisfaction();
+
+        inline bool _should_use_sat_solver() const;
 };
 
 }

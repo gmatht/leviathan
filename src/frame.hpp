@@ -1,6 +1,7 @@
 #pragma once
 
 #include "boost/dynamic_bitset.hpp"
+#include "boost/pool/pool_alloc.hpp"
 #include "identifiable.hpp"
 #include "tag_ptr.hpp"
 #include <unordered_map>
@@ -62,6 +63,8 @@ private:
         static constexpr uint64_t NOT_SATISFIED = std::numeric_limits<uint64_t>::max() - 1;
 };
 
+using Eventualities = std::vector<Eventuality, boost::fast_pool_allocator<Eventuality>>;
+
 struct Frame
 {
         enum Type : uint8_t
@@ -74,7 +77,7 @@ struct Frame
 
         Bitset formulas;
         Bitset to_process;
-        std::vector<Eventuality> eventualities;
+        Eventualities eventualities;
         FrameID id;
         FormulaID choosenFormula;
         Type type;
@@ -98,7 +101,7 @@ struct Frame
         Frame(const FrameID _id, const Frame& _frame)
                 : formulas(_frame.formulas)
                 , to_process(_frame.to_process)
-                , eventualities(_frame.eventualities)
+                , eventualities(_frame.eventualities, _frame.eventualities.get_allocator())
                 , id(_id)
                 , choosenFormula(FormulaID::max())
                 , type(UNKNOWN)
@@ -107,10 +110,10 @@ struct Frame
         }
 
         // Builds a frame with the given sets of eventualities (needs to be manually filled with the formulas) -> Step rule
-        Frame(const FrameID _id, uint64_t number_of_formulas, const std::vector<Eventuality>& _eventualities, Frame* chainPtr)
+        Frame(const FrameID _id, uint64_t number_of_formulas, const Eventualities& _eventualities, Frame* chainPtr)
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
-                , eventualities(_eventualities)
+                , eventualities(_eventualities, _eventualities.get_allocator())
                 , id(_id)
                 , choosenFormula(FormulaID::max())
                 , type(UNKNOWN)

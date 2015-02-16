@@ -27,6 +27,24 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 using namespace Minisat;
 
+std::ostream& Minisat::operator<<(std::ostream& os, lbool b)
+{
+        switch (toInt(b))
+        {
+                case 0:
+                    return os << "true";
+
+                case 1:
+                    return os << "false";
+
+                case 2:
+                    return os << "undef";
+
+                default:
+                    return os;
+        }
+}
+
 //=================================================================================================
 // Constructor/Destructor:
 
@@ -646,7 +664,6 @@ bool Solver::simplify()
             if (seen[var(trail[i])] == 0)
                 trail[j++] = trail[i];
         trail.shrink(i - j);
-        //printf("trail.size()= %d, qhead = %d\n", trail.size(), qhead);
         qhead = trail.size();
 
         for (int i = 0; i < released_vars.size(); i++)
@@ -711,16 +728,11 @@ lbool Solver::search(int nof_conflicts)
             varDecayActivity();
             claDecayActivity();
 
-            if (--learntsize_adjust_cnt == 0){
+            if (--learntsize_adjust_cnt == 0)
+            {
                 learntsize_adjust_confl *= learntsize_adjust_inc;
                 learntsize_adjust_cnt    = (int)learntsize_adjust_confl;
                 max_learnts             *= learntsize_inc;
-
-                if (verbosity >= 1)
-                    printf("| %9d | %7d %8d %8d | %8d %8d %6.0f | %6.3f %% |\n", 
-                           (int)conflicts, 
-                           (int)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]), nClauses(), (int)clauses_literals, 
-                           (int)max_learnts, nLearnts(), (double)learnts_literals/nLearnts(), progressEstimate()*100);
             }
 
         }else{
@@ -832,13 +844,6 @@ lbool Solver::solve_()
     learntsize_adjust_cnt     = (int)learntsize_adjust_confl;
     lbool   status            = l_Undef;
 
-    if (verbosity >= 1){
-        printf("============================[ Search Statistics ]==============================\n");
-        printf("| Conflicts |          ORIGINAL         |          LEARNT          | Progress |\n");
-        printf("|           |    Vars  Clauses Literals |    Limit  Clauses Lit/Cl |          |\n");
-        printf("===============================================================================\n");
-    }
-
     // Search:
     int curr_restarts = 0;
     while (status == l_Undef){
@@ -847,10 +852,6 @@ lbool Solver::solve_()
         if (!withinBudget()) break;
         curr_restarts++;
     }
-
-    if (verbosity >= 1)
-        printf("===============================================================================\n");
-
 
     if (status == l_True){
         // Extend & copy model:
@@ -947,8 +948,5 @@ void Solver::garbageCollect()
     ClauseAllocator to(ca.size() - ca.wasted()); 
 
     relocAll(to);
-    if (verbosity >= 2)
-        printf("|  Garbage collection:   %12d bytes => %12d bytes             |\n", 
-               ca.size()*ClauseAllocator::Unit_Size, to.size()*ClauseAllocator::Unit_Size);
     to.moveTo(ca);
 }

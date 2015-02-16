@@ -1,4 +1,4 @@
-#include "solver.hpp"
+ #include "solver.hpp"
 
 #include "generator.hpp"
 #include "utility.hpp"
@@ -154,6 +154,7 @@ void Solver::_initialize()
         FormulaID current_index(0);
     
         _number_of_formulas = _subformulas.size();
+        _bitset.atom.resize(_number_of_formulas);
         _bitset.negation.resize(_number_of_formulas);
         _bitset.tomorrow.resize(_number_of_formulas);
         _bitset.always.resize(_number_of_formulas);
@@ -215,6 +216,17 @@ void Solver::_initialize()
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
 
+        /*
+        std::cout << "Negation: " << _bitset.negation.count() << std::endl;
+        std::cout << "Tomorrow: " << _bitset.tomorrow.count() << std::endl;
+        std::cout << "Eventually: " << _bitset.eventually.count() << std::endl;
+        std::cout << "Always: " << _bitset.always.count() << std::endl;
+        std::cout << "Conjunction: " << _bitset.conjunction.count() << std::endl;
+        std::cout << "Disjunction: " << _bitset.disjunction.count() << std::endl;
+        std::cout << "Until: " << _bitset.until.count() << std::endl;
+        std::cout << "Not Until: " << _bitset.not_until.count() << std::endl;
+        */
+
         std::cout << "Generating eventualities..." << std::endl;
         _fw_eventualities_lut = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
         std::vector<FormulaPtr> eventualities;
@@ -247,16 +259,76 @@ void Solver::_initialize()
         std::cout << "Generating clauses..." << std::endl;
 
         _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
+        _clauses = std::vector<Clause>(_number_of_formulas);
+
         ClauseCounter counter;
         current_index = FormulaID(0);
+        std::vector<Minisat::Lit> temp;
+        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f)
+        {
+                assert(isa<Disjunction>(f));
+                assert(!isa<Conjunction>(f));
+                
+                if (isa<Disjunction>(fast_cast<Disjunction>(f)->left()))
+                        collect(fast_cast<Disjunction>(f)->left());
+                else
+                {
+                        uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->left(), compareFunc) - _subformulas.begin());
+                        if (isa<Negation>(fast_cast<Disjunction>(f)->left()))
+                                temp.push_back(Minisat::Lit(index - 1, true));
+                        else
+                                temp.push_back(Minisat::Lit(index));
+                }
+
+                if (isa<Disjunction>(fast_cast<Disjunction>(f)->right()))
+                        collect(fast_cast<Disjunction>(f)->right());
+                else
+                {
+                        uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->right(), compareFunc) - _subformulas.begin());
+                        if (isa<Negation>(fast_cast<Disjunction>(f)->right()))
+                                temp.push_back(Minisat::Lit(index - 1, true));
+                        else
+                                temp.push_back(Minisat::Lit(index));
+                }
+        };
+
+        PrettyPrinter p;
         for (auto f : _subformulas)
         {
                 if (isa<Disjunction>(f))
                         _clause_size[current_index] = counter.count(f);
                 
+                if (isa<Atom>(f))
+                {
+                        Clause clause;
+                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+                        clause.moveTo(_clauses[current_index]);
+                }
+                else if (isa<Negation>(f))
+                {
+                        Clause clause;
+                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
+                        clause.moveTo(_clauses[current_index]);
+                }
+                else if (isa<Tomorrow>(f))
+                {
+                        Clause clause;
+                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+                        clause.moveTo(_clauses[current_index]);
+                }
+                else if (isa<Disjunction>(f))
+                {
+                        collect(f);
+                        Clause clause;
+                        std::for_each(temp.begin(), temp.end(), [&] (const Minisat::Lit& lit) { clause.push(lit); });
+                        clause.moveTo(_clauses[current_index]);
+                }
+
+                // TODO: Missing types of formulas
+
                 current_index++;
         }
-
+        
         _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas, _bw_eventualities_lut.size()));
         _state = State::INITIALIZED;
 
@@ -268,6 +340,7 @@ void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID posit
          switch (formula->type())
         {
                 case Formula::Type::Atom:
+                        _bitset.atom[position] = true;
                         _atom_set[position] = fast_cast<Atom>(formula)->name();
                         break;
 
@@ -460,6 +533,31 @@ loop:
                         if (_apply_always_rule())
                                 rules_applied = true;
 
+                        if (_should_use_sat_solver())
+                        {
+                                frame.type = Frame::SAT;
+
+                                PrettyPrinter p;
+                                Minisat::Solver solver;
+                                solver.newVar();
+                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
+                                        solver.newVar();
+
+                                solver.addClause(_clauses[1]);
+                                solver.addClause(_clauses[4]);
+                                
+                                p.print(_subformulas[0]) << ": " << _clauses[0][0].x << std::endl;
+                                p.print(_subformulas[1]) << ": " << _clauses[1][0].x << std::endl;
+                                p.print(_subformulas[2]) << ": " << _clauses[2][0].x << std::endl;
+
+                                std::cout << solver.solve() << std::endl;
+                                p.print(_subformulas[0]) << ": " << solver.modelValue(_clauses[0][0]) << std::endl;
+                                p.print(_subformulas[1]) << ": " << solver.modelValue(_clauses[1][0]) << std::endl;
+                                p.print(_subformulas[2]) << ": " << solver.modelValue(_clauses[2][0]) << std::endl;
+                        }
+                        else
+                                frame.type = Frame::UNKNOWN;
+
                         if (_apply_disjunction_rule())
                         {
                                 Frame new_frame(frame.id, frame);
@@ -536,8 +634,6 @@ loop:
 
                         if (frame.formulas.is_subset_of(currFrame->formulas))
                         {
-                                // TODO: Can this be done in a cheaper way? Probably yes
-                                // if (eventualities_satisfied(frame, currFrame))
                                 bool all_satisfied = true;
                                 for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
                                 {
@@ -558,7 +654,7 @@ loop:
                                 }
 
                                 //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completely the same in terms of performance
-                                if (frame.formulas == currFrame->formulas) // STEP rule check
+                                if (frame.formulas == currFrame->formulas) // REP rule check
                                 {
                                         if (!repFrame1)
                                                 repFrame1 = currFrame;
@@ -694,6 +790,7 @@ void Solver::_rollback_to_latest_choice()
         }
 }
 
+// TODO: This crash when the formula simplifies to True
 ModelPtr Solver::model()
 {
         if (_state != State::PAUSED)
@@ -755,6 +852,16 @@ ModelPtr Solver::model()
         */
 
         return model;
+}
+
+bool Solver::_should_use_sat_solver() const
+{
+        assert(_stack.top().type == Frame::SAT || _stack.top().type == Frame::UNKNOWN);
+
+        // We want atoms, tomorrows and disjunction
+
+        //return _bitset.disjunction.any() && ((_stack.top().formulas & _stack.top().to_process).count() > 100);
+        return false;
 }
 
 }

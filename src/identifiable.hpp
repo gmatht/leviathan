@@ -29,10 +29,12 @@ public:
 		return *this;
         }
 
-        inline CONSTEXPR operator bool() const
+        /*
+        inline CONSTEXPR operator size_t() const
         {
-                return static_cast<bool>(_id);
+                return static_cast<size_t>(_id);
         }
+        */
 
         inline CONSTEXPR operator unsigned long() const
         {

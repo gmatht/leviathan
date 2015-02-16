@@ -380,13 +380,6 @@ inline ClauseIterator Solver::clausesEnd  () const { return ClauseIterator(ca, &
 inline TrailIterator  Solver::trailBegin  () const { return TrailIterator(&trail[0]); }
 inline TrailIterator  Solver::trailEnd    () const { 
     return TrailIterator(&trail[decisionLevel() == 0 ? trail.size() : trail_lim[0]]); }
-
-
-//=================================================================================================
-// Debug etc:
-
-
-//=================================================================================================
 }
 
 #endif
