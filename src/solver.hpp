@@ -123,6 +123,7 @@ private:
         std::vector<FormulaID> _fw_eventualities_lut;
         std::vector<FormulaID> _bw_eventualities_lut;
         std::vector<Clause> _clauses;
+        std::vector<FormulaID> _bw_clauses_lut;
 
         size_t _number_of_formulas;
         FormulaID _start_index;
@@ -134,6 +135,10 @@ private:
         std::mt19937 _mt;
         std::uniform_int_distribution<uint32_t> _backtrack_probability_rand;
         std::uniform_int_distribution<uint32_t> _backtrack_percentage_rand;
+
+        bool _has_eventually;
+        bool _has_until;
+        bool _has_not_until;
 
         void _initialize();
         void _add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs);

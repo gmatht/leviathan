@@ -62,9 +62,9 @@ void readableOutput(std::string const&f, bool modelFlag, uint64_t depth, uint32_
 
     std::cout << "Is satisfiable: ";
     if (solver.satisfiability() == LTL::Solver::Result::SATISFIABLE)
-            std::cout << "True" << std::endl;
+            std::cout << "\033[0;32mTrue\033[0m" << std::endl;
     else
-            std::cout << "False" << std::endl;
+            std::cout << "\033[0;31mFalse\033[0m" << std::endl;
 
     std::cout << "Time taken: ";
     auto time = (t2 - t1).count();

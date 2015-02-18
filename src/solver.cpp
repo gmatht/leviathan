@@ -18,7 +18,8 @@ namespace detail
 
 Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack, bool use_sat)
         : _formula(formula), _maximum_depth(maximum_depth), _backtrack_probability(backtrack_probability), _minimum_backtrack(minimum_backtrack),
-          _maximum_backtrack(maximum_backtrack), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED),  _start_index(0), _loop_state(0)
+          _maximum_backtrack(maximum_backtrack), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED),  _start_index(0), _loop_state(0),
+          _has_eventually(false), _has_until(false), _has_not_until(false)
 {
         if (_backtrack_probability > 100)
                 _backtrack_probability = 100;
@@ -38,7 +39,9 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
 void Solver::_initialize()
 {
-        std::cout << "Initializing solver..." << std::endl;
+        std::cout << sizeof(Frame) << std::endl;
+
+        std::cout << std::endl << "Initializing solver..." << std::endl;
         _atom_set.clear();
 
         std::cout << "Simplifing formula..." << std::endl;
@@ -216,17 +219,6 @@ void Solver::_initialize()
                 _add_formula_for_position(f, current_index++, lhs, rhs);
         }
 
-        /*
-        std::cout << "Negation: " << _bitset.negation.count() << std::endl;
-        std::cout << "Tomorrow: " << _bitset.tomorrow.count() << std::endl;
-        std::cout << "Eventually: " << _bitset.eventually.count() << std::endl;
-        std::cout << "Always: " << _bitset.always.count() << std::endl;
-        std::cout << "Conjunction: " << _bitset.conjunction.count() << std::endl;
-        std::cout << "Disjunction: " << _bitset.disjunction.count() << std::endl;
-        std::cout << "Until: " << _bitset.until.count() << std::endl;
-        std::cout << "Not Until: " << _bitset.not_until.count() << std::endl;
-        */
-
         std::cout << "Generating eventualities..." << std::endl;
         _fw_eventualities_lut = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
         std::vector<FormulaPtr> eventualities;
@@ -250,7 +242,7 @@ void Solver::_initialize()
         _bw_eventualities_lut = std::vector<FormulaID>(eventualities.size());
         for (uint64_t i = 0; i < eventualities.size(); ++i)
         {
-                uint64_t position = static_cast<uint64_t>(std::lower_bound(eventualities.begin(), eventualities.end(), eventualities[i], compareFunc) - eventualities.begin());
+                uint64_t position = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), eventualities[i], compareFunc) - _subformulas.begin());
                 _fw_eventualities_lut[position] = FormulaID(i);
                 _bw_eventualities_lut[i] = FormulaID(position);
         }
@@ -264,7 +256,7 @@ void Solver::_initialize()
         ClauseCounter counter;
         current_index = FormulaID(0);
         std::vector<Minisat::Lit> temp;
-        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f)
+        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability
         {
                 assert(isa<Disjunction>(f));
                 assert(!isa<Conjunction>(f));
@@ -274,7 +266,7 @@ void Solver::_initialize()
                 else
                 {
                         uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->left(), compareFunc) - _subformulas.begin());
-                        if (isa<Negation>(fast_cast<Disjunction>(f)->left()))
+                        if (isa<Negation>(fast_cast<Disjunction>(f)->left()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->left()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->left())->formula()))))
                                 temp.push_back(Minisat::Lit(index - 1, true));
                         else
                                 temp.push_back(Minisat::Lit(index));
@@ -285,26 +277,25 @@ void Solver::_initialize()
                 else
                 {
                         uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->right(), compareFunc) - _subformulas.begin());
-                        if (isa<Negation>(fast_cast<Disjunction>(f)->right()))
+                        if (isa<Negation>(fast_cast<Disjunction>(f)->right()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->right()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->right())->formula()))))
                                 temp.push_back(Minisat::Lit(index - 1, true));
                         else
                                 temp.push_back(Minisat::Lit(index));
                 }
         };
 
-        PrettyPrinter p;
         for (auto f : _subformulas)
         {
                 if (isa<Disjunction>(f))
                         _clause_size[current_index] = counter.count(f);
                 
-                if (isa<Atom>(f))
+                if (isa<Atom>(f) || isa<Always>(f) || isa<Eventually>(f) || isa<Until>(f))
                 {
                         Clause clause;
                         clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
                         clause.moveTo(_clauses[current_index]);
                 }
-                else if (isa<Negation>(f))
+                else if (isa<Negation>(f)) // Note: Not until case implicitly handled here
                 {
                         Clause clause;
                         clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
@@ -313,7 +304,10 @@ void Solver::_initialize()
                 else if (isa<Tomorrow>(f))
                 {
                         Clause clause;
-                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+                        if (isa<Negation>(fast_cast<Tomorrow>(f)->formula()))
+                                clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
+                        else
+                                clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));                    
                         clause.moveTo(_clauses[current_index]);
                 }
                 else if (isa<Disjunction>(f))
@@ -325,15 +319,19 @@ void Solver::_initialize()
                         clause.moveTo(_clauses[current_index]);
                 }
 
-                // TODO: Missing types of formulas
+                // Note: We have nothing to do for conjunctions, because the formula is in CNF
 
                 current_index++;
         }
-        
+
+        _has_eventually = _bitset.eventually.any();
+        _has_until = _bitset.until.any();
+        _has_not_until = _bitset.not_until.any();
+
         _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas, _bw_eventualities_lut.size()));
         _state = State::INITIALIZED;
 
-        std::cout << "Solver initialized!" << std::endl;
+        std::cout << "Solver initialized!" << std::endl << std::endl;
 }
 
 void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs)
@@ -534,102 +532,44 @@ loop:
                         if (_apply_always_rule())
                                 rules_applied = true;
 
-                        if (_should_use_sat_solver()) // Suboptimal, not-very-tested, experimental code
-                        {
-                                frame.type = Frame::SAT;
-
-                                Minisat::Solver solver;
-                                solver.newVar();
-                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
-                                        solver.newVar();
-
-                                while (_apply_conjunction_rule());
-
-                                _bitset.temporary = frame.formulas;
-                                _bitset.temporary &= ~_bitset.conjunction;
-
-                                /*
-                                // Clauses for the SAT solver
-                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
-                                {
-                                        if (_bitset.temporary[i])
-                                        {
-                                                p.print(_subformulas[i], true);
-                                                std::cout << _clauses[i].size() << std::endl;
-                                        }
-                                }
-                                */
-
-                                size_t one = _bitset.temporary.find_first();
-                                while (one != Bitset::npos)
-                                {
-                                        solver.addClause(_clauses[one]);
-                                        if (_bitset.disjunction[one])
-                                                frame.to_process[one] = false;
-                                        one = _bitset.temporary.find_next(one);
-                                }
-
-                                bool satisfiable = solver.solve();
-                                if (!satisfiable)
-                                {
-                                        _rollback_to_latest_choice();
-                                        goto loop;
-                                }
-
-                                Frame new_frame(frame.id, frame);
-                                one = _bitset.atom.find_first(); // TODO: Not only atoms
-                                while (one != Bitset::npos)
-                                {
-                                        if (Minisat::toInt(solver.modelValue(_clauses[one][0])) == 0)
-                                                new_frame.formulas[one] = true;
-                                        else if (Minisat::toInt(solver.modelValue(_clauses[one + 1][0])) == 0)
-                                                new_frame.formulas[one + 1] = true; // TODO: Is this correct?
-                                        
-                                        one = _bitset.atom.find_next(one);
-                                }
-
-                                _stack.push(std::move(new_frame));
-                                goto loop;
-                        }
-                        else
-                                frame.type = Frame::UNKNOWN;
-
+                        /*
                         if (_apply_disjunction_rule())
                         {
-                                Frame new_frame(frame.id, frame);
+                                Frame new_frame(frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
+                        */
 
-                        if (_apply_eventually_rule())
+                        if (_has_eventually && _apply_eventually_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
                                 if (__builtin_expect(ev.is_not_requested(), 0))
                                         ev.set_not_satisfied();
 
-                                Frame new_frame(frame.id, frame);
+                                Frame new_frame(frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
 
-                        if (_apply_until_rule())
+                        if (_has_until && _apply_until_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]]; 
                                 if (__builtin_expect(ev.is_not_requested(), 0))
                                         ev.set_not_satisfied();
 
-                                Frame new_frame(frame.id, frame);
+                                Frame new_frame(frame);
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
 
                                 goto loop;
                         }
 
-                        if (_apply_not_until_rule())
+                        if (_has_not_until && _apply_not_until_rule())
                         {
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]]; 
                                 if (__builtin_expect(ev.is_not_requested(), 0))
@@ -638,11 +578,87 @@ loop:
                                 if (__builtin_expect(ev.is_not_requested(), 0))
                                         ev.set_not_satisfied();
 
-                                Frame new_frame(frame.id, frame);
+                                Frame new_frame(frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
 
+                                goto loop;
+                        }
+
+                        if (rules_applied)
+                                goto loop;
+
+                        if (!_should_use_sat_solver())
+                        {
+                                if (_apply_disjunction_rule())
+                                {
+                                        Frame new_frame(frame);
+                                        new_frame.formulas[_lhs[frame.choosenFormula]] = true;
+                                        _stack.push(std::move(new_frame));
+
+                                        goto loop;
+                                }
+                        }
+                        else
+                        {
+                                /* https://github.com/niklasso/minisat-examples */
+                                frame.type = Frame::SAT;
+
+                                frame.solver = std::make_unique<Minisat::Solver>();
+                                Minisat::Solver& solver = *frame.solver;
+                                solver.newVar();
+                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
+                                        solver.newVar();
+
+                                _bitset.temporary = frame.formulas;
+                                _bitset.temporary &= ~_bitset.conjunction;
+
+                                std::vector<int> lit;
+                                size_t one = _bitset.temporary.find_first();
+                                while (one != Bitset::npos)
+                                {
+                                        solver.addClause(_clauses[one]);
+                                        for (uint64_t i = 0; i < _clause_size[one]; ++i)
+                                                lit.push_back(_clauses[one][i].x);
+
+                                        if (_bitset.disjunction[one])
+                                                frame.to_process[one] = false;
+                                        one = _bitset.temporary.find_next(one);
+                                }
+
+                                std::sort(lit.begin(), lit.end());
+                                auto last = std::unique(lit.begin(), lit.end());
+                                lit.erase(last, lit.end());
+
+                                bool satisfiable = solver.solve();
+                                if (!satisfiable)
+                                {
+                                        _rollback_to_latest_choice();
+                                        goto loop;
+                                }
+
+                                Frame new_frame(frame);
+                                Clause c;
+                                for (int l : lit) // TODO: This could be more intelligent
+                                {
+                                        auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
+                                        {
+                                                return (c.size() == 1) && (c[0].x == l);
+                                        });
+                                        FormulaID id(pos - _clauses.begin());
+
+                                        assert(pos != _clauses.end());
+
+                                        if (solver.modelValue(_clauses[id][0]) == Minisat::l_True)
+                                        {
+                                                new_frame.formulas[id] = true;
+                                                c.push(Minisat::Lit(l >> 1, true));
+                                        }
+                                }
+                                solver.addClause(c);
+                                
+                                _stack.push(std::move(new_frame));
                                 goto loop;
                         }
                 }
@@ -761,7 +777,7 @@ step_rule:
 
         std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0] (Eventuality& ev) mutable
         {
-                if (frame.formulas[i])
+                if (frame.formulas[_bw_eventualities_lut[i]])
                         ev.set_satisfied(frame.id);
                 ++i;
         });
@@ -774,7 +790,7 @@ void Solver::_rollback_to_latest_choice()
                 if (_stack.top().type == Frame::CHOICE && _stack.top().choosenFormula != FormulaID::max())
                 {
                         Frame& top = _stack.top();;
-                        Frame new_frame(top.id, top);
+                        Frame new_frame(top);
 
                         if (_bitset.disjunction[top.choosenFormula])
                                 new_frame.formulas[_rhs[top.choosenFormula]] = true;
@@ -820,6 +836,48 @@ void Solver::_rollback_to_latest_choice()
                         _stack.push(std::move(new_frame));
 
                         return;
+                }
+                else if (_stack.top().type == Frame::SAT)
+                {
+                        std::cout << "\033[0;31m" << "Rolling back a SAT frame. Not yet implemented!" << "\033[0m" << std::endl;
+
+                        /*
+                        Minisat::Solver& solver = *_stack.top().solver;
+                        bool satisfiable = solver.solve();
+                        if (satisfiable)
+                        {
+                                Frame new_frame(_stack.top());
+                                Clause c;
+
+                                for (int i = 0; i < solver.nVars(); i++)
+                                {
+                                        // TODO: Need to go backward to find the formula associated with the literal
+                                        c.push(Minisat::Lit(i, solver.modelValue(i) == Minisat::l_True));
+                                }
+                                solver.addClause(c);
+
+                                for (int l : lit) // TODO: This could be more intelligent (???)
+                                {
+                                        auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
+                                        {
+                                                return (c.size() == 1) && (c[0].x == l);
+                                        });
+                                        FormulaID id(pos - _clauses.begin());
+
+                                        assert(pos != _clauses.end());
+
+                                        if (Minisat::toInt(solver.modelValue(_clauses[id][0])) == 0)
+                                        {
+                                                new_frame.formulas[id] = true;
+                                                c.push(Minisat::Lit(l >> 1, true));
+                                        }
+                                }
+                                solver.addClause(c);
+
+                                _stack.push(std::move(new_frame));
+                                return;
+                        }
+                        */
                 }
 
                 _stack.pop();

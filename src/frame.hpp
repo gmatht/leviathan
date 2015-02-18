@@ -3,7 +3,8 @@
 #include "boost/dynamic_bitset.hpp"
 #include "boost/pool/pool_alloc.hpp"
 #include "identifiable.hpp"
-#include "tag_ptr.hpp"
+#include "minisat/core/Solver.h"
+#include <memory>
 #include <unordered_map>
 #include <cstdint>
 #include <iostream>
@@ -80,8 +81,9 @@ struct Frame
         Eventualities eventualities;
         FrameID id;
         FormulaID choosenFormula;
-        Type type;
         Frame* chain;
+        std::unique_ptr<Minisat::Solver> solver;
+        Type type;
 
         // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
         Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas, uint64_t number_of_eventualities)
@@ -90,22 +92,24 @@ struct Frame
                 , eventualities(number_of_eventualities)
                 , id(_id)
                 , choosenFormula(FormulaID::max())
-                , type(UNKNOWN)
                 , chain(nullptr)
+                , solver(nullptr)
+                , type(UNKNOWN)
         {
                 formulas.set(_formula);
                 to_process.set();
         }
 
         // Builds a frame with the same formulas of the given frame in it -> Choice point
-        Frame(const FrameID _id, const Frame& _frame)
+        Frame(const Frame& _frame)
                 : formulas(_frame.formulas)
                 , to_process(_frame.to_process)
                 , eventualities(_frame.eventualities, _frame.eventualities.get_allocator())
-                , id(_id)
+                , id(_frame.id)
                 , choosenFormula(FormulaID::max())
-                , type(UNKNOWN)
                 , chain(_frame.chain)
+                , solver(nullptr)
+                , type(UNKNOWN)
         {
         }
 
@@ -115,9 +119,10 @@ struct Frame
                 , to_process(number_of_formulas)
                 , eventualities(_eventualities, _eventualities.get_allocator())
                 , id(_id)
-                , choosenFormula(FormulaID::max())
-                , type(UNKNOWN)
+                , choosenFormula(FormulaID::max())                
                 , chain(chainPtr)
+                , solver(nullptr)
+                , type(UNKNOWN)
         {
                 to_process.set();
         }

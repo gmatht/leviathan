@@ -57,7 +57,7 @@ endif()
 
 #-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
 set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -fuse-ld=gold -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
-set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -flto -Ofast -g0")
 
 file (MAKE_DIRECTORY ${bin_dir})
@@ -67,6 +67,10 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 
 add_library (leviathan ${src})
 target_link_libraries (leviathan boost_system)
+
+if (CMAKE_BUILD_TYPE MATCHES "Debug" AND CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries (leviathan SegFault)
+endif()
 
 link_directories (${bin_dir})
 
