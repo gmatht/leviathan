@@ -123,7 +123,6 @@ private:
         std::vector<FormulaID> _fw_eventualities_lut;
         std::vector<FormulaID> _bw_eventualities_lut;
         std::vector<Clause> _clauses;
-        std::vector<FormulaID> _bw_clauses_lut;
 
         size_t _number_of_formulas;
         FormulaID _start_index;

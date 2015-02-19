@@ -65,6 +65,7 @@ private:
 };
 
 using Eventualities = std::vector<Eventuality, boost::fast_pool_allocator<Eventuality>>;
+using Literals = std::vector<int>;
 
 struct Frame
 {
@@ -79,6 +80,7 @@ struct Frame
         Bitset formulas;
         Bitset to_process;
         Eventualities eventualities;
+        Literals literals;
         FrameID id;
         FormulaID choosenFormula;
         Frame* chain;
@@ -90,6 +92,7 @@ struct Frame
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
                 , eventualities(number_of_eventualities)
+                , literals()
                 , id(_id)
                 , choosenFormula(FormulaID::max())
                 , chain(nullptr)
@@ -105,6 +108,7 @@ struct Frame
                 : formulas(_frame.formulas)
                 , to_process(_frame.to_process)
                 , eventualities(_frame.eventualities, _frame.eventualities.get_allocator())
+                , literals()
                 , id(_frame.id)
                 , choosenFormula(FormulaID::max())
                 , chain(_frame.chain)
@@ -118,6 +122,7 @@ struct Frame
                 : formulas(number_of_formulas)
                 , to_process(number_of_formulas)
                 , eventualities(_eventualities, _eventualities.get_allocator())
+                , literals()
                 , id(_id)
                 , choosenFormula(FormulaID::max())                
                 , chain(chainPtr)

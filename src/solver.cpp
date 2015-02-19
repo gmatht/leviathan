@@ -39,8 +39,6 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
 void Solver::_initialize()
 {
-        std::cout << sizeof(Frame) << std::endl;
-
         std::cout << std::endl << "Initializing solver..." << std::endl;
         _atom_set.clear();
 
@@ -607,55 +605,86 @@ loop:
 
                                 frame.solver = std::make_unique<Minisat::Solver>();
                                 Minisat::Solver& solver = *frame.solver;
-                                solver.newVar();
-                                for (uint64_t i = 0; i < _subformulas.size(); ++i)
-                                        solver.newVar();
 
-                                _bitset.temporary = frame.formulas;
-                                _bitset.temporary &= ~_bitset.conjunction;
+                                _bitset.temporary = _bitset.atom | _bitset.tomorrow | _bitset.negation | _bitset.disjunction;
+                                //_bitset.temporary =  ~(_bitset.conjunction & _bitset.until & _bitset.not_until & _bitset.always & _bitset.eventually);
+                                //_bitset.temporary = ~_bitset.conjunction;
+                                _bitset.temporary &= frame.formulas;
 
-                                std::vector<int> lit;
+                                assert(frame.literals.empty());
+                                assert(solver.nVars() == 0);
+                                std::for_each(_subformulas.begin(), _subformulas.end(), [&] (FormulaPtr f) { solver.newVar(); });
+
+                                PrettyPrinter p;
+                                //std::cout << "\033[0;32m" << "Inserting formulas in the SAT solver: " << "\033[0m" << std::endl;
+
                                 size_t one = _bitset.temporary.find_first();
                                 while (one != Bitset::npos)
                                 {
                                         solver.addClause(_clauses[one]);
+
                                         for (uint64_t i = 0; i < _clause_size[one]; ++i)
-                                                lit.push_back(_clauses[one][i].x);
+                                                frame.literals.push_back(Minisat::var(_clauses[one][i]));
 
                                         if (_bitset.disjunction[one])
                                                 frame.to_process[one] = false;
+
+                                        //p.print(_subformulas[one], true);
+
                                         one = _bitset.temporary.find_next(one);
                                 }
 
-                                std::sort(lit.begin(), lit.end());
-                                auto last = std::unique(lit.begin(), lit.end());
-                                lit.erase(last, lit.end());
+                                std::sort(frame.literals.begin(), frame.literals.end());
+                                auto last = std::unique(frame.literals.begin(), frame.literals.end());
+                                frame.literals.erase(last, frame.literals.end());
 
-                                bool satisfiable = solver.solve();
-                                if (!satisfiable)
+                                std::for_each(frame.literals.begin(), frame.literals.end(), [&] (int l) { solver.newVar(); });
+
+                                if (!solver.solve())
                                 {
+                                        //std::cout << "SAT says NO" << std::endl;
                                         _rollback_to_latest_choice();
                                         goto loop;
                                 }
 
                                 Frame new_frame(frame);
                                 Clause c;
-                                for (int l : lit) // TODO: This could be more intelligent
+
+                                //std::cout << "\033[0;32m" << "Extracting formulas from the SAT solver: " << "\033[0m" << std::endl;
+                                for (int l : frame.literals)
                                 {
                                         auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
                                         {
-                                                return (c.size() == 1) && (c[0].x == l);
+                                                return (c.size() == 1) && (Minisat::var(c[0]) == l);
                                         });
                                         FormulaID id(pos - _clauses.begin());
 
                                         assert(pos != _clauses.end());
 
-                                        if (solver.modelValue(_clauses[id][0]) == Minisat::l_True)
+                                        if (solver.modelValue(l) == Minisat::l_True)
                                         {
+                                                c.push(Minisat::Lit(l, true));
                                                 new_frame.formulas[id] = true;
-                                                c.push(Minisat::Lit(l >> 1, true));
+
+                                                //std::cout << "\033[0;32m" << "TRUE " << "\33[0m";
+                                                //p.print(_subformulas[id], true);
+                                        }
+                                        else if (_bitset.negation[id + 1] || _bitset.not_until[id + 1] || (isa<Tomorrow>(_subformulas[id + 1]) && isa<Negation>(fast_cast<Tomorrow>(_subformulas[id + 1])->formula()))) // Missing Gs and Fs
+                                        {
+                                                c.push(Minisat::Lit(l));
+                                                new_frame.formulas[id + 1] = true;
+
+                                                //std::cout << "\033[0;31m" << "FALSE " << "\33[0m";
+                                                //p.print(_subformulas[id + 1], true);
+                                        }
+                                        else
+                                        {
+                                                PrettyPrinter p;
+                                                p.print(_subformulas[id + 1], true);
+                                                assert(false);
                                         }
                                 }
+
                                 solver.addClause(c);
                                 
                                 _stack.push(std::move(new_frame));
@@ -720,6 +749,7 @@ loop:
                 // REP rule application
                 if (repFrame1 && repFrame2)
                 {
+                        //std::cout << "Applying REP rule" << std::endl;
                         _rollback_to_latest_choice();
                         goto loop;
                 }
@@ -839,45 +869,57 @@ void Solver::_rollback_to_latest_choice()
                 }
                 else if (_stack.top().type == Frame::SAT)
                 {
-                        std::cout << "\033[0;31m" << "Rolling back a SAT frame. Not yet implemented!" << "\033[0m" << std::endl;
-
-                        /*
+                        //std::cout << "\033[0;31m" << "ROLLBACK" << "\033[0m" << std::endl;
                         Minisat::Solver& solver = *_stack.top().solver;
+
                         bool satisfiable = solver.solve();
                         if (satisfiable)
                         {
+                                PrettyPrinter p;
+
                                 Frame new_frame(_stack.top());
                                 Clause c;
 
-                                for (int i = 0; i < solver.nVars(); i++)
-                                {
-                                        // TODO: Need to go backward to find the formula associated with the literal
-                                        c.push(Minisat::Lit(i, solver.modelValue(i) == Minisat::l_True));
-                                }
-                                solver.addClause(c);
-
-                                for (int l : lit) // TODO: This could be more intelligent (???)
+                                //std::cout << "\033[0;32m" << "Extracting formulas from the SAT solver: " << "\033[0m" << std::endl;
+                                for (int l : _stack.top().literals)
                                 {
                                         auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
                                         {
-                                                return (c.size() == 1) && (c[0].x == l);
+                                                return (c.size() == 1) && (Minisat::var(c[0]) == l);
                                         });
                                         FormulaID id(pos - _clauses.begin());
 
                                         assert(pos != _clauses.end());
 
-                                        if (Minisat::toInt(solver.modelValue(_clauses[id][0])) == 0)
+                                        if (solver.modelValue(l) == Minisat::l_True)
                                         {
+                                                c.push(Minisat::Lit(l, true));
                                                 new_frame.formulas[id] = true;
-                                                c.push(Minisat::Lit(l >> 1, true));
+
+                                                //std::cout << "\033[0;32m" << "TRUE " << "\33[0m";
+                                                //p.print(_subformulas[id], true);
+                                        }
+                                        else if (_bitset.negation[id + 1] || _bitset.not_until[id + 1] || (isa<Tomorrow>(_subformulas[id + 1]) && isa<Negation>(fast_cast<Tomorrow>(_subformulas[id + 1])->formula()))) // Missing Gs and Fs
+                                        {
+                                                c.push(Minisat::Lit(l));
+                                                new_frame.formulas[id + 1] = true;
+
+                                                //std::cout << "\033[0;31m" << "FALSE " << "\33[0m";
+                                                //p.print(_subformulas[id + 1], true);
+                                        }
+                                        else
+                                        {
+                                                PrettyPrinter p;
+                                                p.print(_subformulas[id + 1], true);
+                                                assert(false);
                                         }
                                 }
+
                                 solver.addClause(c);
 
                                 _stack.push(std::move(new_frame));
                                 return;
                         }
-                        */
                 }
 
                 _stack.pop();

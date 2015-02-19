@@ -17,3 +17,4 @@
 - Reduce produced model conservatively in the case of Occasional Lookback Heuristic
 - Refactor duplicate code during branch frame initialization? (Inside the main loop and the roolback function)
 - Not Untils are not stored as Negations in the bitsets. Check if this breaks something
+- Not every field of Frame is needed in every type of Frame, check if something can be compressed with unions like (FormulaID, FrameID) or (Eventualities, Literal vector)
