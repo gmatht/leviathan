@@ -653,13 +653,7 @@ loop:
                                 //std::cout << "\033[0;32m" << "Extracting formulas from the SAT solver: " << "\033[0m" << std::endl;
                                 for (int l : frame.literals)
                                 {
-                                        auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
-                                        {
-                                                return (c.size() == 1) && (Minisat::var(c[0]) == l);
-                                        });
-                                        FormulaID id(pos - _clauses.begin());
-
-                                        assert(pos != _clauses.end());
+                                        uint64_t id = static_cast<uint64_t>(l);
 
                                         if (solver.modelValue(l) == Minisat::l_True)
                                         {
@@ -883,13 +877,7 @@ void Solver::_rollback_to_latest_choice()
                                 //std::cout << "\033[0;32m" << "Extracting formulas from the SAT solver: " << "\033[0m" << std::endl;
                                 for (int l : _stack.top().literals)
                                 {
-                                        auto pos = std::find_if(_clauses.begin(), _clauses.end(), [=] (const Clause& c)
-                                        {
-                                                return (c.size() == 1) && (Minisat::var(c[0]) == l);
-                                        });
-                                        FormulaID id(pos - _clauses.begin());
-
-                                        assert(pos != _clauses.end());
+                                        uint64_t id = static_cast<uint64_t>(l);
 
                                         if (solver.modelValue(l) == Minisat::l_True)
                                         {

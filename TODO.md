@@ -18,3 +18,4 @@
 - Refactor duplicate code during branch frame initialization? (Inside the main loop and the roolback function)
 - Not Untils are not stored as Negations in the bitsets. Check if this breaks something
 - Not every field of Frame is needed in every type of Frame, check if something can be compressed with unions like (FormulaID, FrameID) or (Eventualities, Literal vector)
+- Reduce minisat computation time by either pooling and reusing the solver or add a contructor which takes the number of variables (first option seems better)
