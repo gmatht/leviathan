@@ -101,7 +101,6 @@ Solver::Solver() :
   , asynch_interrupt   (false)
 {}
 
-
 Solver::~Solver()
 {
 }
@@ -147,7 +146,6 @@ void Solver::releaseVar(Lit l)
         released_vars.push(var(l));
     }
 }
-
 
 bool Solver::addClause_(vec<Lit>& ps)
 {

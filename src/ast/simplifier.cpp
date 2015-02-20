@@ -146,10 +146,8 @@ void Simplifier::visit(const Always* a)
                 result = make_false();
                 rulesApplied = true;
         }
-        else if (isa<Always>(result) && isa<Eventually>(fast_cast<Always>(result)->formula()))
-                rulesApplied = true;
         else if (isa<Always>(result))
-                rulesApplied = true; // TODO: Is this true?
+                rulesApplied = true;
         else if (isa<Disjunction>(result) && isa<Always>(fast_cast<Disjunction>(result)->right()) && isa<Eventually>(fast_cast<Always>(fast_cast<Disjunction>(result)->right())->formula()))
         {
                 result = make_disjunction(make_always(fast_cast<Disjunction>(result)->left()),

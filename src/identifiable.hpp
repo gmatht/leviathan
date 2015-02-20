@@ -29,13 +29,12 @@ public:
 		return *this;
         }
 
-        /*
         inline CONSTEXPR operator size_t() const
         {
                 return static_cast<size_t>(_id);
         }
-        */
 
+        /*
         inline CONSTEXPR operator unsigned long() const
         {
                 return static_cast<unsigned long>(_id);
@@ -45,6 +44,7 @@ public:
         {
                 return static_cast<unsigned long long>(_id);
         }
+        */
 
         inline CONSTEXPR friend bool operator==(const Derived& d1, const Derived& d2)
         {

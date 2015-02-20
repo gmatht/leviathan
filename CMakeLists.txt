@@ -58,7 +58,7 @@ endif()
 #-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
 set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -fuse-ld=gold -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
-set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -flto -Ofast -g0")
+set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -Ofast -g0")
 
 file (MAKE_DIRECTORY ${bin_dir})
 
