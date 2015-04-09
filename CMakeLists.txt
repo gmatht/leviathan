@@ -53,10 +53,10 @@ endif ()
 if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
     set_source_files_properties (${src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
     set_source_files_properties (${checker_src} PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
-endif()
+endif ()
 
 #-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -fuse-ld=gold -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -Ofast -g0")
 
@@ -70,7 +70,7 @@ target_link_libraries (leviathan boost_system)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug" AND CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries (leviathan SegFault)
-endif()
+endif ()
 
 link_directories (${bin_dir})
 

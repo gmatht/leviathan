@@ -140,6 +140,7 @@ private:
         bool _has_not_until;
 
         void _initialize();
+
         void _add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs);
 
         inline bool _check_contradiction_rule();

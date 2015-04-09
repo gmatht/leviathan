@@ -5,6 +5,7 @@ bin
 */xcuserdata/*
 analyze/*
 build/*
+build_test/*
 .idea
 CMakeLists.txt.user
 valgrind

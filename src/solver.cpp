@@ -246,6 +246,7 @@ void Solver::_initialize()
         }
 
         std::cout << "Found " << eventualities.size() << " eventualities" << std::endl;
+        // TODO: Skip this step if the use of the sat solver is not enabled
         std::cout << "Generating clauses..." << std::endl;
 
         _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
@@ -717,6 +718,10 @@ loop:
                                 for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
                                 {
                                         const Eventuality& ev = frame.eventualities[i];
+
+                                        if (ev.is_not_requested())
+                                                continue;
+
                                         if (!(ev.is_satisfied() && ev.id() >= currFrame->id))
                                         {
                                                 all_satisfied = false;
@@ -754,7 +759,6 @@ loop:
 
 // Heuristics: OCCASIONAL LOOKBACK
 step_rule:
-
                 if (frame.id >= _maximum_depth)
                 {
                         _rollback_to_latest_choice();
@@ -809,6 +813,8 @@ step_rule:
                         ev.set_satisfied(frame.id);
                 ++i;
         });
+
+        std::cout << std::endl;
  }
 
 void Solver::_rollback_to_latest_choice()

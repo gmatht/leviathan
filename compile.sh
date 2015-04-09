@@ -42,6 +42,7 @@ while [ "$1" != "" ]; do
                         link=$VALUE
                         shift
                 ;;
+                
                 *)
                         echo "ERROR: unknown parameter \"$PARAM\""
                         usage
