@@ -813,8 +813,6 @@ step_rule:
                         ev.set_satisfied(frame.id);
                 ++i;
         });
-
-        std::cout << std::endl;
  }
 
 void Solver::_rollback_to_latest_choice()
