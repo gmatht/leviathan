@@ -40,6 +40,8 @@ set (checker_src
     ${src_dir}/json_output.cpp
 )
 
+find_package(Boost COMPONENTS system)
+
 include_directories (include)
 include_directories (${src_dir})
 include_directories (${src_dir}/ast)
@@ -56,7 +58,7 @@ if (${CMAKE_CXX_COMPILER} MATCHES "usr/bin/clang\\+\\+")
 endif ()
 
 #-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize
-set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -DHAVE_LONG_LONG -march=native -mavx2 -std=c++1y")
+set (CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wstrict-aliasing -Wunreachable-code -Wno-zero-length-array -fPIC -DHAVE_LONG_LONG -march=native -std=c++1y")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
 set (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fstrict-aliasing -Ofast -g0")
 
@@ -66,7 +68,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${bin_dir})
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${bin_dir})
 
 add_library (leviathan ${src})
-target_link_libraries (leviathan boost_system)
+target_link_libraries (leviathan ${Boost_LIBRARIES})
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug" AND CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries (leviathan SegFault)

@@ -1,4 +1,4 @@
- #include "solver.hpp"
+#include "solver.hpp"
 
 #include "generator.hpp"
 #include "utility.hpp"
@@ -32,7 +32,7 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_pro
 
         _mt = std::mt19937((std::random_device())());
         _backtrack_probability_rand = std::uniform_int_distribution<uint32_t>(0, 100);
-        _backtrack_percentage_rand = std::uniform_int_distribution<uint32_t>(_minimum_backtrack, _maximum_backtrack);
+        //_backtrack_percentage_rand = std::uniform_int_distribution<uint32_t>(_minimum_backtrack, _maximum_backtrack);
 
         _initialize();
 }
@@ -46,6 +46,10 @@ void Solver::_initialize()
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
 
+        std::cout << "Simplified formula: ";
+        PrettyPrinter p;
+        p.print(_formula, true);
+    
         std::cout << "Generating subformulas..." << std::endl;
         Generator gen;
         gen.generate(_formula);
@@ -697,6 +701,8 @@ loop:
                 const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
 
+            //bool applyRepRule = false;
+            
                 //FrameID min_frame;
 
                 // Heuristics: OCCASIONAL LOOKBACK
@@ -705,7 +711,7 @@ loop:
                 
                 // Heuristics: PARTIAL LOOKBACK
                 //min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_backtrack_percentage_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
-
+            
                 while (currFrame)
                 {
                         // Heuristics: PARTIAL LOOKBACK
@@ -722,7 +728,7 @@ loop:
                                         if (ev.is_not_requested())
                                                 continue;
 
-                                        if (!(ev.is_satisfied() && ev.id() >= currFrame->id))
+                                        if (!(ev.is_satisfied() && ev.id() > currFrame->id))
                                         {
                                                 all_satisfied = false;
                                                 break;
@@ -731,13 +737,14 @@ loop:
 
                                 if (__builtin_expect(all_satisfied, 0))
                                 {
-                                        _result = Result::SATISFIABLE;
-                                        _state = State::PAUSED;
-                                        _loop_state = currFrame->id;
-                                        return _result;
+                                    _result = Result::SATISFIABLE;
+                                    _state = State::PAUSED;
+                                    _loop_state = currFrame->id;
+                                    return _result;
                                 }
 
                                 //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completely the same in terms of performance
+                                /*
                                 if (frame.formulas == currFrame->formulas) // REP rule check
                                 {
                                         if (!repFrame1)
@@ -745,18 +752,160 @@ loop:
                                         else if (!repFrame2)
                                                 repFrame2 = currFrame;
                                 }
+                                */
+                            
+                                /*
+                                if (!applyRepRule && frame.formulas == currFrame->formulas)
+                                {
+                                    if (std::none_of(frame.eventualities.begin(), frame.eventualities.end(), [=] (const Eventuality& ev)
+                                                     {
+                                                         return !ev.is_not_requested() && ev.is_satisfied() && ev.id() > currFrame->id;
+                                                     }))
+                                        applyRepRule = true;
+                                    
+                                    if (!repFrame1)
+                                        repFrame1 = currFrame;
+                                    else
+                                    {
+                                        bool same_satisfied = true;
+                                        for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
+                                        {
+                                            const Eventuality& ev = frame.eventualities[i];
+                                            
+                                            if (ev.is_not_requested() || ev.is_not_satisfied())
+                                                continue;
+                                            
+                                            if (ev.id() > repFrame1->id && repFrame1->eventualities[i].id() > currFrame->id)
+                                            {
+                                                same_satisfied = false;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        if (!same_satisfied)
+                                            applyRepRule = true;
+                                    }
+                                    
+                                }
+                                */
+                            
+                                //if (frame.formulas == currFrame->formulas)
+                                //      applyRepRule = true;
+                            
                         }
                         currFrame = currFrame->chain;
                 }
 
                 // REP rule application
+                /*
                 if (repFrame1 && repFrame2)
                 {
                         //std::cout << "Applying REP rule" << std::endl;
                         _rollback_to_latest_choice();
                         goto loop;
                 }
-
+                */
+            
+                /*
+                if (applyRepRule)
+                {
+                    //std::cout << "Applying REP rule" << std::endl;
+                    _rollback_to_latest_choice();
+                    goto loop;
+                }
+                */
+            
+                /*
+                // PRUNE0 rule
+                currFrame = frame.chain;
+                while (currFrame)
+                {
+                    if (frame.formulas == currFrame->formulas)
+                    {
+                        bool none_satisfied = true;
+                        
+                        for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
+                        {
+                            const Eventuality& ev = frame.eventualities[i];
+                            
+                            if (ev.is_not_requested())
+                                continue;
+                            
+                            if (ev.is_satisfied() && ev.id() > currFrame->id)
+                            {
+                                none_satisfied = false;
+                                break;
+                            }
+                        }
+                        
+                        if (none_satisfied)
+                        {
+                            //std::cout << "Applying PRUNE0 rule" << std::endl;
+                            _rollback_to_latest_choice();
+                            goto loop;
+                        }
+                    }
+                    
+                    currFrame = currFrame->chain;
+                }
+            
+                // PRUNE rule
+                currFrame = frame.chain;
+                while (currFrame)
+                {
+                    if (frame.formulas == currFrame->formulas)
+                    {
+                        repFrame2 = currFrame->chain;
+                        while (repFrame2)
+                        {
+                            if (frame.formulas == repFrame2->formulas)
+                            {
+                                bool nothing_changed = true;
+                                
+                                for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
+                                {
+                                    const Eventuality& ev = frame.eventualities[i];
+                                    
+                                    if (ev.is_not_requested())
+                                        continue;
+                                    
+                                    if (ev.is_satisfied() && ev.id() > currFrame->id &&
+                                        (currFrame->eventualities[i].is_not_satisfied() ||
+                                         currFrame->eventualities[i].id() <= repFrame2->id))
+                                    {
+                                        nothing_changed = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (nothing_changed)
+                                {
+                                    //std::cout << "Applying PRUNE rule" << std::endl;
+                                    _rollback_to_latest_choice();
+                                    goto loop;
+                                }
+                            }
+                            
+                            repFrame2 = repFrame2->chain;
+                        }
+                    }
+                
+                    currFrame = currFrame->chain;
+                }
+                */
+            
+                currFrame = frame.chain;
+                while (currFrame)
+                {
+                    if (frame.formulas == currFrame->formulas)
+                    {
+                        _rollback_to_latest_choice();
+                        goto loop;
+                    }
+                    
+                    currFrame = currFrame->chain;
+                }
+            
 // Heuristics: OCCASIONAL LOOKBACK
 step_rule:
                 if (frame.id >= _maximum_depth)
@@ -999,5 +1148,8 @@ bool Solver::_should_use_sat_solver()
         return _bitset.temporary.any();
 }
 
-}
+        FormulaPtr inline Solver::Formula() const {
+                return _formula;
+        }
+    }
 }

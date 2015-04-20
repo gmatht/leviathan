@@ -45,17 +45,14 @@ public:
         ~Solver() {}
 
         Solver(const Solver&) = delete;
-        Solver(const Solver&&) = delete;
+        Solver(Solver&&) = delete;
 
         Solver& operator=(const Solver&) = delete;
-        Solver& operator=(const Solver&&) = delete;
+        Solver& operator=(Solver&&) = delete;
 
         Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100, bool use_sat = false);
 
-        inline FormulaPtr Formula() const
-        {
-                return _formula;
-        }
+        FormulaPtr inline Formula() const;
 
         inline State state() const
         {
@@ -133,7 +130,7 @@ private:
 
         std::mt19937 _mt;
         std::uniform_int_distribution<uint32_t> _backtrack_probability_rand;
-        std::uniform_int_distribution<uint32_t> _backtrack_percentage_rand;
+        //std::uniform_int_distribution<uint32_t> _backtrack_percentage_rand;
 
         bool _has_eventually;
         bool _has_until;
