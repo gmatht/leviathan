@@ -46,9 +46,9 @@ void Solver::_initialize()
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
 
-        std::cout << "Simplified formula: ";
-        PrettyPrinter p;
-        p.print(_formula, true);
+        //std::cout << "Simplified formula: ";
+        //PrettyPrinter p;
+        //p.print(_formula, true);
     
         std::cout << "Generating subformulas..." << std::endl;
         Generator gen;
@@ -505,12 +505,14 @@ Solver::Result Solver::solution()
 
         _state = State::RUNNING;
         bool rules_applied;
+    
+        __dump_current_formulas();
 
 loop:
         while (!_stack.empty())
         {
                 Frame& frame = _stack.top();
-
+            
                 rules_applied = true;
                 while (rules_applied)
                 {
@@ -553,6 +555,13 @@ loop:
                                 if (__builtin_expect(ev.is_not_requested(), 0))
                                         ev.set_not_satisfied();
 
+                                /*
+                                PrettyPrinter p;
+                    
+                                std::cout << "Choosing on id: " << frame.id << " on formula: ";
+                                p.print(_subformulas[frame.choosenFormula], true);
+                                 */
+                            
                                 Frame new_frame(frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
@@ -696,12 +705,47 @@ loop:
                 }
 
                 _update_eventualities_satisfaction();
+                _update_history();
+            
+                bool loop_result = false;
+                std::tie(loop_result, _loop_state) = _check_loop_rule();
+            
+                if (loop_result)
+                {
+                    _result = Result::SATISFIABLE;
+                    _state = State::PAUSED;
+                    return _result;
+                }
+            
+                /*
+                if (_check_my_prune())
+                {
+                    _rollback_to_latest_choice();
+                    goto loop;
+                }
+                */
+            
+                if (_check_prune0_rule() || _check_prune_rule())
+                {
+                    /*
+                    PrettyPrinter p;
+                    
+                    for (uint64_t i = 0; i < frame.eventualities.size(); ++i)
+                        p.print(_subformulas[_bw_eventualities_lut[i]]) << " : " << frame.eventualities[i].id() << " - " <<
+                                                                                    frame.prev->eventualities[i].id() << " - " <<
+                                                                                    frame.first->eventualities[i].id() << std::endl;
+                    std::cout << std::endl;
+                    */
+                    _rollback_to_latest_choice();
+                    goto loop;
+                }
 
+                /*
                 // LOOP rule
                 const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
                 const Frame* currFrame = frame.chain;
 
-            //bool applyRepRule = false;
+                //bool applyRepRule = false;
             
                 //FrameID min_frame;
 
@@ -792,9 +836,11 @@ loop:
                                 //if (frame.formulas == currFrame->formulas)
                                 //      applyRepRule = true;
                             
+                        /*
                         }
                         currFrame = currFrame->chain;
                 }
+                */
 
                 // REP rule application
                 /*
@@ -894,6 +940,7 @@ loop:
                 }
                 */
             
+                /*
                 currFrame = frame.chain;
                 while (currFrame)
                 {
@@ -905,9 +952,10 @@ loop:
                     
                     currFrame = currFrame->chain;
                 }
-            
+                */
+                 
 // Heuristics: OCCASIONAL LOOKBACK
-step_rule:
+//step_rule:
                 if (frame.id >= _maximum_depth)
                 {
                         _rollback_to_latest_choice();
@@ -963,7 +1011,95 @@ step_rule:
                 ++i;
         });
  }
+    
+void Solver::_update_history()
+{
+    Frame* current_frame = _stack.top().chain;
+    Frame& top_frame = _stack.top();
+    
+    while (current_frame)
+    {
+        if (current_frame->formulas == top_frame.formulas)
+        {
+            top_frame.prev = current_frame;
+            top_frame.first = current_frame->first;
+            return;
+        }
+        
+        current_frame = current_frame->chain;
+    }
+    
+    top_frame.prev = &top_frame;
+    top_frame.first = &top_frame;
+}
+    
+std::tuple<bool, FrameID> Solver::_check_loop_rule() const
+{
+    const Frame& top_frame = _stack.top();
+    const FrameID first_frame_id = top_frame.first->id;
+    
+    bool ret = std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [first_frame_id] (const Eventuality& ev)
+    {
+        return ev.is_not_requested() || (ev.is_satisfied() && ev.id() > first_frame_id);
+    });
+    
+    return std::tuple<bool, FrameID>{ ret, first_frame_id };
+}
+    
+bool Solver::_check_prune0_rule() const
+{
+    const Frame& top_frame = _stack.top();
+    const FrameID prev_frame_id = top_frame.prev->id;
+    
+    if (top_frame.prev == &top_frame)
+        return false;
+    
+    return !top_frame.eventualities.empty() &&
+            std::none_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [&, prev_frame_id] (const Eventuality& ev)
+    {
+        if (ev.is_not_requested() || ev.is_not_satisfied())
+            return false;
+        
+        return ev.id() > prev_frame_id;
+    });
+}
 
+bool Solver::_check_prune_rule() const
+{
+    const Frame& top_frame = _stack.top();
+    const FrameID prev_frame_id = top_frame.prev->id;
+    const FrameID first_frame_id = top_frame.first->id;
+    
+    if (top_frame.prev == top_frame.first)
+        return false;
+    
+    return std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [&top_frame, i = 0] (const Eventuality& ev) mutable
+    {
+        if (ev.is_not_requested() || ev.is_not_satisfied() || ev.id() <= top_frame.prev->id)
+        {
+            ++i;
+            return true;
+        }
+        
+        bool ret = top_frame.prev->eventualities[i].is_satisfied() && top_frame.prev->eventualities[i].id() > top_frame.first->id;
+        ++i;
+        return ret;
+    });
+}
+    
+bool Solver::_check_my_prune() const
+{
+    const Frame& top_frame = _stack.top();
+    
+    if (top_frame.prev == &top_frame)
+        return false;
+    
+    return std::any_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [] (const Eventuality& ev)
+    {
+        return ev.is_not_satisfied();
+    });
+}
+    
 void Solver::_rollback_to_latest_choice()
 {
         while (!_stack.empty())
@@ -972,11 +1108,25 @@ void Solver::_rollback_to_latest_choice()
                 {
                         Frame& top = _stack.top();;
                         Frame new_frame(top);
-
+                        /*
+                        PrettyPrinter p;
+                        p.print(_subformulas[8], true);
+                    
+                        if (&top == &Container(_stack)[0] && top.choosenFormula == 8)
+                            std::cout << "LOL" << std::endl;
+                         */
+                    
                         if (_bitset.disjunction[top.choosenFormula])
                                 new_frame.formulas[_rhs[top.choosenFormula]] = true;
                         else if (_bitset.eventually[top.choosenFormula])
                         {
+                                /*
+                                PrettyPrinter p;
+                                std::cout << "Rollback on id: " << top.id << " on formula: ";
+                                p.print(_subformulas[top.choosenFormula], true);
+                                p.print(_subformulas[top.choosenFormula + 1], true);
+                                 */
+                            
                                 new_frame.formulas[top.choosenFormula + 1] = true;
                                 assert(_bitset.tomorrow[top.choosenFormula + 1] && _lhs[top.choosenFormula + 1] == top.choosenFormula);
                         }
@@ -1148,8 +1298,42 @@ bool Solver::_should_use_sat_solver()
         return _bitset.temporary.any();
 }
 
-        FormulaPtr inline Solver::Formula() const {
-                return _formula;
-        }
-    }
+FormulaPtr inline Solver::Formula() const {
+        return _formula;
 }
+
+void Solver::__dump_current_formulas() const
+{
+    PrettyPrinter p;
+    for (uint64_t i = 0; i < _subformulas.size(); ++i)
+        if (_stack.top().formulas[i])
+            p.print(_subformulas[i], true);
+    std::cout << std::endl;
+}
+    
+void Solver::__dump_current_eventualities() const
+{
+    PrettyPrinter p;
+    for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
+        p.print(_subformulas[_bw_eventualities_lut[i]]) << " : " << _stack.top().eventualities[i].id() << std::endl;
+}
+    
+void Solver::__dump_eventualities(FrameID id) const
+{
+    PrettyPrinter p;
+    Frame* current_frame = _stack.top().chain;
+    while (current_frame)
+    {
+        if (current_frame->id == id)
+            break;
+        
+        current_frame = current_frame->chain;
+    }
+    
+    for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
+        p.print(_subformulas[_bw_eventualities_lut[i]]) << " : " << Container(_stack)[id].eventualities[i].id() << std::endl;
+}
+    
+}
+}
+

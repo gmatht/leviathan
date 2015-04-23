@@ -86,6 +86,8 @@ struct Frame
         Frame* chain;
         std::unique_ptr<Minisat::Solver> solver;
         Type type;
+        Frame* prev;
+        Frame* first;
 
         // Builds a frame with a single formula in it (represented by the index in the table) -> Start of the process
         Frame(const FrameID _id, const FormulaID _formula, uint64_t number_of_formulas, uint64_t number_of_eventualities)
@@ -98,6 +100,8 @@ struct Frame
                 , chain(nullptr)
                 , solver(nullptr)
                 , type(UNKNOWN)
+                , prev(nullptr)
+                , first(nullptr)
         {
                 formulas.set(_formula);
                 to_process.set();
@@ -114,6 +118,8 @@ struct Frame
                 , chain(_frame.chain)
                 , solver(nullptr)
                 , type(UNKNOWN)
+                , prev(nullptr)
+                , first(nullptr)
         {
         }
 
@@ -128,6 +134,8 @@ struct Frame
                 , chain(chainPtr)
                 , solver(nullptr)
                 , type(UNKNOWN)
+                , prev(nullptr)
+                , first(nullptr)
         {
                 to_process.set();
         }

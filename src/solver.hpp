@@ -150,8 +150,18 @@ private:
 
         inline void _rollback_to_latest_choice();
         inline void _update_eventualities_satisfaction();
+        inline void _update_history();
+    
+        inline std::tuple<bool, FrameID> _check_loop_rule() const;
+        inline bool _check_prune0_rule() const;
+        inline bool _check_prune_rule() const;
+        inline bool _check_my_prune() const;
 
         inline bool _should_use_sat_solver();
+    
+        void __dump_current_formulas() const;
+        void __dump_current_eventualities() const;
+        void __dump_eventualities(FrameID id) const;
 };
 
 }
