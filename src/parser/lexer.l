@@ -21,6 +21,7 @@
 "THEN"		return Parser::THEN;
 "<->"		return Parser::IFF;
 "IFF"		return Parser::IFF;
+"="		return Parser::IFF;
 "U"         return Parser::UNTIL;
 "V"         return Parser::RELEASE;
 "R" 		return Parser::RELEASE;

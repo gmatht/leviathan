@@ -86,7 +86,7 @@ void Simplifier::visit(const Negation* n)
         }
         else if (isa<Iff>(result))
         {
-                result = make_iff(make_negation(fast_cast<Iff>(result)->left()), make_negation(fast_cast<Iff>(result)->right()));
+                result = make_iff(make_negation(fast_cast<Iff>(result)->left()), fast_cast<Iff>(result)->right());
                 rulesApplied = true;
         }
         else
@@ -330,9 +330,9 @@ void Simplifier::visit(const Iff* i)
         i->right()->accept(*this);
         FormulaPtr right = result;
 
-        rulesApplied = true;
-        result = make_conjunction(make_disjunction(make_negation(left), right),
-                                  make_disjunction(left, make_negation(right)));
+        result = make_iff(left, right);
+        //rulesApplied = true;
+        //result = make_conjunction(make_disjunction(make_negation(left), right), make_disjunction(left, make_negation(right)));
 }
 
 void Simplifier::visit(const Until* u)

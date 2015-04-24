@@ -110,6 +110,7 @@ private:
                 Bitset disjunction;
                 Bitset until;
                 Bitset not_until;
+                Bitset iff;
                 Bitset temporary;
         } _bitset;
 
@@ -144,6 +145,7 @@ private:
         inline bool _apply_conjunction_rule();
         inline bool _apply_always_rule();
         inline bool _apply_disjunction_rule();
+        inline bool _apply_iff_rule();
         inline bool _apply_eventually_rule();
         inline bool _apply_until_rule();
         inline bool _apply_not_until_rule();

@@ -92,9 +92,21 @@ void Generator::visit(const Then*)
         assert(false && "Then node found in the AST!");
 }
 
-void Generator::visit(const Iff*)
+void Generator::visit(const Iff* t)
 {
-        assert(false && "Iff node found in the AST!");
+        _formulas.push_back(t->left());
+        _formulas.push_back(t->right());
+        
+        auto lneg = _simplifier.simplify(make_negation(t->left()));
+        auto rneg = _simplifier.simplify(make_negation(t->right()));
+
+        _formulas.push_back(lneg);
+        _formulas.push_back(rneg);
+
+        lneg->accept(*this);
+        rneg->accept(*this);
+
+        //assert(false && "Iff node found in the AST!");
 }
 
 void Generator::visit(const Until* t)

@@ -45,10 +45,6 @@ void Solver::_initialize()
         std::cout << "Simplifing formula..." << std::endl;
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
-
-        //std::cout << "Simplified formula: ";
-        //PrettyPrinter p;
-        //p.print(_formula, true);
     
         std::cout << "Generating subformulas..." << std::endl;
         Generator gen;
@@ -144,6 +140,17 @@ void Solver::_initialize()
             else
                 return compareFunc(fast_cast<Until>(a)->right(), fast_cast<Until>(b)->right());
         }
+
+        if (isa<Then>(a) || isa<Then>(b))
+            assert(false);
+
+        if (isa<Iff>(a) && isa<Iff>(b))
+        {
+             if (fast_cast<Iff>(a)->left() != fast_cast<Iff>(b)->left())
+               return compareFunc(fast_cast<Iff>(a)->left(), fast_cast<Iff>(b)->left());
+            else
+                return compareFunc(fast_cast<Iff>(a)->right(), fast_cast<Iff>(b)->right());
+        }
         
         return a->type() < b->type();
         };
@@ -168,6 +175,7 @@ void Solver::_initialize()
         _bitset.disjunction.resize(_number_of_formulas);
         _bitset.until.resize(_number_of_formulas);
         _bitset.not_until.resize(_number_of_formulas);
+        _bitset.iff.resize(_number_of_formulas);
         _bitset.temporary.resize(_number_of_formulas);
         
         _lhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
@@ -212,6 +220,13 @@ void Solver::_initialize()
                         left = fast_cast<Until>(f)->left();
                         right = fast_cast<Until>(f)->right();
                 }
+                else if (isa<Then>(f))
+                        assert(false);
+                else if (isa<Iff>(f))
+                {
+                        left = fast_cast<Iff>(f)->left();
+                        right = fast_cast<Iff>(f)->right();
+                }
 
                 if (left)
                         lhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), left, compareFunc) - _subformulas.begin()));
@@ -230,7 +245,7 @@ void Solver::_initialize()
                         eventualities.push_back(_subformulas[_lhs[i]]);
                 else if (_bitset.until[i])
                         eventualities.push_back(_subformulas[_rhs[i]]);
-                else if (_bitset.not_until[i])
+                else if (_bitset.not_until[i]) // TODO: Does NOT UNTIL formulas generate eventualities?
                 {
                         eventualities.push_back(_subformulas[_lhs[i]]);
                         eventualities.push_back(_subformulas[_rhs[i]]);
@@ -259,7 +274,7 @@ void Solver::_initialize()
         ClauseCounter counter;
         current_index = FormulaID(0);
         std::vector<Minisat::Lit> temp;
-        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability
+        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability and consider Iff formulas
         {
                 assert(isa<Disjunction>(f));
                 assert(!isa<Conjunction>(f));
@@ -321,6 +336,8 @@ void Solver::_initialize()
                         std::for_each(temp.begin(), temp.end(), [&] (const Minisat::Lit& lit) { clause.push(lit); });
                         clause.moveTo(_clauses[current_index]);
                 }
+                else if (isa<Then>(f))
+                        assert(false);
 
                 // Note: We have nothing to do for conjunctions, because the formula is in CNF
 
@@ -391,9 +408,14 @@ void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID posit
                         _rhs[position] = rhs;
                         break;
 
+                case Formula::Type::Iff:
+                        _bitset.iff[position] = true;
+                        _lhs[position] = lhs;
+                        _rhs[position] = rhs;
+                        break;
+
                 case Formula::Type::True:
                 case Formula::Type::False:
-                case Formula::Type::Iff:
                 case Formula::Type::Then:
                         assert(false);
                         break;
@@ -489,11 +511,22 @@ bool Solver::_apply_##rule##_rule() \
 }
 
 APPLY_RULE(disjunction)
+APPLY_RULE(iff)
 APPLY_RULE(eventually)
 APPLY_RULE(until)
 APPLY_RULE(not_until)
 
 #undef APPLY_RULE
+
+namespace
+{
+        volatile std::atomic_bool signal_status;
+}
+
+void signal_handler(int signal)
+{
+        signal_status.store(true);
+}
 
 Solver::Result Solver::solution()
 {
@@ -505,10 +538,23 @@ Solver::Result Solver::solution()
 
         _state = State::RUNNING;
         bool rules_applied;
-    
-        __dump_current_formulas();
+
+        uint64_t maximum_steps = 1;
+        uint64_t maximum_frames = 1;
+        uint64_t total_frames = 1;
+
+        std::signal(SIGINT, signal_handler);
 
 loop:
+        if (signal_status.load())
+        {
+                std::cout << "Total frames: "  << total_frames << std::endl;
+                std::cout << "Maximum model size: " << maximum_steps << std::endl;
+                std::cout << "Maximum depth: " << maximum_frames << std::endl;
+
+                signal_status.store(false);
+        }
+
         while (!_stack.empty())
         {
                 Frame& frame = _stack.top();
@@ -523,12 +569,18 @@ loop:
                                 _state = State::PAUSED;
                                 _result = Result::SATISFIABLE;
                                 _loop_state = frame.chain->id;
+
+                                std::cout << "Total frames: "  << total_frames << std::endl;
+                                std::cout << "Maximum model size: " << maximum_steps << std::endl;
+                                std::cout << "Maximum depth: " << maximum_frames << std::endl;
+
                                 return _result;
                         }
 
                         if (_check_contradiction_rule())
                         {
                                 _rollback_to_latest_choice();
+                                ++total_frames;
                                 goto loop;
                         }
 
@@ -545,8 +597,26 @@ loop:
                                         new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                         _stack.push(std::move(new_frame));
 
+                                        ++total_frames;
+                                        if (_stack.size() > maximum_frames)
+                                            maximum_frames = _stack.size();
+
                                         goto loop;
                                 }
+                        }
+
+                        if (_apply_iff_rule())
+                        {
+                                Frame new_frame(frame);
+                                new_frame.formulas[_lhs[frame.choosenFormula]] = true;
+                                new_frame.formulas[_rhs[frame.choosenFormula]] = true;
+                                _stack.push(std::move(new_frame));
+
+                                ++total_frames;
+                                if (_stack.size() > maximum_frames)
+                                        maximum_frames = _stack.size();
+
+                                goto loop;
                         }
 
                         if (_has_eventually && _apply_eventually_rule())
@@ -554,17 +624,14 @@ loop:
                                 auto& ev = frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
                                 if (__builtin_expect(ev.is_not_requested(), 0))
                                         ev.set_not_satisfied();
-
-                                /*
-                                PrettyPrinter p;
-                    
-                                std::cout << "Choosing on id: " << frame.id << " on formula: ";
-                                p.print(_subformulas[frame.choosenFormula], true);
-                                 */
                             
                                 Frame new_frame(frame);
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
+
+                                ++total_frames;
+                                if (_stack.size() > maximum_frames)
+                                            maximum_frames = _stack.size();
 
                                 goto loop;
                         }
@@ -578,6 +645,10 @@ loop:
                                 Frame new_frame(frame);
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
+
+                                ++total_frames;
+                                if (_stack.size() > maximum_frames)
+                                            maximum_frames = _stack.size();
 
                                 goto loop;
                         }
@@ -595,6 +666,10 @@ loop:
                                 new_frame.formulas[_lhs[frame.choosenFormula]] = true;
                                 new_frame.formulas[_rhs[frame.choosenFormula]] = true;
                                 _stack.push(std::move(new_frame));
+
+                                ++total_frames;
+                                if (_stack.size() > maximum_frames)
+                                            maximum_frames = _stack.size();
 
                                 goto loop;
                         }
@@ -714,251 +789,31 @@ loop:
                 {
                     _result = Result::SATISFIABLE;
                     _state = State::PAUSED;
+
+                    std::cout << "Total frames: "  << total_frames << std::endl;
+                    std::cout << "Maximum model size: " << maximum_steps << std::endl;
+                    std::cout << "Maximum depth: " << maximum_frames << std::endl;
+
                     return _result;
                 }
             
-                /*
-                if (_check_my_prune())
-                {
-                    _rollback_to_latest_choice();
-                    goto loop;
-                }
-                */
-            
-                if (_check_prune0_rule() || _check_prune_rule())
-                {
-                    /*
-                    PrettyPrinter p;
-                    
-                    for (uint64_t i = 0; i < frame.eventualities.size(); ++i)
-                        p.print(_subformulas[_bw_eventualities_lut[i]]) << " : " << frame.eventualities[i].id() << " - " <<
-                                                                                    frame.prev->eventualities[i].id() << " - " <<
-                                                                                    frame.first->eventualities[i].id() << std::endl;
-                    std::cout << std::endl;
-                    */
-                    _rollback_to_latest_choice();
-                    goto loop;
-                }
-
-                /*
-                // LOOP rule
-                const Frame* repFrame1 = nullptr, *repFrame2 = nullptr;
-                const Frame* currFrame = frame.chain;
-
-                //bool applyRepRule = false;
-            
-                //FrameID min_frame;
-
-                // Heuristics: OCCASIONAL LOOKBACK
+// Heuristics: OCCASIONAL LOOKBACK
                 if (_backtrack_probability_rand(_mt) > _backtrack_probability)
                         goto step_rule;
-                
-                // Heuristics: PARTIAL LOOKBACK
-                //min_frame = FrameID(static_cast<uint64_t>(static_cast<float>(_backtrack_percentage_rand(_mt)) / 100.f * static_cast<uint64_t>(currFrame->id)));
-            
-                while (currFrame)
+
+                if (_check_prune0_rule() || _check_prune_rule())
                 {
-                        // Heuristics: PARTIAL LOOKBACK
-                        //if (currFrame->id < min_frame)
-                                //break;
-
-                        if (frame.formulas.is_subset_of(currFrame->formulas))
-                        {
-                                bool all_satisfied = true;
-                                for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
-                                {
-                                        const Eventuality& ev = frame.eventualities[i];
-
-                                        if (ev.is_not_requested())
-                                                continue;
-
-                                        if (!(ev.is_satisfied() && ev.id() > currFrame->id))
-                                        {
-                                                all_satisfied = false;
-                                                break;
-                                        }
-                                }
-
-                                if (__builtin_expect(all_satisfied, 0))
-                                {
-                                    _result = Result::SATISFIABLE;
-                                    _state = State::PAUSED;
-                                    _loop_state = currFrame->id;
-                                    return _result;
-                                }
-
-                                //if (!frame.formulas.is_proper_subset_of(currFrame->formulas)) // Alternative: seems to be completely the same in terms of performance
-                                /*
-                                if (frame.formulas == currFrame->formulas) // REP rule check
-                                {
-                                        if (!repFrame1)
-                                                repFrame1 = currFrame;
-                                        else if (!repFrame2)
-                                                repFrame2 = currFrame;
-                                }
-                                */
-                            
-                                /*
-                                if (!applyRepRule && frame.formulas == currFrame->formulas)
-                                {
-                                    if (std::none_of(frame.eventualities.begin(), frame.eventualities.end(), [=] (const Eventuality& ev)
-                                                     {
-                                                         return !ev.is_not_requested() && ev.is_satisfied() && ev.id() > currFrame->id;
-                                                     }))
-                                        applyRepRule = true;
-                                    
-                                    if (!repFrame1)
-                                        repFrame1 = currFrame;
-                                    else
-                                    {
-                                        bool same_satisfied = true;
-                                        for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
-                                        {
-                                            const Eventuality& ev = frame.eventualities[i];
-                                            
-                                            if (ev.is_not_requested() || ev.is_not_satisfied())
-                                                continue;
-                                            
-                                            if (ev.id() > repFrame1->id && repFrame1->eventualities[i].id() > currFrame->id)
-                                            {
-                                                same_satisfied = false;
-                                                break;
-                                            }
-                                        }
-                                        
-                                        if (!same_satisfied)
-                                            applyRepRule = true;
-                                    }
-                                    
-                                }
-                                */
-                            
-                                //if (frame.formulas == currFrame->formulas)
-                                //      applyRepRule = true;
-                            
-                        /*
-                        }
-                        currFrame = currFrame->chain;
-                }
-                */
-
-                // REP rule application
-                /*
-                if (repFrame1 && repFrame2)
-                {
-                        //std::cout << "Applying REP rule" << std::endl;
-                        _rollback_to_latest_choice();
-                        goto loop;
-                }
-                */
-            
-                /*
-                if (applyRepRule)
-                {
-                    //std::cout << "Applying REP rule" << std::endl;
                     _rollback_to_latest_choice();
+                    ++total_frames;
                     goto loop;
                 }
-                */
-            
-                /*
-                // PRUNE0 rule
-                currFrame = frame.chain;
-                while (currFrame)
-                {
-                    if (frame.formulas == currFrame->formulas)
-                    {
-                        bool none_satisfied = true;
-                        
-                        for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
-                        {
-                            const Eventuality& ev = frame.eventualities[i];
-                            
-                            if (ev.is_not_requested())
-                                continue;
-                            
-                            if (ev.is_satisfied() && ev.id() > currFrame->id)
-                            {
-                                none_satisfied = false;
-                                break;
-                            }
-                        }
-                        
-                        if (none_satisfied)
-                        {
-                            //std::cout << "Applying PRUNE0 rule" << std::endl;
-                            _rollback_to_latest_choice();
-                            goto loop;
-                        }
-                    }
-                    
-                    currFrame = currFrame->chain;
-                }
-            
-                // PRUNE rule
-                currFrame = frame.chain;
-                while (currFrame)
-                {
-                    if (frame.formulas == currFrame->formulas)
-                    {
-                        repFrame2 = currFrame->chain;
-                        while (repFrame2)
-                        {
-                            if (frame.formulas == repFrame2->formulas)
-                            {
-                                bool nothing_changed = true;
-                                
-                                for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
-                                {
-                                    const Eventuality& ev = frame.eventualities[i];
-                                    
-                                    if (ev.is_not_requested())
-                                        continue;
-                                    
-                                    if (ev.is_satisfied() && ev.id() > currFrame->id &&
-                                        (currFrame->eventualities[i].is_not_satisfied() ||
-                                         currFrame->eventualities[i].id() <= repFrame2->id))
-                                    {
-                                        nothing_changed = false;
-                                        break;
-                                    }
-                                }
-                                
-                                if (nothing_changed)
-                                {
-                                    //std::cout << "Applying PRUNE rule" << std::endl;
-                                    _rollback_to_latest_choice();
-                                    goto loop;
-                                }
-                            }
-                            
-                            repFrame2 = repFrame2->chain;
-                        }
-                    }
-                
-                    currFrame = currFrame->chain;
-                }
-                */
-            
-                /*
-                currFrame = frame.chain;
-                while (currFrame)
-                {
-                    if (frame.formulas == currFrame->formulas)
-                    {
-                        _rollback_to_latest_choice();
-                        goto loop;
-                    }
-                    
-                    currFrame = currFrame->chain;
-                }
-                */
-                 
+
 // Heuristics: OCCASIONAL LOOKBACK
-//step_rule:
+step_rule:
                 if (frame.id >= _maximum_depth)
                 {
                         _rollback_to_latest_choice();
+                        ++total_frames;
                         goto loop;
                 }
 
@@ -966,18 +821,6 @@ loop:
                 Frame new_frame(frame.id + 1, _number_of_formulas, frame.eventualities, &frame);
                 _bitset.temporary = frame.formulas;
                 _bitset.temporary &= _bitset.tomorrow;
-
-                /* TODO: This doesn't work for w/e reason. Investigate
-                size_t p = _bitset.temporary.find_first();
-                while (p != Bitset::npos)
-                {
-                        assert(_bitset.tomorrow[p]);
-                        assert(frame.formulas[p]);
-                
-                        new_frame.formulas[_lhs[p]] = true;
-                        p = _bitset.temporary.find_next(p + 1);
-                }
-                */
                 
                 for (uint64_t i = 0; i < _number_of_formulas; ++i)
                 {
@@ -991,11 +834,19 @@ loop:
 
                 frame.type = Frame::STEP;
                 _stack.push(std::move(new_frame));
+
+                ++total_frames;
+                if (_stack.top().id > maximum_steps)
+                    maximum_steps = _stack.top().id;
         }
 
         _state = State::DONE;
         if (_result == Result::UNDEFINED)
                 _result = Result::UNSATISFIABLE;
+
+        std::cout << "Total frames: "  << total_frames << std::endl;
+        std::cout << "Maximum model size: " << maximum_steps << std::endl;
+        std::cout << "Maximum depth: " << maximum_frames << std::endl;
 
         return _result;
 }
@@ -1040,7 +891,7 @@ std::tuple<bool, FrameID> Solver::_check_loop_rule() const
     
     bool ret = std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [first_frame_id] (const Eventuality& ev)
     {
-        return ev.is_not_requested() || (ev.is_satisfied() && ev.id() > first_frame_id);
+            return ev.is_not_requested() || (ev.is_satisfied() && ev.id() > first_frame_id);
     });
     
     return std::tuple<bool, FrameID>{ ret, first_frame_id };
@@ -1108,25 +959,16 @@ void Solver::_rollback_to_latest_choice()
                 {
                         Frame& top = _stack.top();;
                         Frame new_frame(top);
-                        /*
-                        PrettyPrinter p;
-                        p.print(_subformulas[8], true);
-                    
-                        if (&top == &Container(_stack)[0] && top.choosenFormula == 8)
-                            std::cout << "LOL" << std::endl;
-                         */
                     
                         if (_bitset.disjunction[top.choosenFormula])
                                 new_frame.formulas[_rhs[top.choosenFormula]] = true;
+                        else if (_bitset.iff[top.choosenFormula])
+                        {
+                                new_frame.formulas[_lhs[top.choosenFormula] + 1] = true;
+                                new_frame.formulas[_rhs[top.choosenFormula] + 1] = true;   
+                        }
                         else if (_bitset.eventually[top.choosenFormula])
                         {
-                                /*
-                                PrettyPrinter p;
-                                std::cout << "Rollback on id: " << top.id << " on formula: ";
-                                p.print(_subformulas[top.choosenFormula], true);
-                                p.print(_subformulas[top.choosenFormula + 1], true);
-                                 */
-                            
                                 new_frame.formulas[top.choosenFormula + 1] = true;
                                 assert(_bitset.tomorrow[top.choosenFormula + 1] && _lhs[top.choosenFormula + 1] == top.choosenFormula);
                         }
@@ -1261,7 +1103,8 @@ ModelPtr Solver::model()
                 ++i;
         }
         
-        model->states.pop_back();
+        if (_stack.top().id != 0)
+                model->states.pop_back();
         model->loop_state = _loop_state;
 
         // TODO: Optimize model to compensate heuristics. How to do it conservatively?
