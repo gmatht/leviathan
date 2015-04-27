@@ -323,16 +323,15 @@ void Simplifier::visit(const Then* t)
         result = make_disjunction(make_negation(left), right);
 }
 
-void Simplifier::visit(const Iff* i)
+void Simplifier::visit(const Iff* t)
 {
-        i->left()->accept(*this);
+        t->left()->accept(*this);
         FormulaPtr left = result;
-        i->right()->accept(*this);
+        t->right()->accept(*this);
         FormulaPtr right = result;
 
-        result = make_iff(left, right);
-        //rulesApplied = true;
-        //result = make_conjunction(make_disjunction(make_negation(left), right), make_disjunction(left, make_negation(right)));
+        rulesApplied = true;
+        result = make_conjunction(make_disjunction(make_negation(left), right), make_disjunction(left, make_negation(right)));
 }
 
 void Simplifier::visit(const Until* u)

@@ -45,6 +45,9 @@ void Solver::_initialize()
         std::cout << "Simplifing formula..." << std::endl;
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
+
+        //PrettyPrinter p;
+        //p.print(_formula, true);
     
         std::cout << "Generating subformulas..." << std::endl;
         Generator gen;
@@ -145,12 +148,7 @@ void Solver::_initialize()
             assert(false);
 
         if (isa<Iff>(a) && isa<Iff>(b))
-        {
-             if (fast_cast<Iff>(a)->left() != fast_cast<Iff>(b)->left())
-               return compareFunc(fast_cast<Iff>(a)->left(), fast_cast<Iff>(b)->left());
-            else
-                return compareFunc(fast_cast<Iff>(a)->right(), fast_cast<Iff>(b)->right());
-        }
+            assert(false);
         
         return a->type() < b->type();
         };
@@ -161,6 +159,12 @@ void Solver::_initialize()
         _subformulas.erase(last, _subformulas.end());
 
         std::cout << "Found " << _subformulas.size() << " subformulas" << std::endl;
+
+        /*
+        for (auto _f : _subformulas)
+                p.print(_f, true);
+        */
+
         std::cout << "Building data structure..." << std::endl;
 
         FormulaID current_index(0);
@@ -175,7 +179,6 @@ void Solver::_initialize()
         _bitset.disjunction.resize(_number_of_formulas);
         _bitset.until.resize(_number_of_formulas);
         _bitset.not_until.resize(_number_of_formulas);
-        _bitset.iff.resize(_number_of_formulas);
         _bitset.temporary.resize(_number_of_formulas);
         
         _lhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
@@ -223,10 +226,7 @@ void Solver::_initialize()
                 else if (isa<Then>(f))
                         assert(false);
                 else if (isa<Iff>(f))
-                {
-                        left = fast_cast<Iff>(f)->left();
-                        right = fast_cast<Iff>(f)->right();
-                }
+                        assert(false);
 
                 if (left)
                         lhs = FormulaID(static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), left, compareFunc) - _subformulas.begin()));
@@ -274,7 +274,7 @@ void Solver::_initialize()
         ClauseCounter counter;
         current_index = FormulaID(0);
         std::vector<Minisat::Lit> temp;
-        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability and consider Iff formulas
+        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability
         {
                 assert(isa<Disjunction>(f));
                 assert(!isa<Conjunction>(f));
@@ -337,6 +337,8 @@ void Solver::_initialize()
                         clause.moveTo(_clauses[current_index]);
                 }
                 else if (isa<Then>(f))
+                        assert(false);
+                else if(isa<Iff>(f))
                         assert(false);
 
                 // Note: We have nothing to do for conjunctions, because the formula is in CNF
@@ -408,14 +410,9 @@ void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID posit
                         _rhs[position] = rhs;
                         break;
 
-                case Formula::Type::Iff:
-                        _bitset.iff[position] = true;
-                        _lhs[position] = lhs;
-                        _rhs[position] = rhs;
-                        break;
-
                 case Formula::Type::True:
                 case Formula::Type::False:
+                case Formula::Type::Iff:
                 case Formula::Type::Then:
                         assert(false);
                         break;
@@ -425,6 +422,7 @@ void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID posit
 bool Solver::_check_contradiction_rule()
 {
         const Frame& frame = _stack.top();
+
         _bitset.temporary = frame.formulas;
         _bitset.temporary &= _bitset.negation;
         _bitset.temporary >>= 1;
@@ -511,7 +509,6 @@ bool Solver::_apply_##rule##_rule() \
 }
 
 APPLY_RULE(disjunction)
-APPLY_RULE(iff)
 APPLY_RULE(eventually)
 APPLY_RULE(until)
 APPLY_RULE(not_until)
@@ -542,6 +539,8 @@ Solver::Result Solver::solution()
         uint64_t maximum_steps = 1;
         uint64_t maximum_frames = 1;
         uint64_t total_frames = 1;
+        uint64_t cross_by_contradiction = 0;
+        uint64_t cross_by_prune = 0;
 
         std::signal(SIGINT, signal_handler);
 
@@ -551,6 +550,8 @@ loop:
                 std::cout << "Total frames: "  << total_frames << std::endl;
                 std::cout << "Maximum model size: " << maximum_steps << std::endl;
                 std::cout << "Maximum depth: " << maximum_frames << std::endl;
+                std::cout << "Cross by contradiction: " << cross_by_contradiction << std::endl;
+                std::cout << "Cross by prune: " << cross_by_prune << std::endl;
 
                 signal_status.store(false);
         }
@@ -573,6 +574,8 @@ loop:
                                 std::cout << "Total frames: "  << total_frames << std::endl;
                                 std::cout << "Maximum model size: " << maximum_steps << std::endl;
                                 std::cout << "Maximum depth: " << maximum_frames << std::endl;
+                                std::cout << "Cross by contradiction: " << cross_by_contradiction << std::endl;
+                                std::cout << "Cross by prune: " << cross_by_prune << std::endl;
 
                                 return _result;
                         }
@@ -581,6 +584,7 @@ loop:
                         {
                                 _rollback_to_latest_choice();
                                 ++total_frames;
+                                ++cross_by_contradiction;
                                 goto loop;
                         }
 
@@ -603,20 +607,6 @@ loop:
 
                                         goto loop;
                                 }
-                        }
-
-                        if (_apply_iff_rule())
-                        {
-                                Frame new_frame(frame);
-                                new_frame.formulas[_lhs[frame.choosenFormula]] = true;
-                                new_frame.formulas[_rhs[frame.choosenFormula]] = true;
-                                _stack.push(std::move(new_frame));
-
-                                ++total_frames;
-                                if (_stack.size() > maximum_frames)
-                                        maximum_frames = _stack.size();
-
-                                goto loop;
                         }
 
                         if (_has_eventually && _apply_eventually_rule())
@@ -793,6 +783,8 @@ loop:
                     std::cout << "Total frames: "  << total_frames << std::endl;
                     std::cout << "Maximum model size: " << maximum_steps << std::endl;
                     std::cout << "Maximum depth: " << maximum_frames << std::endl;
+                    std::cout << "Cross by contradiction: " << cross_by_contradiction << std::endl;
+                    std::cout << "Cross by prune: " << cross_by_prune << std::endl;
 
                     return _result;
                 }
@@ -801,10 +793,20 @@ loop:
                 if (_backtrack_probability_rand(_mt) > _backtrack_probability)
                         goto step_rule;
 
+                /*
+                if (_check_my_prune())
+                {
+                    _rollback_to_latest_choice();
+                    ++total_frames;
+                    goto loop;
+                }
+                */
+
                 if (_check_prune0_rule() || _check_prune_rule())
                 {
                     _rollback_to_latest_choice();
                     ++total_frames;
+                    ++cross_by_prune;
                     goto loop;
                 }
 
@@ -847,6 +849,8 @@ step_rule:
         std::cout << "Total frames: "  << total_frames << std::endl;
         std::cout << "Maximum model size: " << maximum_steps << std::endl;
         std::cout << "Maximum depth: " << maximum_frames << std::endl;
+        std::cout << "Cross by contradiction: " << cross_by_contradiction << std::endl;
+        std::cout << "Cross by prune: " << cross_by_prune << std::endl;
 
         return _result;
 }
@@ -962,11 +966,6 @@ void Solver::_rollback_to_latest_choice()
                     
                         if (_bitset.disjunction[top.choosenFormula])
                                 new_frame.formulas[_rhs[top.choosenFormula]] = true;
-                        else if (_bitset.iff[top.choosenFormula])
-                        {
-                                new_frame.formulas[_lhs[top.choosenFormula] + 1] = true;
-                                new_frame.formulas[_rhs[top.choosenFormula] + 1] = true;   
-                        }
                         else if (_bitset.eventually[top.choosenFormula])
                         {
                                 new_frame.formulas[top.choosenFormula + 1] = true;
@@ -986,7 +985,7 @@ void Solver::_rollback_to_latest_choice()
                                         assert(_lhs[top.choosenFormula + 2] == top.choosenFormula);
                                 }
                         }
-                        else if (_bitset.not_until[top.choosenFormula])
+                        else if (_bitset.not_until[top.choosenFormula]) // TODO: Negation are not always in the + 1 position
                         {
                                 new_frame.formulas[_rhs[top.choosenFormula]] = true;
                                 if (_bitset.tomorrow[top.choosenFormula + 1])
