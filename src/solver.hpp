@@ -50,7 +50,7 @@ public:
         Solver& operator=(const Solver&) = delete;
         Solver& operator=(Solver&&) = delete;
 
-        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100, uint32_t max_backtrack = 100, bool use_sat = false);
+        Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), bool use_sat = false);
 
         FormulaPtr inline Formula() const;
 
@@ -128,17 +128,13 @@ private:
         std::vector<FormulaPtr> _subformulas;
         Stack _stack;
 
-        std::mt19937 _mt;
-        std::uniform_int_distribution<uint32_t> _backtrack_probability_rand;
-        //std::uniform_int_distribution<uint32_t> _backtrack_percentage_rand;
-
         bool _has_eventually;
         bool _has_until;
         bool _has_not_until;
 
         void _initialize();
 
-        void _add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs);
+        void _add_formula_for_position(const FormulaPtr& formula, FormulaID position, FormulaID lhs, FormulaID rhs);
 
         inline bool _check_contradiction_rule();
         inline bool _apply_conjunction_rule();

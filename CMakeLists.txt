@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 project (leviathan CXX)
 
 if (CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_BUILD_TYPE MATCHES "Debug")
-    message (STATUS "Build type selected: " ${CMAKE_BUILD_TYPE})
+    message (STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 endif()
 
 if (NOT CMAKE_BUILD_TYPE)

@@ -16,24 +16,10 @@ namespace LTL
 namespace detail
 {
 
-Solver::Solver(FormulaPtr formula, FrameID maximum_depth, uint32_t backtrack_probability, uint32_t minimum_backtrack, uint32_t maximum_backtrack, bool use_sat)
-        : _formula(formula), _maximum_depth(maximum_depth), _backtrack_probability(backtrack_probability), _minimum_backtrack(minimum_backtrack),
-          _maximum_backtrack(maximum_backtrack), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED),  _start_index(0), _loop_state(0),
-          _has_eventually(false), _has_until(false), _has_not_until(false)
+Solver::Solver(FormulaPtr formula, FrameID maximum_depth, bool use_sat)
+        : _formula(formula), _maximum_depth(maximum_depth), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED),  _start_index(0),
+        _loop_state(0), _has_eventually(false), _has_until(false), _has_not_until(false)
 {
-        if (_backtrack_probability > 100)
-                _backtrack_probability = 100;
-
-        if (_maximum_backtrack > 100)
-                _maximum_backtrack = 100;
-        
-        if (_minimum_backtrack > _maximum_backtrack)
-                _minimum_backtrack = _maximum_backtrack;
-
-        _mt = std::mt19937((std::random_device())());
-        _backtrack_probability_rand = std::uniform_int_distribution<uint32_t>(0, 100);
-        //_backtrack_percentage_rand = std::uniform_int_distribution<uint32_t>(_minimum_backtrack, _maximum_backtrack);
-
         _initialize();
 }
 
@@ -45,9 +31,6 @@ void Solver::_initialize()
         std::cout << "Simplifing formula..." << std::endl;
         Simplifier simplifier;
         _formula = simplifier.simplify(_formula);
-
-        //PrettyPrinter p;
-        //p.print(_formula, true);
     
         std::cout << "Generating subformulas..." << std::endl;
         Generator gen;
@@ -70,87 +53,87 @@ void Solver::_initialize()
                 }
         }
 
-        std::function<bool(FormulaPtr, FormulaPtr)> compareFunc = [&compareFunc](const FormulaPtr a, const FormulaPtr b)
+        std::function<bool(const FormulaPtr&, const FormulaPtr&)> compareFunc = [&compareFunc] (const FormulaPtr& a, const FormulaPtr& b)
         {
-        if (isa<Atom>(a) && isa<Atom>(b))
-            return std::lexicographical_compare(fast_cast<Atom>(a)->name().begin(), fast_cast<Atom>(a)->name().end(),
-                                                fast_cast<Atom>(b)->name().begin(), fast_cast<Atom>(b)->name().end());
+                if (isa<Atom>(a) && isa<Atom>(b))
+                        return std::lexicographical_compare(fast_cast<Atom>(a)->name().begin(), fast_cast<Atom>(a)->name().end(),
+                                                                                        fast_cast<Atom>(b)->name().begin(), fast_cast<Atom>(b)->name().end());
         
-        if (isa<Negation>(a) && isa<Negation>(b))
-            return compareFunc(fast_cast<Negation>(a)->formula(), fast_cast<Negation>(b)->formula());
+                if (isa<Negation>(a) && isa<Negation>(b))
+                        return compareFunc(fast_cast<Negation>(a)->formula(), fast_cast<Negation>(b)->formula());
         
-        if (isa<Negation>(a))
-        {
-            if (fast_cast<Negation>(a)->formula() == b)
-                return false;
+                if (isa<Negation>(a))
+                {
+                        if (fast_cast<Negation>(a)->formula() == b)
+                                return false;
             
-            return compareFunc(fast_cast<Negation>(a)->formula(), b);
-        }
+                        return compareFunc(fast_cast<Negation>(a)->formula(), b);
+                }
         
-        if (isa<Negation>(b))
-        {
-            if (fast_cast<Negation>(b)->formula() == a)
-                return true;
+                if (isa<Negation>(b))
+                {
+                        if (fast_cast<Negation>(b)->formula() == a)
+                                return true;
             
-            return compareFunc(a, fast_cast<Negation>(b)->formula());
-        }
+                        return compareFunc(a, fast_cast<Negation>(b)->formula());
+                }
         
-        if (isa<Tomorrow>(a) && isa<Tomorrow>(b))
-            return compareFunc(fast_cast<Tomorrow>(a)->formula(), fast_cast<Tomorrow>(b)->formula());
+                if (isa<Tomorrow>(a) && isa<Tomorrow>(b))
+                        return compareFunc(fast_cast<Tomorrow>(a)->formula(), fast_cast<Tomorrow>(b)->formula());
         
-        if (isa<Tomorrow>(a))
-        {
-            if (fast_cast<Tomorrow>(a)->formula() == b)
-                return false;
+                if (isa<Tomorrow>(a))
+                {
+                        if (fast_cast<Tomorrow>(a)->formula() == b)
+                                return false;
             
-            return compareFunc(fast_cast<Tomorrow>(a)->formula(), b);
-        }
+                        return compareFunc(fast_cast<Tomorrow>(a)->formula(), b);
+                }
         
-        if (isa<Tomorrow>(b))
-        {
-            if (fast_cast<Tomorrow>(b)->formula() == a)
-                return true;
+                if (isa<Tomorrow>(b))
+                {
+                        if (fast_cast<Tomorrow>(b)->formula() == a)
+                                return true;
             
-            return compareFunc(a, fast_cast<Tomorrow>(b)->formula());
-        }
+                        return compareFunc(a, fast_cast<Tomorrow>(b)->formula());
+                }
         
-        if (isa<Always>(a) && isa<Always>(b))
-            return compareFunc(fast_cast<Always>(a)->formula(), fast_cast<Always>(b)->formula());
+                if (isa<Always>(a) && isa<Always>(b))
+                        return compareFunc(fast_cast<Always>(a)->formula(), fast_cast<Always>(b)->formula());
         
-        if (isa<Eventually>(a) && isa<Eventually>(b))
-            return compareFunc(fast_cast<Eventually>(a)->formula(), fast_cast<Eventually>(b)->formula());
+                if (isa<Eventually>(a) && isa<Eventually>(b))
+                        return compareFunc(fast_cast<Eventually>(a)->formula(), fast_cast<Eventually>(b)->formula());
         
-        if (isa<Conjunction>(a) && isa<Conjunction>(b))
-        {
-            if (fast_cast<Conjunction>(a)->left() != fast_cast<Conjunction>(b)->left())
-                return compareFunc(fast_cast<Conjunction>(a)->left(), fast_cast<Conjunction>(b)->left());
-            else
-                return compareFunc(fast_cast<Conjunction>(a)->right(), fast_cast<Conjunction>(b)->right());
-        }
+                if (isa<Conjunction>(a) && isa<Conjunction>(b))
+                {
+                        if (fast_cast<Conjunction>(a)->left() != fast_cast<Conjunction>(b)->left())
+                                return compareFunc(fast_cast<Conjunction>(a)->left(), fast_cast<Conjunction>(b)->left());
+                        else
+                                return compareFunc(fast_cast<Conjunction>(a)->right(), fast_cast<Conjunction>(b)->right());
+                }
         
-        if (isa<Disjunction>(a) && isa<Disjunction>(b))
-        {
-            if (fast_cast<Disjunction>(a)->left() != fast_cast<Disjunction>(b)->left())
-                return compareFunc(fast_cast<Disjunction>(a)->left(), fast_cast<Disjunction>(b)->left());
-            else
-                return compareFunc(fast_cast<Disjunction>(a)->right(), fast_cast<Disjunction>(b)->right());
-        }
+                if (isa<Disjunction>(a) && isa<Disjunction>(b))
+                {
+                        if (fast_cast<Disjunction>(a)->left() != fast_cast<Disjunction>(b)->left())
+                                return compareFunc(fast_cast<Disjunction>(a)->left(), fast_cast<Disjunction>(b)->left());
+                        else
+                                return compareFunc(fast_cast<Disjunction>(a)->right(), fast_cast<Disjunction>(b)->right());
+                }
         
-        if (isa<Until>(a) && isa<Until>(b))
-        {
-            if (fast_cast<Until>(a)->left() != fast_cast<Until>(b)->left())
-                return compareFunc(fast_cast<Until>(a)->left(), fast_cast<Until>(b)->left());
-            else
-                return compareFunc(fast_cast<Until>(a)->right(), fast_cast<Until>(b)->right());
-        }
+                if (isa<Until>(a) && isa<Until>(b))
+                {
+                        if (fast_cast<Until>(a)->left() != fast_cast<Until>(b)->left())
+                                return compareFunc(fast_cast<Until>(a)->left(), fast_cast<Until>(b)->left());
+                        else
+                                return compareFunc(fast_cast<Until>(a)->right(), fast_cast<Until>(b)->right());
+                }
 
-        if (isa<Then>(a) || isa<Then>(b))
-            assert(false);
+                if (isa<Then>(a) || isa<Then>(b))
+                        assert(false);
 
-        if (isa<Iff>(a) && isa<Iff>(b))
-            assert(false);
+                if (isa<Iff>(a) && isa<Iff>(b))
+                        assert(false);
         
-        return a->type() < b->type();
+                return a->type() < b->type();
         };
 
         std::sort(_subformulas.begin(), _subformulas.end(), compareFunc);
@@ -159,12 +142,6 @@ void Solver::_initialize()
         _subformulas.erase(last, _subformulas.end());
 
         std::cout << "Found " << _subformulas.size() << " subformulas" << std::endl;
-
-        /*
-        for (auto _f : _subformulas)
-                p.print(_f, true);
-        */
-
         std::cout << "Building data structure..." << std::endl;
 
         FormulaID current_index(0);
@@ -184,7 +161,7 @@ void Solver::_initialize()
         _lhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
         _rhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
 
-        for (auto f : _subformulas)
+        for (const auto& f : _subformulas)
         {
                 if (f == _formula)
                         _start_index = current_index;
@@ -245,7 +222,7 @@ void Solver::_initialize()
                         eventualities.push_back(_subformulas[_lhs[i]]);
                 else if (_bitset.until[i])
                         eventualities.push_back(_subformulas[_rhs[i]]);
-                else if (_bitset.not_until[i]) // TODO: Does NOT UNTIL formulas generate eventualities?
+                else if (_bitset.not_until[i])
                 {
                         eventualities.push_back(_subformulas[_lhs[i]]);
                         eventualities.push_back(_subformulas[_rhs[i]]);
@@ -265,86 +242,88 @@ void Solver::_initialize()
         }
 
         std::cout << "Found " << eventualities.size() << " eventualities" << std::endl;
-        // TODO: Skip this step if the use of the sat solver is not enabled
-        std::cout << "Generating clauses..." << std::endl;
 
-        _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
-        _clauses = std::vector<Clause>(_number_of_formulas);
-
-        ClauseCounter counter;
-        current_index = FormulaID(0);
-        std::vector<Minisat::Lit> temp;
-        std::function<void(const FormulaPtr)> collect = [&] (const FormulaPtr f) // TODO: Fix the readability
+        if (_use_sat_solver)
         {
-                assert(isa<Disjunction>(f));
-                assert(!isa<Conjunction>(f));
-                
-                if (isa<Disjunction>(fast_cast<Disjunction>(f)->left()))
-                        collect(fast_cast<Disjunction>(f)->left());
-                else
-                {
-                        uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->left(), compareFunc) - _subformulas.begin());
-                        if (isa<Negation>(fast_cast<Disjunction>(f)->left()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->left()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->left())->formula()))))
-                                temp.push_back(Minisat::Lit(index - 1, true));
-                        else
-                                temp.push_back(Minisat::Lit(index));
-                }
+                std::cout << "Generating clauses..." << std::endl;
 
-                if (isa<Disjunction>(fast_cast<Disjunction>(f)->right()))
-                        collect(fast_cast<Disjunction>(f)->right());
-                else
-                {
-                        uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->right(), compareFunc) - _subformulas.begin());
-                        if (isa<Negation>(fast_cast<Disjunction>(f)->right()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->right()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->right())->formula()))))
-                                temp.push_back(Minisat::Lit(index - 1, true));
-                        else
-                                temp.push_back(Minisat::Lit(index));
-                }
-        };
+                _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
+                _clauses = std::vector<Clause>(_number_of_formulas);
 
-        for (auto f : _subformulas)
-        {
-                if (isa<Disjunction>(f))
-                        _clause_size[current_index] = counter.count(f);
+                ClauseCounter counter;
+                current_index = FormulaID(0);
+                std::vector<Minisat::Lit> temp;
+                std::function<void(const FormulaPtr&)> collect = [&] (const FormulaPtr& f) // TODO: Fix the readability
+                {
+                        assert(isa<Disjunction>(f));
+                        
+                        if (isa<Disjunction>(fast_cast<Disjunction>(f)->left()))
+                                collect(fast_cast<Disjunction>(f)->left());
+                        else
+                        {
+                                uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->left(), compareFunc) - _subformulas.begin());
+                                if (isa<Negation>(fast_cast<Disjunction>(f)->left()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->left()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->left())->formula()))))
+                                        temp.push_back(Minisat::Lit(index - 1, true));
+                                else
+                                        temp.push_back(Minisat::Lit(index));
+                        }
+
+                        if (isa<Disjunction>(fast_cast<Disjunction>(f)->right()))
+                                collect(fast_cast<Disjunction>(f)->right());
+                        else
+                        {
+                                uint64_t index = static_cast<uint64_t>(std::lower_bound(_subformulas.begin(), _subformulas.end(), fast_cast<Disjunction>(f)->right(), compareFunc) - _subformulas.begin());
+                                if (isa<Negation>(fast_cast<Disjunction>(f)->right()) || (isa<Tomorrow>(fast_cast<Disjunction>(f)->right()) && (isa<Negation>(fast_cast<Tomorrow>(fast_cast<Disjunction>(f)->right())->formula()))))
+                                        temp.push_back(Minisat::Lit(index - 1, true));
+                                else
+                                        temp.push_back(Minisat::Lit(index));
+                        }
+                };
+
+                for (const auto& f : _subformulas)
+                {
+                        if (isa<Disjunction>(f))
+                                _clause_size[current_index] = counter.count(f);
                 
-                if (isa<Atom>(f) || isa<Always>(f) || isa<Eventually>(f) || isa<Until>(f))
-                {
-                        Clause clause;
-                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
-                        clause.moveTo(_clauses[current_index]);
-                }
-                else if (isa<Negation>(f)) // Note: Not until case implicitly handled here
-                {
-                        Clause clause;
-                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
-                        clause.moveTo(_clauses[current_index]);
-                }
-                else if (isa<Tomorrow>(f))
-                {
-                        Clause clause;
-                        if (isa<Negation>(fast_cast<Tomorrow>(f)->formula()))
+                        if (isa<Atom>(f) || isa<Always>(f) || isa<Eventually>(f) || isa<Until>(f))
+                        {
+                                Clause clause;
+                                clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+                                clause.moveTo(_clauses[current_index]);
+                        }
+                        else if (isa<Negation>(f)) // Note: Not until case implicitly handled here
+                        {
+                                Clause clause;
                                 clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
-                        else
-                                clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));                    
-                        clause.moveTo(_clauses[current_index]);
-                }
-                else if (isa<Disjunction>(f))
-                {
-                        temp.clear();
-                        collect(f);
-                        Clause clause;
-                        std::for_each(temp.begin(), temp.end(), [&] (const Minisat::Lit& lit) { clause.push(lit); });
-                        clause.moveTo(_clauses[current_index]);
-                }
-                else if (isa<Then>(f))
-                        assert(false);
-                else if(isa<Iff>(f))
-                        assert(false);
+                                clause.moveTo(_clauses[current_index]);
+                        }
+                        else if (isa<Tomorrow>(f))
+                        {
+                                Clause clause;
+                                if (isa<Negation>(fast_cast<Tomorrow>(f)->formula()))
+                                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
+                                else
+                                        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));                    
+                                clause.moveTo(_clauses[current_index]);
+                        }
+                        else if (isa<Disjunction>(f))
+                        {
+                                temp.clear();
+                                collect(f);
+                                Clause clause;
+                                std::for_each(temp.begin(), temp.end(), [&] (const Minisat::Lit& lit) { clause.push(lit); });
+                                clause.moveTo(_clauses[current_index]);
+                        }
+                        else if (isa<Then>(f))
+                                assert(false);
+                        else if(isa<Iff>(f))
+                                assert(false);
 
-                // Note: We have nothing to do for conjunctions, because the formula is in CNF
+                        // Note: We have nothing to do for conjunctions, because the formula is in CNF
 
-                current_index++;
-        }
+                        current_index++;
+                }
+        } // _use_sat_solver
 
         _has_eventually = _bitset.eventually.any();
         _has_until = _bitset.until.any();
@@ -356,7 +335,7 @@ void Solver::_initialize()
         std::cout << "Solver initialized!" << std::endl << std::endl;
 }
 
-void Solver::_add_formula_for_position(const FormulaPtr formula, FormulaID position, FormulaID lhs, FormulaID rhs)
+void Solver::_add_formula_for_position(const FormulaPtr& formula, FormulaID position, FormulaID lhs, FormulaID rhs)
 {
          switch (formula->type())
         {
@@ -541,18 +520,20 @@ Solver::Result Solver::solution()
         uint64_t total_frames = 1;
         uint64_t cross_by_contradiction = 0;
         uint64_t cross_by_prune = 0;
-
+        
         std::signal(SIGINT, signal_handler);
-
+        
 loop:
         if (signal_status.load())
         {
+                std::cout << std::endl << "/*-------------------------*/" << std::endl;
                 std::cout << "Total frames: "  << total_frames << std::endl;
                 std::cout << "Maximum model size: " << maximum_steps << std::endl;
                 std::cout << "Maximum depth: " << maximum_frames << std::endl;
                 std::cout << "Cross by contradiction: " << cross_by_contradiction << std::endl;
                 std::cout << "Cross by prune: " << cross_by_prune << std::endl;
-
+                std::cout << "/*-------------------------*/" << std::endl;
+                
                 signal_status.store(false);
         }
 
@@ -667,20 +648,6 @@ loop:
                         if (rules_applied)
                                 goto loop;
 
-                        /*
-                        if (!_should_use_sat_solver())
-                        {
-                                if (_apply_disjunction_rule())
-                                {
-                                        Frame new_frame(frame);
-                                        new_frame.formulas[_lhs[frame.choosenFormula]] = true;
-                                        _stack.push(std::move(new_frame));
-
-                                        goto loop;
-                                }
-                        }
-                        else
-                        */
                         if (_should_use_sat_solver())
                         {
                                 /* https://github.com/niklasso/minisat-examples */
@@ -773,8 +740,8 @@ loop:
                 _update_history();
             
                 bool loop_result = false;
+
                 std::tie(loop_result, _loop_state) = _check_loop_rule();
-            
                 if (loop_result)
                 {
                     _result = Result::SATISFIABLE;
@@ -788,19 +755,6 @@ loop:
 
                     return _result;
                 }
-            
-// Heuristics: OCCASIONAL LOOKBACK
-                if (_backtrack_probability_rand(_mt) > _backtrack_probability)
-                        goto step_rule;
-
-                /*
-                if (_check_my_prune())
-                {
-                    _rollback_to_latest_choice();
-                    ++total_frames;
-                    goto loop;
-                }
-                */
 
                 if (_check_prune0_rule() || _check_prune_rule())
                 {
@@ -810,8 +764,6 @@ loop:
                     goto loop;
                 }
 
-// Heuristics: OCCASIONAL LOOKBACK
-step_rule:
                 if (frame.id >= _maximum_depth)
                 {
                         _rollback_to_latest_choice();
@@ -819,7 +771,6 @@ step_rule:
                         goto loop;
                 }
 
-                // STEP rule
                 Frame new_frame(frame.id + 1, _number_of_formulas, frame.eventualities, &frame);
                 _bitset.temporary = frame.formulas;
                 _bitset.temporary &= _bitset.tomorrow;
@@ -839,7 +790,7 @@ step_rule:
 
                 ++total_frames;
                 if (_stack.top().id > maximum_steps)
-                    maximum_steps = _stack.top().id;
+                        maximum_steps = _stack.top().id;
         }
 
         _state = State::DONE;
@@ -892,6 +843,9 @@ std::tuple<bool, FrameID> Solver::_check_loop_rule() const
 {
     const Frame& top_frame = _stack.top();
     const FrameID first_frame_id = top_frame.first->id;
+
+    if (top_frame.first == &top_frame)
+        return std::tuple<bool, FrameID>{false, FrameID(0)};
     
     bool ret = std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [first_frame_id] (const Eventuality& ev)
     {

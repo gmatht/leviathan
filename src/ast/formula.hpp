@@ -202,13 +202,13 @@ DECLARE_BINARY(Until, until)
 #undef DECLARE_BINARY
 
 template <typename T>
-inline bool isa(const FormulaPtr f)
+inline bool isa(const FormulaPtr& f)
 {
         return T::type == f->type();
 }
 
 template <typename T, typename ReturnT = typename std::add_const<T>::type>
-inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), static_cast<ReturnT*>(nullptr))
+inline auto fast_cast(const FormulaPtr& ptr) -> decltype(ptr -> type(), static_cast<ReturnT*>(nullptr))
 {
         if (T::type != ptr->type())
                 return nullptr;
@@ -218,8 +218,8 @@ inline auto fast_cast(FormulaPtr ptr) -> decltype(ptr -> type(), static_cast<Ret
 
 using FormulaSet = std::set<FormulaPtr>;
 
-bool operator==(const FormulaPtr f1, const FormulaPtr f2);
-bool operator!=(const FormulaPtr f1, const FormulaPtr f2);
+bool operator==(const FormulaPtr& f1, const FormulaPtr& f2);
+bool operator!=(const FormulaPtr& f1, const FormulaPtr& f2);
 
 }
 }
