@@ -19,6 +19,7 @@ executable ltltotrp
   main-is:             Main.hs
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.7, parsec, mtl
+  build-depends:       base >=4.7, parsec, mtl, pretty
+  default-extensions:  OverloadedStrings 
   -- hs-source-dirs:
   default-language:    Haskell2010

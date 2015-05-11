@@ -53,7 +53,6 @@ tok ops = (void . choice . map (try . keyw) $ ops)
 parens :: Parser a -> Parser a
 parens = T.parens lexer
 
-
 --
 -- Grammar
 --

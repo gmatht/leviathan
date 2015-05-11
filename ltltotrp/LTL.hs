@@ -14,3 +14,6 @@ data LTL = Truth
          | Next   LTL
   deriving (Eq, Show)
 
+
+class ExportLTL w where
+  export :: w LTL -> String
