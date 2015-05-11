@@ -5,9 +5,7 @@
 #include "identifiable.hpp"
 #include "minisat/core/Solver.h"
 #include <memory>
-#include <unordered_map>
 #include <cstdint>
-#include <iostream>
 
 namespace LTL
 {

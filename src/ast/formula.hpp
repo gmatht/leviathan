@@ -74,7 +74,7 @@ public:
 
         static const Type type = Type::True;
 
-        void accept(Visitor& v) const;
+        void accept(Visitor& v) const override;
 };
 
 using TruePtr = std::shared_ptr<True>;
@@ -94,7 +94,7 @@ public:
 
         static const Type type = Type::False;
 
-        void accept(Visitor& v) const;
+        void accept(Visitor& v) const override;
 };
 
 using FalsePtr = std::shared_ptr<False>;
@@ -120,7 +120,7 @@ public:
         }
         static const Type type = Type::Atom;
 
-        void accept(Visitor& v) const;
+        void accept(Visitor& v) const override;
 
 private:
         std::string _name;
@@ -148,7 +148,7 @@ AtomPtr make_atom(const std::string& name);
                 }                                                        \
                 static const Type type = Type::_Type;                    \
                                                                          \
-                void accept(Visitor& v) const;                           \
+                void accept(Visitor& v) const override;                           \
                                                                          \
         private:                                                         \
                 FormulaPtr _f;                                           \
@@ -178,7 +178,7 @@ AtomPtr make_atom(const std::string& name);
                 }                                                                                          \
                 static const Type type = Type::_Type;                                                      \
                                                                                                            \
-                void accept(Visitor& v) const;                                                             \
+                void accept(Visitor& v) const override;                                                             \
                                                                                                            \
         private:                                                                                           \
                 FormulaPtr _f1;                                                                            \

@@ -53,7 +53,7 @@ shift
 done
 
 cores="1"
-if [ $j == "0" ]; then
+if [ "$j" == "0" ]; then
         if [ "$(uname -s)" == "Darwin" ]; then
                 threads=$(sysctl -a | grep machdep.cpu.thread_count)
                 regex="machdep.cpu.thread_count: ([0-9]*)"
@@ -70,18 +70,18 @@ if [ ! -d "build" ]; then
         mkdir "build"
 fi
 
-if [ $link == "static" ]; then
+if [ "$link" == "static" ]; then
         linkonoff="OFF"
 fi
 
 cd "build"
-if [ $compiler == "clang" ]; then
-        cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE=$build -DBUILD_SHARED_LIBS=$linkonoff ..
-elif [ $compiler == "gcc" ]; then
-        cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE=$build -DBUILD_SHARED_LIBS=$linkonoff ..
+if [ "$compiler" == "clang" ]; then
+        cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_BUILD_TYPE="$build" -DBUILD_SHARED_LIBS=$linkonoff ..
+elif [ "$compiler" == "gcc" ]; then
+        cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_BUILD_TYPE="$build" -DBUILD_SHARED_LIBS=$linkonoff ..
 else
         echo "ERROR: Unsupported compiler $1"
         exit 1
 fi
-make -j $cores
+make -j "$cores"
 cd ..

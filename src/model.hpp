@@ -51,6 +51,21 @@ struct Literal
                 return std::lexicographical_compare(l1._atomic.begin(), l1._atomic.end(), l2._atomic.begin(), l2._atomic.end());
         }
 
+        friend bool operator<=(const Literal& l1, const Literal& l2)
+        {
+                return (l1 == l2) || (l1 < l2);
+        }
+
+        friend bool operator>(const Literal& l1, const Literal& l2)
+        {
+                return !(l1 <= l2);
+        }
+
+        friend bool operator>=(const Literal& l1, const Literal& l2)
+        {
+                return (l1 == l2) || (l1 > l2);
+        }
+
 private:
         bool _positive;
         std::string _atomic;

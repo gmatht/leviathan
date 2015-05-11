@@ -320,7 +320,6 @@ void Solver::_initialize()
                                 assert(false);
 
                         // Note: We have nothing to do for conjunctions, because the formula is in CNF
-
                         current_index++;
                 }
         } // _use_sat_solver
@@ -522,7 +521,7 @@ Solver::Result Solver::solution()
         uint64_t cross_by_prune = 0;
         
         std::signal(SIGINT, signal_handler);
-        
+
 loop:
         if (signal_status.load())
         {
@@ -838,7 +837,7 @@ void Solver::_update_history()
     top_frame.prev = &top_frame;
     top_frame.first = &top_frame;
 }
-    
+
 std::tuple<bool, FrameID> Solver::_check_loop_rule() const
 {
     const Frame& top_frame = _stack.top();
@@ -901,11 +900,11 @@ bool Solver::_check_my_prune() const
     const Frame& top_frame = _stack.top();
     
     if (top_frame.prev == &top_frame)
-        return false;
+            return false;
     
     return std::any_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [] (const Eventuality& ev)
     {
-        return ev.is_not_satisfied();
+            return ev.is_not_satisfied();
     });
 }
     
@@ -954,9 +953,7 @@ void Solver::_rollback_to_latest_choice()
                                 }
                         }
                         else
-                        {
                                 assert(false);
-                        }
 
                         top.choosenFormula = FormulaID::max();
                         _stack.push(std::move(new_frame));
@@ -1051,6 +1048,8 @@ ModelPtr Solver::model()
                                         state.insert(Literal(_atom_set.find(FormulaID(_lhs[j]))->second, false));
                         }
                 }
+
+                std::cout << std::endl;
                 
                 model->states.push_back(state);
                 ++i;
@@ -1059,24 +1058,6 @@ ModelPtr Solver::model()
         if (_stack.top().id != 0)
                 model->states.pop_back();
         model->loop_state = _loop_state;
-
-        // TODO: Optimize model to compensate heuristics. How to do it conservatively?
-        /* Heuristics: OPTIMIZE MODEL
-        std::vector<int64_t> toRemove;
-        for (int64_t i = loopTo; i >= 0; --i) 
-        {
-                    if (std::all_of(model[loopTo].begin(), model[loopTo].end(), [&] (LTL::FormulaPtr f)
-                    {
-                            if (model[i].find(f) != model[i].end())
-                                    return true;
-                            return false;
-                    }))
-                    toRemove.push_back(i);
-        }
-
-        for (auto i : toRemove)
-                model.erase(model.begin() + i);
-        */
 
         return model;
 }
@@ -1094,7 +1075,8 @@ bool Solver::_should_use_sat_solver()
         return _bitset.temporary.any();
 }
 
-FormulaPtr inline Solver::Formula() const {
+FormulaPtr inline Solver::Formula() const
+{
         return _formula;
 }
 

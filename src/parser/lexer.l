@@ -18,6 +18,7 @@
 "|"         return Parser::DISJUNCTION;
 "OR"		return Parser::DISJUNCTION;
 "->" 		return Parser::THEN;
+"=>"		return Parser::THEN;
 "THEN"		return Parser::THEN;
 "<->"		return Parser::IFF;
 "IFF"		return Parser::IFF;
