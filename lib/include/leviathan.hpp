@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../src/ast/formula.hpp"
-#include "../src/parser/parser.hpp"
-#include "../src/solver.hpp"
-#include "../src/identifiable.hpp"
-#include "../src/ast/visitor.hpp"
-#include "../src/ast/pretty_printer.hpp"
-#include "../src/ast/simplifier.hpp"
+#include "formula.hpp"
+#include "parser.hpp"
+#include "solver.hpp"
+#include "identifiable.hpp"
+#include "visitor.hpp"
+#include "pretty_printer.hpp"
+#include "simplifier.hpp"
 
 namespace LTL
 {

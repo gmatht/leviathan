@@ -6,6 +6,7 @@
 #include "frame.hpp"
 #include "model.hpp"
 #include "minisat/core/Solver.h"
+
 #include <vector>
 #include <tuple>
 #include <limits>

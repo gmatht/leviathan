@@ -1,9 +1,11 @@
- #include "solver.hpp"
+#include "solver.hpp"
 
-#include "generator.hpp"
+#include "ast/generator.hpp"
+#include "ast/clause_counter.hpp"
 #include "utility.hpp"
 #include "pretty_printer.hpp"
-#include "clause_counter.hpp"
+
+#include "std14/memory"
 #include <stack>
 #include <iostream>
 #include <cassert>
@@ -608,7 +610,7 @@ loop:
                                 /* https://github.com/niklasso/minisat-examples */
                                 frame.type = Frame::SAT;
 
-                                frame.solver = std::make_unique<Minisat::Solver>();
+                                frame.solver = std14::make_unique<Minisat::Solver>();
                                 Minisat::Solver& solver = *frame.solver;
                                 std::for_each(_subformulas.begin(), _subformulas.end(), [&solver] (FormulaPtr f) { solver.newVar(); });
 
@@ -807,7 +809,8 @@ step_rule:
  {
         Frame& frame = _stack.top();
 
-        std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0] (Eventuality& ev) mutable
+        int i = 0;
+        std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i] (Eventuality& ev) mutable
         {
                 if (frame.formulas[_bw_eventualities_lut[i]])
                         ev.set_satisfied(frame.id);
