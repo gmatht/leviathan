@@ -34,5 +34,3 @@ set_property(TARGET leviathan PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Dependencies
 target_link_libraries (leviathan PUBLIC minisat ${Boost_LIBRARIES})
-
-# Installation

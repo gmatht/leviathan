@@ -18,3 +18,5 @@ target_include_directories(
 target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
 
 target_link_libraries (checker leviathan)
+
+install(TARGETS checker RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
