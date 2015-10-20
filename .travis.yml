@@ -5,6 +5,7 @@ before_install:
   - export CC="${REAL_CC} ${REAL_EXTRA}" CXX="${REAL_CXX} ${REAL_EXTRA}"
 
 install:
+  - sudo apt-get install cmake
   - ./configure $EXTRA_CONFIGURE_ARGS
 
 script: 
@@ -23,6 +24,7 @@ matrix:
           # needed for libstdc++ headers
           - ubuntu-toolchain-r-test
           packages:
+          - cmake
           - clang-3.5
           - libstdc++6-4.9-dbg
   include:
