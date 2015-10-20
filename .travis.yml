@@ -5,35 +5,23 @@ before_install:
   - export CC="${REAL_CC} ${REAL_EXTRA}" CXX="${REAL_CXX} ${REAL_EXTRA}"
 
 install:
-  - sudo apt-get install cmake
   - ./configure $EXTRA_CONFIGURE_ARGS
 
 script: 
   - make -j2
 
+sudo: false
 
 matrix:
   fast-finish: true
   include:
-    - compiler: clang
-      env: REAL_CC=clang-3.5     REAL_CXX=clang++-3.5
+    - compiler: gcc
+      env: REAL_CC=gcc-4.9 REAL_CXX=g++-4.9
       addons:
         apt:
           sources:
-          - llvm-toolchain-precise-3.5
-          # needed for libstdc++ headers
           - ubuntu-toolchain-r-test
           packages:
           - cmake
-          - clang-3.5
-          - libstdc++6-4.9-dbg
-  include:
-    - compiler: gcc
-      env: REAL_CC=gcc-4.9     REAL_CXX=g++-4.9
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
           - g++-4.9
           - libstdc++6-4.9-dbg

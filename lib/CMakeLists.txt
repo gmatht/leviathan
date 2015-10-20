@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 2.8)
 project (lib CXX)
 
 find_package(Boost 1.36.0 REQUIRED COMPONENTS system)
@@ -28,7 +28,6 @@ target_include_directories(
 )
 
 # Required C++11 language features
-target_compile_features(leviathan PUBLIC cxx_constexpr)
 set_property(TARGET leviathan PROPERTY CXX_STANDARD 11)
 set_property(TARGET leviathan PROPERTY CXX_STANDARD_REQUIRED ON)
 
