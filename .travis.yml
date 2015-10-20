@@ -22,7 +22,9 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - kalakris-cmake
+          - boost-latest
           packages:
           - cmake
           - g++-4.9
           - libstdc++6-4.9-dbg
+          - libboost1.55-dev
