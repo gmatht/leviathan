@@ -28,3 +28,4 @@ matrix:
           - g++-4.9
           - libstdc++6-4.9-dbg
           - libboost1.55-dev
+          - libboost-system1.55-dev
