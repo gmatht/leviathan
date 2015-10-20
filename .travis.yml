@@ -14,7 +14,20 @@ sudo: false
 
 matrix:
   fast-finish: true
+  
   include:
+    - compiler: clang
+      env: REAL_CC=clang-3.6 REAL_CXX=clang++-3.6
+      addons:
+        apt:
+          sources:
+          - llvm-toolchain-precise-3.6
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang-3.6
+          - libstdc++6-4.9-dbg
+          - libboost1.55-dev
+          - libboost-system1.55-dev
     - compiler: gcc
       env: REAL_CC=gcc-4.9 REAL_CXX=g++-4.9
       addons:
