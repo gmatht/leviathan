@@ -16,6 +16,7 @@ target_include_directories(
 )
 
 target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
+set_property(TARGET checker PROPERTY COMPILE_FLAGS "-std=c++11")
 
 target_link_libraries (checker leviathan)
 

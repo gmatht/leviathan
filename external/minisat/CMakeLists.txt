@@ -7,5 +7,4 @@ project (minisat CXX)
 add_library(minisat STATIC minisat/core/Solver.cc)
 target_include_directories(minisat PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-set_property(TARGET minisat PROPERTY CXX_STANDARD 11)
-set_property(TARGET minisat PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET minisat PROPERTY COMPILE_FLAGS "-std=c++11")

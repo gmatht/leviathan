@@ -28,8 +28,7 @@ target_include_directories(
 )
 
 # Required C++11 language features
-set_property(TARGET leviathan PROPERTY CXX_STANDARD 11)
-set_property(TARGET leviathan PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET leviathan PROPERTY COMPILE_FLAGS "-std=c++11")
 
 # Dependencies
-target_link_libraries (leviathan PUBLIC minisat ${Boost_LIBRARIES})
+target_link_libraries (leviathan minisat ${Boost_LIBRARIES})

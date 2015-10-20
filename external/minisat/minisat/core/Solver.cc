@@ -24,6 +24,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "minisat/mtl/Sort.h"
 #include "minisat/core/Solver.h"
 #include <cstdio>
+#include <cstdint>
+#include <climits>
 
 using namespace Minisat;
 
