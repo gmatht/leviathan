@@ -21,6 +21,7 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - kalakris-cmake
           packages:
           - cmake
           - g++-4.9
