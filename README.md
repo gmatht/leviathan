@@ -1,9 +1,11 @@
 # Leviathan
 An implementation of a Tableau method for LTL formula satisfiability checking based on the paper "A new very simple, very fast tableau for LTL" by [Mark Reynolds](http://www.csse.uwa.edu.au/~mark/)
 
-* Author: Matteo Bertello
+* Main author: Matteo Bertello
 * Email: bertello.matteo@gmail.com
 * Version: 0.2.2
+
+[![Build Status](https://travis-ci.org/Corralx/leviathan.svg?branch=refactoring)](https://travis-ci.org/Corralx/leviathan)
 
 ## License
 Copyright (c) 2014, Matteo Bertello
