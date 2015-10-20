@@ -17,11 +17,24 @@ matrix:
   
   include:
     - compiler: clang
-      env: REAL_CC=clang-3.6 REAL_CXX=clang++-3.6
+      env: REAL_CC=clang REAL_CXX=clang++
       addons:
         apt:
           sources:
-          - llvm-toolchain-precise-3.6
+          - ubuntu-toolchain-r-test
+          - kalakris-cmake
+          - boost-latest
+          packages:
+          - cmake
+          - libstdc++6-4.9-dbg
+          - libboost1.55-dev
+          - libboost-system1.55-dev
+    - compiler: clang
+      env: REAL_CC=clang-3.5 REAL_CXX=clang++-3.5
+      addons:
+        apt:
+          sources:
+          - llvm-toolchain-precise-3.5
           - ubuntu-toolchain-r-test
           - kalakris-cmake
           - boost-latest
