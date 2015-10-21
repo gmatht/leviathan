@@ -29,13 +29,6 @@ PREFIX=/usr/local
 LIBDIR=
 
 
-if [ "x$TRAVIS_CC" != "x" ]; then
-    CC=$TRAVIS_CC
-fi
-if [ "x$TRAVIS_CXX" != "x"]; then
-    CXX=$TRAVIS_CXX
-fi
-
 if [ -e "${TOP_SRCDIR}/.configure-custom.sh" ]; then
     source "${TOP_SRCDIR}/.configure-custom.sh"
 fi

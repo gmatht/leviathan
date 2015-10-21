@@ -10,16 +10,26 @@ script:
 sudo: required
 dist: trusty
 
-compiler: 
-  - gcc
-  - clang
-
 addons:
   apt:
-    packages: 
-    - clang-3.6
+    packages:
     - cmake
     - libboost-system1.55-dev
+
+matrix:
+  include:
+    - compiler: clang
+      env: TRAVIS_CLANG_VERSION=3.5
+      addons:
+        apt:
+          packages:
+          - clang-3.5
+    - compiler: clang
+      env: TRAVIS_CLANG_VERSION=3.6
+      addons:
+        apt:
+          packages:
+          - clang-3.6
 
 #matrix:
 #  fast-finish: true
