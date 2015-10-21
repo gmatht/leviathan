@@ -10,21 +10,48 @@ script:
 sudo: required
 dist: trusty
 
+#
+# Default setup for Ubuntu 14.04 ships GCC 4.8 and Clang 3.5
+#
+compiler: 
+ - gcc
+ - clang
+
+addons:
+  apt:
+    packages:
+    - libboost-system1.55-dev
+#
+# Other configurations with other Clang and GCC versions
+#
 matrix:
   include:
-    - compiler: clang
-      env: TRAVIS_CLANG_VERSION=3.5
-      addons:
-        apt:
-          packages:
-          - clang-3.5
-          - libboost-system1.55-dev
     - compiler: clang
       env: TRAVIS_CLANG_VERSION=3.6
       addons:
         apt:
           packages:
           - clang-3.6
+          - libboost-system1.55-dev
+    - compiler: gcc
+      env: TRAVIS_GNU_VERSION=4.9
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-4.9
+          - libstdc++-4.9-dev
+          - libboost-system1.55-dev
+    - compiler: gcc
+      env: TRAVIS_GNU_VERSION=5
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-5
+          - libstdc++-5-dev
           - libboost-system1.55-dev
 
 #matrix:
