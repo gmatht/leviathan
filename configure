@@ -69,7 +69,8 @@ function prefix_to_offset() {
 function print_help() {
     cat <<EOF >&2
   -h, --help              display this help and exit
-  --disable-debug         disable debugging mode
+  --debug                 compile in Debug mode [default]
+  --release               compile in Release mode
   --pass-thru             pass remaining arguments through to CMake
 
   --prefix=PREFIX         install architecture-independent files in PREFIX
@@ -150,6 +151,12 @@ declare -a CMAKE_ARGS=("" "" "")
 
 while [ $# != 0 ]; do
     case "$1" in
+        "--debug")
+            BUILD_TYPE="Debug"
+            ;;
+        "--release")
+            BUILD_TYPE="Release"
+            ;;
         "--prefix="*)
             PREFIX="$(echo -n "${1}" | cut -b$(prefix_to_offset "--prefix=")-)";;
         "--prefix")
@@ -228,15 +235,6 @@ while [ $# != 0 ]; do
             print_help;;
         "-h")
             print_help;;
-
-        # This flag is the only one which may be a bit surprising to
-        # people.  Autotools always builds with debugging symbols enabled
-        # (AFAIK), but for cmake you have to do -DCMAKE_BUILD_TYPE=Debug.
-        # Unfortunately this can change other things as well, so although
-        # I realize there is no --disable-debug flag I thought it would be
-        # prudent to support one here.
-        "--disable-debug")
-            BUILD_TYPE="Release";;
 
         "--pass-thru")
             shift;

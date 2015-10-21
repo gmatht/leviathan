@@ -27,8 +27,5 @@ target_include_directories(
   PUBLIC include/
 )
 
-# Required C++11 language features
-set_property(TARGET leviathan PROPERTY COMPILE_FLAGS "-std=c++11")
-
 # Dependencies
 target_link_libraries (leviathan minisat ${Boost_LIBRARIES})
