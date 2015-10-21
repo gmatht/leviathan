@@ -32,3 +32,12 @@
   * Figure out which test suite of LTL formulas to use
   * Automatize the benchmarking process and generation of useful graphics
     from collected data
+
+- *Operating Systems and Compilers support*:
+  * We have to support at least the last two Ubuntu LTS releases and the 
+    latest version at the time of the release:
+    - Test G++ 4.8/4.9/5               on Ubuntu 12.04
+    - Test G++ 4.8/4.9/5 and Clang 3.5 on Ubuntu 14.04
+    - Test G++ 5.2       and Clang 3.6 on Ubuntu 15.04
+      (Cannot do it in travis, though)
+    - Test Xcode toolchain (Apple Clang) on OS X

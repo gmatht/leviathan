@@ -1,60 +1,69 @@
 ## Doesn't appear to do anything useful.
 language: cpp
 
-before_install:
-  - export CC="${REAL_CC} ${REAL_EXTRA}" CXX="${REAL_CXX} ${REAL_EXTRA}"
+#before_install:
+#  - export CC="${REAL_CC} ${REAL_EXTRA}" CXX="${REAL_CXX} ${REAL_EXTRA}"
 
 install:
-  - ./configure $EXTRA_CONFIGURE_ARGS
+  - ./configure
 
 script: 
   - make -j2
 
-sudo: false
+sudo: required
+dist: trusty
 
-matrix:
-  fast-finish: true
-  
-  include:
-    - compiler: clang
-      env: REAL_CC=clang REAL_CXX=clang++
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          - kalakris-cmake
-          - boost-latest
-          packages:
-          - cmake
-          - libstdc++6-4.9-dbg
-          - libboost1.55-dev
-          - libboost-system1.55-dev
-    - compiler: clang
-      env: REAL_CC=clang-3.5 REAL_CXX=clang++-3.5
-      addons:
-        apt:
-          sources:
-          - llvm-toolchain-precise-3.5
-          - ubuntu-toolchain-r-test
-          - kalakris-cmake
-          - boost-latest
-          packages:
-          - cmake
-          - clang-3.5
-          - libstdc++6-4.9-dbg
-          - libboost1.55-dev
-          - libboost-system1.55-dev
-    - compiler: gcc
-      env: REAL_CC=gcc-4.9 REAL_CXX=g++-4.9
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          - kalakris-cmake
-          - boost-latest
-          packages:
-          - cmake
-          - g++-4.9
-          - libstdc++6-4.9-dbg
-          - libboost1.55-dev
-          - libboost-system1.55-dev
+compiler: gcc
+
+addons:
+  apt:
+    packages: 
+    - cmake
+    - libboost-system1.55-dev
+
+#matrix:
+#  fast-finish: true
+#  include:
+#    - compiler: clang
+#      dist: trusty
+#      env: REAL_CC=clang REAL_CXX=clang++
+#      addons:
+#        apt:
+#          sources:
+#          - ubuntu-toolchain-r-test
+#          - kalakris-cmake
+#          - boost-latest
+#          packages:
+#          - cmake
+#          - libstdc++6-4.9-dbg
+#          - libboost1.55-dev
+#          - libboost-system1.55-dev
+#    - compiler: clang
+#      env: REAL_CC=clang-3.5 REAL_CXX=clang++-3.5
+#      addons:
+#        apt:
+#          sources:
+#          - llvm-toolchain-precise-3.5
+#          - ubuntu-toolchain-r-test
+#          - kalakris-cmake
+#          - boost-latest
+#          packages:
+#          - cmake
+#          - clang-3.5
+#          - libstdc++6-4.9-dbg
+#          - libboost1.55-dev
+#          - libboost-system1.55-dev
+#    - compiler: gcc
+#      env: REAL_CC=gcc-4.9 REAL_CXX=g++-4.9
+#      addons:
+#        apt:
+#          sources:
+#          - ubuntu-toolchain-r-test
+#          - kalakris-cmake
+#          - boost-latest
+#          packages:
+#          - cmake
+#          - g++-4.9
+#          - libstdc++6-4.9-dbg
+#          - libboost1.55-dev
+#          - libboost-system1.55-dev
