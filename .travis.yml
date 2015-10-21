@@ -1,9 +1,6 @@
 ## Doesn't appear to do anything useful.
 language: cpp
 
-#before_install:
-#  - export CC="${REAL_CC} ${REAL_EXTRA}" CXX="${REAL_CXX} ${REAL_EXTRA}"
-
 install:
   - ./configure
 
@@ -11,15 +8,16 @@ script:
   - make -j2
 
 sudo: required
-dist: 
- - precise
- - trusty
+dist: trusty
 
-compiler: gcc
+compiler: 
+  - gcc
+  - clang
 
 addons:
   apt:
     packages: 
+    - clang-3.6
     - cmake
     - libboost-system1.55-dev
 
