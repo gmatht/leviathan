@@ -14,11 +14,11 @@ fi
 
 if [ "x$TRAVIS_GNU_VERSION" != "x" ]; then
 
-  if [ "$CC" = "gcc" -a  ]; then
+  if [ "$CC" = "gcc" ]; then
     CC=gcc-$TRAVIS_GNU_VERSION
   fi
 
-  if [ "$CXX" = "g++" -a  ]; then
+  if [ "$CXX" = "g++" ]; then
     CXX=g++-$TRAVIS_GNU_VERSION
   fi
 fi
