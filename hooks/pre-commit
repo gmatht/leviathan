@@ -3,18 +3,18 @@
 # Redirect output to stderr.
 exec 1>&2
 
-changes=$(find ./lib ./checker \
-	\( -name '*.h' -or -name '*.cpp' \) -exec \
-	sh -c 'if [ ! -z "$(clang-format --style=file {})" ]; then echo {}; fi' \
-	\; \
-)
+changes=$(./clang-format.sh check)
 
 if [ ! -z "$changes" ]; then
 	echo -n "The following C++ files are not correctly formatted according "
-	echo    "to clang format:"
+	echo    "to clang-format:"
+	
 	for f in $changes; do
 		echo $f
 	done
+	
+	echo -n "To apply the changes, run './clang-format.sh format' and redo the "
+	echo    "commit"
 	echo "If you want to force the commit anyway, use the --no-verify option"
 	exit 1
 fi
