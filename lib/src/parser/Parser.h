@@ -11,35 +11,35 @@
 #include "formula.hpp"
 
 #undef Parser
-class Parser: public ParserBase
-{
-    // $insert scannerobject
-    Scanner d_scanner;
-        
-    public:
-        Parser(std::stringstream& ss) : d_scanner(ss), _result(nullptr), _error(false) {}
-        int parse();
+class Parser : public ParserBase {
+  // $insert scannerobject
+  Scanner d_scanner;
 
-        inline LTL::FormulaPtr result() const { return _result; }
-        inline bool error() const { return _error; }
+public:
+  Parser(std::stringstream &ss)
+    : d_scanner(ss), _result(nullptr), _error(false)
+  {
+  }
+  int parse();
 
-    private:
-        void error(char const *msg);    // called on (syntax) errors
-        int lex();                      // returns the next token from the
-                                        // lexical scanner. 
-        void print();                   // use, e.g., d_token, d_loc
+  inline LTL::FormulaPtr result() const { return _result; }
+  inline bool error() const { return _error; }
+private:
+  void error(char const *msg);  // called on (syntax) errors
+  int lex();                    // returns the next token from the
+                                // lexical scanner.
+  void print();                 // use, e.g., d_token, d_loc
 
-    // support functions for parse():
-        void executeAction(int ruleNr);
-        void errorRecovery();
-        int lookup(bool recovery);
-        void nextToken();
-        void print__();
-        void exceptionHandler__(std::exception const &exc);
+  // support functions for parse():
+  void executeAction(int ruleNr);
+  void errorRecovery();
+  int lookup(bool recovery);
+  void nextToken();
+  void print__();
+  void exceptionHandler__(std::exception const &exc);
 
-        LTL::FormulaPtr _result;
-        bool _error;
+  LTL::FormulaPtr _result;
+  bool _error;
 };
-
 
 #endif

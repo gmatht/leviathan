@@ -8,8 +8,7 @@
 #include "pretty_printer.hpp"
 #include "simplifier.hpp"
 
-namespace LTL
-{
+namespace LTL {
 
 using detail::parse;
 
@@ -65,5 +64,4 @@ using detail::make_disjunction;
 using detail::make_then;
 using detail::make_iff;
 using detail::make_until;
-
 }

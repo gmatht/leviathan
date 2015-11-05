@@ -2,26 +2,22 @@
 #include "Parser.h"
 #include <sstream>
 
-namespace LTL
+namespace LTL {
+
+namespace detail {
+
+std::pair<bool, LTL::FormulaPtr> parse(const std::string &formula)
 {
+  std::stringstream ss;
+  ss << formula;
 
-namespace detail
-{
+  Parser p(ss);
+  p.parse();
 
-std::pair<bool, LTL::FormulaPtr> parse(const std::string& formula)
-{
-	std::stringstream ss;
-	ss << formula;
-
-	Parser p(ss);
-	p.parse();
-
-	if (p.error())
-		return { true, nullptr };
-	else 
-		return { false, p.result() };
+  if (p.error())
+    return {true, nullptr};
+  else
+    return {false, p.result()};
 }
-
 }
-
 }

@@ -10,5 +10,4 @@
 
 #include <string>
 
-void jsonOutput(std::string const&f);
-
+void jsonOutput(std::string const &f);

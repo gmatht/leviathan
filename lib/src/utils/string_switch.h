@@ -37,60 +37,62 @@
  * Note also that the function accepts a string_view, so you can use string
  * literals or std::string or whatever.
  *
- * You can use the str_switch() function or the ""_match user defined literal at you
+ * You can use the str_switch() function or the ""_match user defined literal
+ * at you
  * choice.
  */
 
 namespace utils {
-namespace details
+namespace details {
+using std14::experimental::string_view;
+
+// FNV-1a constants
+static constexpr uint64_t basis = 14695981039346656037ULL;
+static constexpr uint64_t prime = 1099511628211ULL;
+
+// hash function
+constexpr uint64_t hash(const char *str, size_t size, uint64_t value)
 {
-    using std14::experimental::string_view;
-    
-    // FNV-1a constants
-    static constexpr uint64_t basis = 14695981039346656037ULL;
-    static constexpr uint64_t prime = 1099511628211ULL;
-    
-    // hash function
-    constexpr uint64_t hash(const char *str, size_t size, uint64_t value)
-    {
-        return size == 0 ? value : hash(str + 1, size - 1,
-                                        (value ^ *str) * prime);
-    }
-    
-    constexpr uint64_t hash(const char *str, size_t size) {
-        return hash(str, size, basis);
-    }
-    
-    constexpr size_t cstrlen(const char *str) {
-        return *str == 0 ? 0 : 1 + cstrlen(str + 1);
-    }
-    
-    /*
-     * Constexpr version for string literals
-     */
-    constexpr uint64_t str_switch(const char *str) {
-        return hash(str, cstrlen(str));
-    }
-    
-    /*
-     * General flexible version
-     */
-    uint64_t str_switch(string_view str) {
-        return hash(str.data(), str.size());
-    }
-    
-    namespace literals {
-        constexpr uint64_t operator ""_match(const char *str, size_t len) {
-            return hash(str, len);
-        }
-    }
-} // namespace details
+  return size == 0 ? value : hash(str + 1, size - 1, (value ^ *str) * prime);
+}
+
+constexpr uint64_t hash(const char *str, size_t size)
+{
+  return hash(str, size, basis);
+}
+
+constexpr size_t cstrlen(const char *str)
+{
+  return *str == 0 ? 0 : 1 + cstrlen(str + 1);
+}
+
+/*
+ * Constexpr version for string literals
+ */
+constexpr uint64_t str_switch(const char *str)
+{
+  return hash(str, cstrlen(str));
+}
+
+/*
+ * General flexible version
+ */
+uint64_t str_switch(string_view str)
+{
+  return hash(str.data(), str.size());
+}
+
+namespace literals {
+constexpr uint64_t operator""_match(const char *str, size_t len)
+{
+  return hash(str, len);
+}
+}
+}  // namespace details
 
 using details::str_switch;
 namespace literals = details::literals;
-    
-} // namespace utils
 
-
+}  // namespace utils
 
 #endif

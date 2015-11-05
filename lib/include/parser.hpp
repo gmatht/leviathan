@@ -3,14 +3,10 @@
 #include <tuple>
 #include "formula.hpp"
 
-namespace LTL
-{
+namespace LTL {
 
-namespace detail
-{
+namespace detail {
 
-std::pair<bool, FormulaPtr> parse(const std::string& formula);
-
+std::pair<bool, FormulaPtr> parse(const std::string &formula);
 }
-
 }
