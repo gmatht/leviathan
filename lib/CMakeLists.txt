@@ -19,7 +19,23 @@ set (
   src/parser/parser.cpp
 )
 
-add_library (leviathan ${SRC})
+set (
+  HEADERS
+  include/formula.hpp
+  include/frame.hpp
+  include/identifiable.hpp
+  include/leviathan.hpp
+  include/model.hpp
+  include/parser.hpp
+  include/pretty_printer.hpp
+  include/simplifier.hpp
+  include/solver.hpp
+  include/visitor.hpp
+)
+
+# Here adding the headers is redundant, but makes them appear in 
+# project files made by IDE generators (Xcode, VS, ecc...)
+add_library (leviathan ${SRC} ${HEADERS})
 
 target_include_directories(
   leviathan 
