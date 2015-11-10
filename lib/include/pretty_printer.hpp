@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <iostream>
 #include "visitor.hpp"
+#include "format.hpp"
 
 namespace LTL {
 namespace detail {
@@ -26,11 +26,14 @@ class Visitor;
 
 class PrettyPrinter : public Visitor {
 public:
-  PrettyPrinter(std::ostream &out = std::cout) : _out(out) {}
+  PrettyPrinter(format::LogLevel logLevel = format::Message)
+    : _logLevel(logLevel)
+  {
+  }
   virtual ~PrettyPrinter() = default;
 
-  std::ostream &print(const FormulaPtr formula, bool newLine = false);
-  std::ostream &print(const Formula *formula, bool newLine = false);
+  void print(const FormulaPtr formula, bool newLine = false);
+  void print(const Formula *formula, bool newLine = false);
 
 protected:
   virtual void visit(const True *t) override;
@@ -47,7 +50,7 @@ protected:
   virtual void visit(const Until *until) override;
 
 private:
-  std::ostream &_out;
+  format::LogLevel _logLevel;
 };
 }
 }

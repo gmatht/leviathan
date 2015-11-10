@@ -16,7 +16,6 @@
 
 #include "formula.hpp"
 #include "visitor.hpp"
-#include <iostream>
 
 namespace LTL {
 

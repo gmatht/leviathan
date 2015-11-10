@@ -4,20 +4,9 @@ project (checker CXX)
 #
 # Checker executable
 #
-set (
-  SRC
-  main.cpp
-  json_output.cpp
-)
+set (SRC main.cpp)
 
-set(
-  HEADERS
-  json_output.hpp
-) 
-
-# Here adding the headers is redundant, but makes them appear in 
-# project files made by IDE generators (Xcode, VS, ecc...)
-add_executable (checker ${SRC} ${HEADERS})
+add_executable (checker ${SRC})
 
 target_include_directories(
   checker PRIVATE checker/ ../external/tclap

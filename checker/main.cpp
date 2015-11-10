@@ -14,7 +14,6 @@
     permission.
 */
 
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -26,7 +25,8 @@ using namespace std::chrono;
 
 #include "tclap/CmdLine.h"
 #include "leviathan.hpp"
-#include "json_output.hpp"
+
+namespace format = LTL::format;
 
 using Clock = high_resolution_clock;
 const std::string leviathan_version = "0.2.2";
@@ -55,7 +55,7 @@ void readableOutput(std::string const &f, bool modelFlag, uint64_t depth,
                     uint32_t max_backtrack, bool use_sat)
 {
   LTL::PrettyPrinter printer;
-  std::cout << "Parsing formula" << std::endl;
+  format::message("Parsing formula\n");
 
   LTL::FormulaPtr formula = nullptr;
   bool error = false;
@@ -65,38 +65,34 @@ void readableOutput(std::string const &f, bool modelFlag, uint64_t depth,
   auto p2 = Clock::now();
 
   if (!error)
-    std::cout << "Parsing time:  "
-              << duration_cast<microseconds>(p2 - p1).count() << " us"
-              << std::endl;
+    format::message("Parsing time: {} us\n",
+                    duration_cast<microseconds>(p2 - p1).count());
   else {
-    std::cout << "Syntax error! Skipping formula: " << f << std::endl;
+    format::error("Syntax error! Skipping formula: {}\n", f);
     return;
   }
 
   LTL::Solver solver(formula, LTL::FrameID(depth), backtrack_probability,
                      min_backtrack, max_backtrack, use_sat);
-  std::cout << "Checking satisfiability..." << std::endl;
+  format::message("Checking satisfiability...\n");
   auto t1 = Clock::now();
   solver.solution();
   auto t2 = Clock::now();
 
-  std::cout << "Is satisfiable: ";
+  format::message("Is satisfiable: ");
   if (solver.satisfiability() == LTL::Solver::Result::SATISFIABLE)
-    std::cout << "\033[0;32mTrue\033[0m" << std::endl;
+    format::message("\033[0;32mTrue\033[0m\n");
   else
-    std::cout << "\033[0;31mFalse\033[0m" << std::endl;
+    format::message("\033[0;31mFalse\033[0m\n");
 
-  std::cout << "Time taken: ";
+  format::message("Time taken: ");
   auto time = (t2 - t1).count();
   if (time > 5000000000)
-    std::cout << duration_cast<seconds>(t2 - t1).count() << " sec"
-              << std::endl;
+    format::message("{} s\n", duration_cast<seconds>(t2 - t1).count());
   else if (time > 5000000)
-    std::cout << duration_cast<milliseconds>(t2 - t1).count() << " ms"
-              << std::endl;
+    format::message("{} ms\n", duration_cast<milliseconds>(t2 - t1).count());
   else
-    std::cout << duration_cast<microseconds>(t2 - t1).count() << " us"
-              << std::endl;
+    format::message("{} us\n", duration_cast<microseconds>(t2 - t1).count());
 
   if (modelFlag &&
       solver.satisfiability() == LTL::Solver::Result::SATISFIABLE) {
@@ -104,24 +100,17 @@ void readableOutput(std::string const &f, bool modelFlag, uint64_t depth,
 
     uint64_t i = 0;
     for (auto &state : model->states) {
-      std::cout << "State " << i << ":" << std::endl;
+      format::message("State {}:\n", i);
       for (auto &lit : state)
-        std::cout << (lit.positive() ? "" : "\u00AC") << lit.atomic_formula()
-                  << ", ";
-      std::cout << std::endl;
+        format::message("{}{}, \n", lit.positive() ? "" : "\u00AC",
+                        lit.atomic_formula());
       ++i;
     }
 
-    std::cout << "The model is looping to state " << model->loop_state
-              << std::endl;
+    format::message("The model is looping to state {}\n", model->loop_state);
   }
 
-  std::cout << std::endl;
-}
-
-void parsableOutput(std::string const &f)
-{
-  jsonOutput(f);
+  format::message("\n");
 }
 
 int main(int argc, char *argv[])
@@ -137,9 +126,6 @@ int main(int argc, char *argv[])
   TCLAP::SwitchArg modelArg(
     "m", "model",
     "Generates and prints a model of the formula, when satisfiable", cmd,
-    false);
-  TCLAP::SwitchArg parsableArg(
-    "p", "parsable", "Generates machine-parsable output. It implies -m", cmd,
     false);
   TCLAP::SwitchArg satArg(
     "s", "sat",
@@ -167,6 +153,15 @@ int main(int argc, char *argv[])
     "check of LOOP and PRUNE rules (between 0 and 100)",
     false, 100, "uint32_t", cmd);
 
+  TCLAP::SwitchArg testArt(
+    "t", "test",
+    "Test the checker. In this mode, the '-f' flag is mandatory. The given "
+    "filename will be read for the formula, together with a .answer file "
+    "named after it, containing the correct answer. The .answer file must "
+    "contain the syntactic representation of the correct model of the given "
+    "formula, if the formula is satisfiable, or be empty otherwise.",
+    cmd, false);
+
   cmd.parse(argc, argv);
 
   std::vector<std::string> formulas;
@@ -174,7 +169,7 @@ int main(int argc, char *argv[])
   if (filenameArg.isSet() && filenameArg.getValue() != "-") {
     std::ifstream file(filenameArg.getValue(), std::ios::in);
     if (!file.is_open()) {
-      std::cout << "File not found!" << std::endl;
+      format::error("File not found!\n");
       return 1;
     }
 
@@ -188,19 +183,11 @@ int main(int argc, char *argv[])
   if (ltlArg.isSet())
     formulas.push_back(ltlArg.getValue());
 
-  bool parsableFlag = parsableArg.getValue();
-  bool modelFlag = parsableFlag || modelArg.getValue();
-
-  std::cout << std::boolalpha << std::endl;
-
   for (const auto &f : formulas) {
-    if (parsableFlag)
-      parsableOutput(f);
-    else
-      readableOutput(f, modelFlag, depthArg.getValue(),
-                     backtrackPropArg.getValue(), minBacktrackArg.getValue(),
-                     maxBacktrackArg.getValue(),
-                     satArg.getValue());  // For some definition of "readable"
+    readableOutput(f, modelArg.getValue(), depthArg.getValue(),
+                   backtrackPropArg.getValue(), minBacktrackArg.getValue(),
+                   maxBacktrackArg.getValue(),
+                   satArg.getValue());  // For some definition of "readable"
   }
 
   // std::this_thread::sleep_until(time_point<system_clock>::max());

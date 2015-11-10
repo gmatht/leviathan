@@ -23,7 +23,6 @@
 #include <memory>
 #include <unordered_map>
 #include <cstdint>
-#include <iostream>
 
 namespace LTL {
 namespace detail {

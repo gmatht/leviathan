@@ -23,6 +23,7 @@
 #include "visitor.hpp"
 #include "pretty_printer.hpp"
 #include "simplifier.hpp"
+#include "format.hpp"
 
 namespace LTL {
 
@@ -80,4 +81,6 @@ using detail::make_disjunction;
 using detail::make_then;
 using detail::make_iff;
 using detail::make_until;
+
+namespace format = detail::format;
 }

@@ -20,10 +20,10 @@
 #include "ast/clause_counter.hpp"
 #include "utility.hpp"
 #include "pretty_printer.hpp"
+#include "format.hpp"
 
 #include "std14/memory"
 #include <stack>
-#include <iostream>
 #include <cassert>
 #include <csignal>
 #include <atomic>
@@ -69,14 +69,14 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth,
 
 void Solver::_initialize()
 {
-  std::cout << std::endl << "Initializing solver..." << std::endl;
+  format::debug("\nInitializing solver...\n");
   _atom_set.clear();
 
-  std::cout << "Simplifing formula..." << std::endl;
+  format::debug("Simplifing formula...\n");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
 
-  std::cout << "Generating subformulas..." << std::endl;
+  format::debug("Generating subformulas...\n");
   Generator gen;
   gen.generate(_formula);
   _subformulas = gen.formulas();
@@ -182,8 +182,8 @@ void Solver::_initialize()
   auto last = std::unique(_subformulas.begin(), _subformulas.end());
   _subformulas.erase(last, _subformulas.end());
 
-  std::cout << "Found " << _subformulas.size() << " subformulas" << std::endl;
-  std::cout << "Building data structure..." << std::endl;
+  format::debug("Found {} subformulas\n", _subformulas.size());
+  format::debug("Building data structure...\n");
 
   FormulaID current_index(0);
 
@@ -252,7 +252,7 @@ void Solver::_initialize()
     _add_formula_for_position(f, current_index++, lhs, rhs);
   }
 
-  std::cout << "Generating eventualities..." << std::endl;
+  format::debug("Generating eventualities...\n");
   _fw_eventualities_lut =
     std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
   std::vector<FormulaPtr> eventualities;
@@ -281,10 +281,9 @@ void Solver::_initialize()
     _bw_eventualities_lut[i] = FormulaID(position);
   }
 
-  std::cout << "Found " << eventualities.size() << " eventualities"
-            << std::endl;
+  format::debug("Found {} eventualities\n", eventualities.size());
   // TODO: Skip this step if the use of the sat solver is not enabled
-  std::cout << "Generating clauses..." << std::endl;
+  format::debug("Generating clauses...\n");
 
   _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
   _clauses = std::vector<Clause>(_number_of_formulas);
@@ -382,7 +381,7 @@ void Solver::_initialize()
                     _bw_eventualities_lut.size()));
   _state = State::INITIALIZED;
 
-  std::cout << "Solver initialized!" << std::endl << std::endl;
+  format::debug("Solver initialized!\n\n");
 }
 
 void Solver::_add_formula_for_position(const FormulaPtr formula,
@@ -672,9 +671,11 @@ loop:
 
         assert(frame.literals.empty());
 
-        PrettyPrinter p;
-        // std::cout << "\033[0;32m" << "Inserting formulas in the SAT solver:
-        // " << "\033[0m" << std::endl;
+        PrettyPrinter p(format::Verbose);
+        format::verbose(
+          "\033[0;32m"
+          "Inserting formulas in the SAT solver: "
+          "\033[0m");
 
         size_t one = _bitset.temporary.find_first();
         while (one != Bitset::npos) {
@@ -686,7 +687,7 @@ loop:
           if (_bitset.disjunction[one])
             frame.to_process[one] = false;
 
-          // p.print(_subformulas[one], true);
+          p.print(_subformulas[one], true);
 
           one = _bitset.temporary.find_next(one);
         }
@@ -699,7 +700,8 @@ loop:
                       [&](int l) { solver.newVar(); });
 
         if (!solver.solve()) {
-          // std::cout << "SAT says NO" << std::endl;
+          format::verbose("SAT says NO\n");
+
           frame.type =
             Frame::UNKNOWN;  // This frame will be deallocated right now anyway
           _rollback_to_latest_choice();
@@ -709,8 +711,11 @@ loop:
         Frame new_frame(frame);
         Clause c;
 
-        // std::cout << "\033[0;32m" << "Extracting formulas from the SAT
-        // solver: " << "\033[0m" << std::endl;
+        format::verbose(
+          "\033[0;32m"
+          "Extracting formulas from the SAT solver: "
+          "\033[0m\n");
+
         for (int l : frame.literals) {
           uint64_t id = static_cast<uint64_t>(l);
 
@@ -718,8 +723,11 @@ loop:
             c.push(Minisat::Lit(l, true));
             new_frame.formulas[id] = true;
 
-            // std::cout << "\033[0;32m" << "TRUE " << "\33[0m";
-            // p.print(_subformulas[id], true);
+            format::verbose(
+              "\033[0;32m"
+              "TRUE "
+              "\33[0m");
+            p.print(_subformulas[id], true);
           }
           else if (_bitset.negation[id + 1] ||
                    (isa<Tomorrow>(_subformulas[id + 1]) &&
@@ -729,8 +737,11 @@ loop:
             c.push(Minisat::Lit(l));
             new_frame.formulas[id + 1] = true;
 
-            // std::cout << "\033[0;31m" << "FALSE " << "\33[0m";
-            // p.print(_subformulas[id + 1], true);
+            format::verbose(
+              "\033[0;31m"
+              "TRUE "
+              "\33[0m");
+            p.print(_subformulas[id + 1], true);
           }
           else  // TODO
           {
@@ -805,7 +816,7 @@ loop:
 
     // REP rule application
     if (repFrame1 && repFrame2) {
-      // std::cout << "Applying REP rule" << std::endl;
+      format::verbose("Applying REP rule\n");
       _rollback_to_latest_choice();
       goto loop;
     }
@@ -915,18 +926,20 @@ void Solver::_rollback_to_latest_choice()
       return;
     }
     else if (_stack.top().type == Frame::SAT) {
-      // std::cout << "\033[0;31m" << "ROLLBACK" << "\033[0m" << std::endl;
+      format::verbose("\033[0;31mROLLBACK\033[0m\n");
       Minisat::Solver &solver = *_stack.top().solver;
 
       bool satisfiable = solver.solve();
       if (satisfiable) {
-        PrettyPrinter p;
+        PrettyPrinter p(format::Verbose);
 
         Frame new_frame(_stack.top());
         Clause c;
 
-        // std::cout << "\033[0;32m" << "Extracting formulas from the SAT
-        // solver: " << "\033[0m" << std::endl;
+        format::verbose(
+          "\033[0;32m"
+          "Extracting formulae from the SAT solver:"
+          "\033[0m\n");
         for (int l : _stack.top().literals) {
           uint64_t id = static_cast<uint64_t>(l);
 
@@ -934,8 +947,11 @@ void Solver::_rollback_to_latest_choice()
             c.push(Minisat::Lit(l, true));
             new_frame.formulas[id] = true;
 
-            // std::cout << "\033[0;32m" << "TRUE " << "\33[0m";
-            // p.print(_subformulas[id], true);
+            format::verbose(
+              "\033[0;32m"
+              "TRUE "
+              "\33[0m");
+            p.print(_subformulas[id], true);
           }
           else if (_bitset.negation[id + 1] ||
                    (isa<Tomorrow>(_subformulas[id + 1]) &&
@@ -945,12 +961,15 @@ void Solver::_rollback_to_latest_choice()
             c.push(Minisat::Lit(l));
             new_frame.formulas[id + 1] = true;
 
-            // std::cout << "\033[0;31m" << "FALSE " << "\33[0m";
-            // p.print(_subformulas[id + 1], true);
+            format::verbose(
+              "\033[0;31m"
+              "TRUE "
+              "\33[0m");
+            p.print(_subformulas[id + 1], true);
           }
           else  // TODO
           {
-            // PrettyPrinter p;
+            // PrettyPrinter p(format::Verbose);
             // p.print(_subformulas[id + 1], true);
             // assert(false);
           }

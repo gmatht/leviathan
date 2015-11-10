@@ -19,48 +19,49 @@
 namespace LTL {
 namespace detail {
 
-#define UNARY_VISIT(_Type, _Symbol)         \
-  void PrettyPrinter::visit(const _Type *u) \
-  {                                         \
-    _out << _Symbol << "( ";                \
-    u->formula()->accept(*this);            \
-    _out << " )";                           \
+#define UNARY_VISIT(_Type, _Symbol)          \
+  void PrettyPrinter::visit(const _Type *u)  \
+  {                                          \
+    format::log(_logLevel, "{}( ", _Symbol); \
+    u->formula()->accept(*this);             \
+    format::log(_logLevel, ") ");            \
   }
 
-#define BINARY_VISIT(_Type, _Symbol)        \
-  void PrettyPrinter::visit(const _Type *b) \
-  {                                         \
-    _out << "(";                            \
-    b->left()->accept(*this);               \
-    _out << ") " << _Symbol << " (";        \
-    b->right()->accept(*this);              \
-    _out << ")";                            \
+#define BINARY_VISIT(_Type, _Symbol)           \
+  void PrettyPrinter::visit(const _Type *b)    \
+  {                                            \
+    format::log(_logLevel, "(");               \
+    b->left()->accept(*this);                  \
+    format::log(_logLevel, ") {} (", _Symbol); \
+    b->right()->accept(*this);                 \
+    format::log(_logLevel, ")");               \
   }
 
-std::ostream &PrettyPrinter::print(const FormulaPtr formula, bool newLine)
+void PrettyPrinter::print(const FormulaPtr formula, bool newLine)
 {
-  return print(formula.get(), newLine);
+  print(formula.get(), newLine);
 }
 
-std::ostream &PrettyPrinter::print(const Formula *formula, bool newLine)
+void PrettyPrinter::print(const Formula *formula, bool newLine)
 {
   formula->accept(*this);
-  return newLine ? _out << std::endl : _out;
+  if (newLine)
+    format::log(_logLevel, "\n");
 }
 
 void PrettyPrinter::visit(const True *)
 {
-  _out << "\u22a4";
+  format::log(_logLevel, "\u22a4");
 }
 
 void PrettyPrinter::visit(const False *)
 {
-  _out << "\u22a5";
+  format::log(_logLevel, "\u22a5");
 }
 
 void PrettyPrinter::visit(const Atom *atom)
 {
-  _out << atom->name();
+  format::log(_logLevel, "{}", atom->name());
 }
 
 UNARY_VISIT(Negation, "\u00AC")

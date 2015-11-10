@@ -17,6 +17,7 @@ set (
   src/parser/lex.cc
   src/parser/parse.cc
   src/parser/parser.cpp
+  src/format.cpp
 )
 
 set (
@@ -31,6 +32,7 @@ set (
   include/simplifier.hpp
   include/solver.hpp
   include/visitor.hpp
+  include/format.hpp
 )
 
 # Here adding the headers is redundant, but makes them appear in 
@@ -44,4 +46,4 @@ target_include_directories(
 )
 
 # Dependencies
-target_link_libraries (leviathan minisat ${Boost_LIBRARIES})
+target_link_libraries (leviathan minisat cppformat ${Boost_LIBRARIES})

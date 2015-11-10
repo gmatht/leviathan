@@ -26,12 +26,10 @@
   CPPUTILS_CONCAT__(UNFULFILLED_TEMPLATE_REQUIREMENT_, __LINE__)
 
 // Note: this must stay on the same line.
+// clang-format off
 #define REQUIRES(...)                                                 \
-  typename CPPUTILS_REQUIRES_FRESH = void,                            \
-           typename std::enable_if<                                   \
-             ::utils::details::true_t<CPPUTILS_REQUIRES_FRESH>::value \
-               && ::utils::details::all(__VA_ARGS__),                 \
-             int>::type = 0
+  typename CPPUTILS_REQUIRES_FRESH = void, typename std::enable_if<::utils::details::true_t<CPPUTILS_REQUIRES_FRESH>::value && ::utils::details::all(__VA_ARGS__), int>::type = 0
+// clang-format on
 
 namespace utils {
 
