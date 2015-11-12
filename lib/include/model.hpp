@@ -24,18 +24,17 @@ namespace LTL {
 namespace detail {
 
 struct Literal {
-  Literal(const std::string &formula, bool positive = true)
-    : _positive(positive), _atomic(formula)
+  Literal(const std::string &atom, bool positive = true)
+    : _positive(positive), _atom(atom)
   {
   }
 
   bool positive() const { return _positive; }
   bool negative() const { return !_positive; }
-  std::string atomic_formula() const { return _atomic; }
+  std::string atom() const { return _atom; }
   friend bool operator==(const Literal &l1, const Literal &l2)
   {
-    return l1.positive() == l2.positive() &&
-           l1.atomic_formula() == l2.atomic_formula();
+    return l1.positive() == l2.positive() && l1.atom() == l2.atom();
   }
 
   friend bool operator!=(const Literal &l1, const Literal &l2)
@@ -45,20 +44,20 @@ struct Literal {
 
   friend bool operator<(const Literal &l1, const Literal &l2)
   {
-    if (l1._atomic == l2._atomic) {
+    if (l1._atom == l2._atom) {
       if (l1.positive() && l2.negative())
         return true;
       else
         return false;
     }
 
-    return std::lexicographical_compare(l1._atomic.begin(), l1._atomic.end(),
-                                        l2._atomic.begin(), l2._atomic.end());
+    return std::lexicographical_compare(l1._atom.begin(), l1._atom.end(),
+                                        l2._atom.begin(), l2._atom.end());
   }
 
 private:
   bool _positive;
-  std::string _atomic;
+  std::string _atom;
 };
 
 using State = std::set<Literal>;
