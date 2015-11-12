@@ -26,6 +26,24 @@ using namespace std::chrono;
 #include "tclap/CmdLine.h"
 #include "leviathan.hpp"
 
+/*
+ Rework the driver program.
+ - Command-line interface and console issues:
+ * Colored output (factor out into the format namespace)
+ * Choose the level of verbosity on the command line
+ * --timings option to enable time measurements output
+ - Actions:
+ * Parse the formula
+ * Parse the test data associated to the formula, if the --test option
+ was given
+ * Initialize the solver and solve
+ * Give the output (parsable output should have same format as test files)
+ - Time measurement:
+ * On parsing
+ * On solving
+ * Parsable output
+*/
+
 namespace format = LTL::format;
 
 using Clock = high_resolution_clock;
