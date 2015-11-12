@@ -121,7 +121,7 @@ void readableOutput(std::string const &f, bool modelFlag, uint64_t depth,
       format::message("State {}:\n", i);
       for (auto &lit : state)
         format::message("{}{}, \n", lit.positive() ? "" : "\u00AC",
-                        lit.atomic_formula());
+                        lit.atom());
       ++i;
     }
 
