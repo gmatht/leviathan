@@ -9,7 +9,12 @@ set (SRC main.cpp)
 add_executable (checker ${SRC})
 
 target_include_directories(
-  checker PRIVATE checker/ ../external/tclap
+  checker 
+  PRIVATE 
+    checker/ 
+    ${CPPUTILS_HEADERS}
+    ${TCLAP_HEADERS}
+    ${STDOPTIONAL_HEADERS}
 )
 
 target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)

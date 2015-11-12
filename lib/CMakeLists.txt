@@ -42,7 +42,11 @@ add_library (leviathan ${SRC} ${HEADERS})
 target_include_directories(
   leviathan 
   PRIVATE src/
-  PUBLIC include/
+  PUBLIC 
+    include/ 
+    ${CPPUTILS_HEADERS} 
+    ${TCLAP_HEADERS} 
+    ${STDOPTIONAL_HEADERS}
 )
 
 # Dependencies
