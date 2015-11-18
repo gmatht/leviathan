@@ -21,6 +21,7 @@
 #endif
 
 #include <cstdint>
+#include <cstdlib>
 #include <utility>
 #include <iostream>
 
@@ -43,6 +44,15 @@ auto log(LogLevel level, const CharTy *fmt, Args &&... args)
 
   if (uint8_t(level) <= max_log_level)
     fmt::print(out, fmt, std::forward<Args>(args)...);
+}
+
+// Same as error() but terminates. Don't use lightly
+template <typename CharTy, typename... Args>
+auto fatal(const CharTy *fmt, Args &&... args)
+  -> decltype(log(Error, fmt, std::forward<Args>(args)...))
+{
+  log(Error, fmt, std::forward<Args>(args)...);
+  exit(EXIT_FAILURE);
 }
 
 template <typename CharTy, typename... Args>
