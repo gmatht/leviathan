@@ -3,7 +3,7 @@ project (cpputils CXX)
 
 set(
   CPPUTILS_HEADERS 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpputils/include/ 
+  "${CMAKE_CURRENT_SOURCE_DIR}/cpputils/include/"
   PARENT_SCOPE
 )
 

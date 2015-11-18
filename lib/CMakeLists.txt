@@ -44,9 +44,9 @@ target_include_directories(
   PRIVATE src/
   PUBLIC 
     include/ 
-    ${CPPUTILS_HEADERS} 
-    ${TCLAP_HEADERS} 
-    ${STDOPTIONAL_HEADERS}
+    "${CPPUTILS_HEADERS}"
+    "${TCLAP_HEADERS}"
+    "${STDOPTIONAL_HEADERS}"
 )
 
 # Dependencies
