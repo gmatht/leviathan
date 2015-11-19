@@ -32,6 +32,8 @@ namespace LTL {
 
 namespace detail {
 
+namespace colors = format::colors;
+
 Solver::Solver(FormulaPtr formula, FrameID maximum_depth,
                uint32_t backtrack_probability, uint32_t minimum_backtrack,
                uint32_t maximum_backtrack, bool use_sat)
@@ -672,10 +674,8 @@ loop:
         assert(frame.literals.empty());
 
         PrettyPrinter p;
-        format::verbose(
-          "\033[0;32m"
-          "Inserting formulas in the SAT solver: "
-          "\033[0m");
+        format::verbose(colors::Green,
+                        "Inserting formulas in the SAT solver: ");
 
         size_t one = _bitset.temporary.find_first();
         while (one != Bitset::npos) {
@@ -711,10 +711,8 @@ loop:
         Frame new_frame(frame);
         Clause c;
 
-        format::verbose(
-          "\033[0;32m"
-          "Extracting formulas from the SAT solver: "
-          "\033[0m\n");
+        format::verbose(colors::Green,
+                        "Extracting formulas from the SAT solver: ");
 
         for (int l : frame.literals) {
           uint64_t id = static_cast<uint64_t>(l);
@@ -723,10 +721,7 @@ loop:
             c.push(Minisat::Lit(l, true));
             new_frame.formulas[id] = true;
 
-            format::verbose(
-              "\033[0;32m"
-              "TRUE "
-              "\33[0m");
+            format::verbose(colors::Green, "TRUE ");
             format::verbose("{}", p.to_string(_subformulas[id]));
           }
           else if (_bitset.negation[id + 1] ||
@@ -737,10 +732,7 @@ loop:
             c.push(Minisat::Lit(l));
             new_frame.formulas[id + 1] = true;
 
-            format::verbose(
-              "\033[0;31m"
-              "TRUE "
-              "\33[0m");
+            format::verbose(colors::Red, "TRUE ");
             format::verbose("{}", p.to_string(_subformulas[id + 1]));
           }
           else  // TODO
@@ -926,7 +918,7 @@ void Solver::_rollback_to_latest_choice()
       return;
     }
     else if (_stack.top().type == Frame::SAT) {
-      format::verbose("\033[0;31mROLLBACK\033[0m");
+      format::verbose(colors::Yellow, "ROLLBACK");
       Minisat::Solver &solver = *_stack.top().solver;
 
       bool satisfiable = solver.solve();
@@ -936,10 +928,8 @@ void Solver::_rollback_to_latest_choice()
         Frame new_frame(_stack.top());
         Clause c;
 
-        format::verbose(
-          "\033[0;32m"
-          "Extracting formulae from the SAT solver:"
-          "\033[0m\n");
+        format::verbose(colors::Green,
+                        "Extracting formulae from the SAT solver:");
         for (int l : _stack.top().literals) {
           uint64_t id = static_cast<uint64_t>(l);
 
@@ -947,10 +937,7 @@ void Solver::_rollback_to_latest_choice()
             c.push(Minisat::Lit(l, true));
             new_frame.formulas[id] = true;
 
-            format::verbose(
-              "\033[0;32m"
-              "TRUE "
-              "\33[0m");
+            format::verbose(colors::Green, "TRUE ");
             format::verbose("{}", p.to_string(_subformulas[id]));
           }
           else if (_bitset.negation[id + 1] ||
@@ -961,10 +948,7 @@ void Solver::_rollback_to_latest_choice()
             c.push(Minisat::Lit(l));
             new_frame.formulas[id + 1] = true;
 
-            format::verbose(
-              "\033[0;31m"
-              "TRUE "
-              "\33[0m");
+            format::verbose(colors::Red, "TRUE ");
             format::verbose("{}", p.to_string(_subformulas[id + 1]));
           }
           else  // TODO

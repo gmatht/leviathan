@@ -162,61 +162,112 @@ enum LogLevel : uint8_t { Error = 0, Warning, Message, Debug, Verbose };
 extern LogLevel max_log_level;
 
 template <typename CharTy, typename... Args>
-auto log(LogLevel level, const CharTy *fmt, Args &&... args)
+auto log(LogLevel level, Color color, const CharTy *fmt, Args &&... args)
   -> decltype(fmt::print(std::declval<std::ostream &>(), fmt,
                          std::forward<Args>(args)...))
 {
   std::ostream &out = uint8_t(level) >= Message ? std::cout : std::cerr;
 
   if (uint8_t(level) <= max_log_level) {
+    out << set_color(color);
     fmt::print(out, fmt, std::forward<Args>(args)...);
-    out << std::endl;
+    out << set_color(Reset) << std::endl;
   }
+}
+
+template <typename CharTy, typename... Args>
+auto log(LogLevel level, const CharTy *fmt, Args &&... args)
+  -> decltype(log(level, Reset, fmt, std::forward<Args>(args)...))
+{
+  return log(level, Reset, fmt, std::forward<Args>(args)...);
 }
 
 // Same as error() but terminates the process. Don't use lightly
 template <typename CharTy, typename... Args>
-auto fatal(const CharTy *fmt, Args &&... args)
+auto fatal(Color color, const CharTy *fmt, Args &&... args)
   -> decltype(log(Error, fmt, std::forward<Args>(args)...))
 {
-  log(Error, fmt, std::forward<Args>(args)...);
+  log(Error, color, fmt, std::forward<Args>(args)...);
   exit(EXIT_FAILURE);
 }
 
 template <typename CharTy, typename... Args>
-auto error(const CharTy *fmt, Args &&... args)
+auto fatal(const CharTy *fmt, Args &&... args)
+  -> decltype(fatal(Reset, fmt, std::forward<Args>(args)...))
+{
+  return fatal(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto error(Color color, const CharTy *fmt, Args &&... args)
   -> decltype(log(Error, fmt, std::forward<Args>(args)...))
 {
-  log(Error, fmt, std::forward<Args>(args)...);
+  log(Error, color, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto error(const CharTy *fmt, Args &&... args)
+  -> decltype(error(Reset, fmt, std::forward<Args>(args)...))
+{
+  return error(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto warning(Color color, const CharTy *fmt, Args &&... args)
+  -> decltype(log(Warning, fmt, std::forward<Args>(args)...))
+{
+  log(Warning, color, fmt, std::forward<Args>(args)...);
 }
 
 template <typename CharTy, typename... Args>
 auto warning(const CharTy *fmt, Args &&... args)
-  -> decltype(log(Warning, fmt, std::forward<Args>(args)...))
+  -> decltype(warning(Reset, fmt, std::forward<Args>(args)...))
 {
-  log(Warning, fmt, std::forward<Args>(args)...);
+  return warning(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto message(Color color, const CharTy *fmt, Args &&... args)
+  -> decltype(log(Message, fmt, std::forward<Args>(args)...))
+{
+  log(Message, color, fmt, std::forward<Args>(args)...);
 }
 
 template <typename CharTy, typename... Args>
 auto message(const CharTy *fmt, Args &&... args)
-  -> decltype(log(Message, fmt, std::forward<Args>(args)...))
+  -> decltype(message(Reset, fmt, std::forward<Args>(args)...))
 {
-  log(Message, fmt, std::forward<Args>(args)...);
+  return message(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto debug(Color color, const CharTy *fmt, Args &&... args)
+  -> decltype(log(Debug, fmt, std::forward<Args>(args)...))
+{
+  log(Debug, color, fmt, std::forward<Args>(args)...);
 }
 
 template <typename CharTy, typename... Args>
 auto debug(const CharTy *fmt, Args &&... args)
-  -> decltype(log(Debug, fmt, std::forward<Args>(args)...))
+  -> decltype(debug(Reset, fmt, std::forward<Args>(args)...))
 {
-  log(Debug, fmt, std::forward<Args>(args)...);
+  return debug(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto verbose(Color color, const CharTy *fmt, Args &&... args)
+  -> decltype(log(Verbose, fmt, std::forward<Args>(args)...))
+{
+  log(Verbose, color, fmt, std::forward<Args>(args)...);
 }
 
 template <typename CharTy, typename... Args>
 auto verbose(const CharTy *fmt, Args &&... args)
-  -> decltype(log(Verbose, fmt, std::forward<Args>(args)...))
+  -> decltype(verbose(Reset, fmt, std::forward<Args>(args)...))
 {
-  log(Verbose, fmt, std::forward<Args>(args)...);
+  return verbose(Reset, fmt, std::forward<Args>(args)...);
 }
+
 }  // namespace format
 }  // namespace detail
 }  // namespace LTL
