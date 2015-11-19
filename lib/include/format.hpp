@@ -44,9 +44,10 @@ auto log(LogLevel level, const CharTy *fmt, Args &&... args)
 
   if (uint8_t(level) <= max_log_level)
     fmt::print(out, fmt, std::forward<Args>(args)...);
+  out << std::endl;
 }
 
-// Same as error() but terminates. Don't use lightly
+// Same as error() but terminates the process. Don't use lightly
 template <typename CharTy, typename... Args>
 auto fatal(const CharTy *fmt, Args &&... args)
   -> decltype(log(Error, fmt, std::forward<Args>(args)...))

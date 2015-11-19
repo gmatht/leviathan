@@ -69,14 +69,14 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth,
 
 void Solver::_initialize()
 {
-  format::debug("\nInitializing solver...\n");
+  format::debug("\nInitializing solver...");
   _atom_set.clear();
 
-  format::debug("Simplifing formula...\n");
+  format::debug("Simplifing formula...");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
 
-  format::debug("Generating subformulas...\n");
+  format::debug("Generating subformulas...");
   Generator gen;
   gen.generate(_formula);
   _subformulas = gen.formulas();
@@ -182,8 +182,8 @@ void Solver::_initialize()
   auto last = std::unique(_subformulas.begin(), _subformulas.end());
   _subformulas.erase(last, _subformulas.end());
 
-  format::debug("Found {} subformulas\n", _subformulas.size());
-  format::debug("Building data structure...\n");
+  format::debug("Found {} subformulas", _subformulas.size());
+  format::debug("Building data structure...");
 
   FormulaID current_index(0);
 
@@ -252,7 +252,7 @@ void Solver::_initialize()
     _add_formula_for_position(f, current_index++, lhs, rhs);
   }
 
-  format::debug("Generating eventualities...\n");
+  format::debug("Generating eventualities...");
   _fw_eventualities_lut =
     std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
   std::vector<FormulaPtr> eventualities;
@@ -281,9 +281,9 @@ void Solver::_initialize()
     _bw_eventualities_lut[i] = FormulaID(position);
   }
 
-  format::debug("Found {} eventualities\n", eventualities.size());
+  format::debug("Found {} eventualities", eventualities.size());
   // TODO: Skip this step if the use of the sat solver is not enabled
-  format::debug("Generating clauses...\n");
+  format::debug("Generating clauses...");
 
   _clause_size = std::vector<uint64_t>(_number_of_formulas, 1);
   _clauses = std::vector<Clause>(_number_of_formulas);
@@ -381,7 +381,7 @@ void Solver::_initialize()
                     _bw_eventualities_lut.size()));
   _state = State::INITIALIZED;
 
-  format::debug("Solver initialized!\n\n");
+  format::debug("Solver initialized!");
 }
 
 void Solver::_add_formula_for_position(const FormulaPtr formula,
@@ -671,7 +671,7 @@ loop:
 
         assert(frame.literals.empty());
 
-        PrettyPrinter p(format::Verbose);
+        PrettyPrinter p;
         format::verbose(
           "\033[0;32m"
           "Inserting formulas in the SAT solver: "
@@ -687,7 +687,7 @@ loop:
           if (_bitset.disjunction[one])
             frame.to_process[one] = false;
 
-          p.print(_subformulas[one], true);
+          format::verbose("{}", p.to_string(_subformulas[one]));
 
           one = _bitset.temporary.find_next(one);
         }
@@ -700,7 +700,7 @@ loop:
                       [&](int l) { solver.newVar(); });
 
         if (!solver.solve()) {
-          format::verbose("SAT says NO\n");
+          format::verbose("SAT says NO");
 
           frame.type =
             Frame::UNKNOWN;  // This frame will be deallocated right now anyway
@@ -727,7 +727,7 @@ loop:
               "\033[0;32m"
               "TRUE "
               "\33[0m");
-            p.print(_subformulas[id], true);
+            format::verbose("{}", p.to_string(_subformulas[id]));
           }
           else if (_bitset.negation[id + 1] ||
                    (isa<Tomorrow>(_subformulas[id + 1]) &&
@@ -741,7 +741,7 @@ loop:
               "\033[0;31m"
               "TRUE "
               "\33[0m");
-            p.print(_subformulas[id + 1], true);
+            format::verbose("{}", p.to_string(_subformulas[id + 1]));
           }
           else  // TODO
           {
@@ -816,7 +816,7 @@ loop:
 
     // REP rule application
     if (repFrame1 && repFrame2) {
-      format::verbose("Applying REP rule\n");
+      format::verbose("Applying REP rule");
       _rollback_to_latest_choice();
       goto loop;
     }
@@ -926,12 +926,12 @@ void Solver::_rollback_to_latest_choice()
       return;
     }
     else if (_stack.top().type == Frame::SAT) {
-      format::verbose("\033[0;31mROLLBACK\033[0m\n");
+      format::verbose("\033[0;31mROLLBACK\033[0m");
       Minisat::Solver &solver = *_stack.top().solver;
 
       bool satisfiable = solver.solve();
       if (satisfiable) {
-        PrettyPrinter p(format::Verbose);
+        PrettyPrinter p;
 
         Frame new_frame(_stack.top());
         Clause c;
@@ -951,7 +951,7 @@ void Solver::_rollback_to_latest_choice()
               "\033[0;32m"
               "TRUE "
               "\33[0m");
-            p.print(_subformulas[id], true);
+            format::verbose("{}", p.to_string(_subformulas[id]));
           }
           else if (_bitset.negation[id + 1] ||
                    (isa<Tomorrow>(_subformulas[id + 1]) &&
@@ -965,11 +965,11 @@ void Solver::_rollback_to_latest_choice()
               "\033[0;31m"
               "TRUE "
               "\33[0m");
-            p.print(_subformulas[id + 1], true);
+            format::verbose("{}", p.to_string(_subformulas[id + 1]));
           }
           else  // TODO
           {
-            // PrettyPrinter p(format::Verbose);
+            // PrettyPrinter p;
             // p.print(_subformulas[id + 1], true);
             // assert(false);
           }

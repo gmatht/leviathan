@@ -1,17 +1,17 @@
 /*
-  Copyright (c) 2014, Matteo Bertello
-  All rights reserved.
+ Copyright (c) 2014, Matteo Bertello
+ All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * The names of its contributors may not be used to endorse or promote
-    products derived from this software without specific prior written
-    permission.
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ * The names of its contributors may not be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
 */
 
 #pragma once
@@ -26,14 +26,11 @@ class Visitor;
 
 class PrettyPrinter : public Visitor {
 public:
-  PrettyPrinter(format::LogLevel logLevel = format::Message)
-    : _logLevel(logLevel)
-  {
-  }
+  PrettyPrinter() = default;
   virtual ~PrettyPrinter() = default;
 
-  void print(const FormulaPtr formula, bool newLine = false);
-  void print(const Formula *formula, bool newLine = false);
+  std::string to_string(const FormulaPtr formula);
+  std::string to_string(const Formula *formula);
 
 protected:
   virtual void visit(const True *t) override;
@@ -50,7 +47,7 @@ protected:
   virtual void visit(const Until *until) override;
 
 private:
-  format::LogLevel _logLevel;
+  std::stringstream _stream;
 };
 }
 }
