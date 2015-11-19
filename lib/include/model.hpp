@@ -19,6 +19,7 @@
 #include <memory>
 #include <vector>
 #include <set>
+#include <ostream>
 
 namespace LTL {
 namespace detail {
@@ -68,5 +69,11 @@ struct Model {
 };
 
 using ModelPtr = std::shared_ptr<Model>;
+
+// TODO
+inline std::ostream &operator<<(std::ostream &os, ModelPtr const &model)
+{
+  return os << "I should print the model at this point";
+}
 }
 }

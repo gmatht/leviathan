@@ -45,6 +45,7 @@
 */
 
 namespace format = LTL::format;
+using namespace format::colors;
 
 const std::string leviathan_version = "0.2.2";
 
@@ -109,6 +110,54 @@ TCLAP::ValueArg<uint32_t> maxBacktrack(
   false, 100, "percentage");
 }
 
+// We suppose 80 columns is a good width
+void print_progress_status(std::string formula, int i)
+{
+  std::string msg = format::format("Solving formula n° {}: ", i);
+
+  formula.erase(std::remove(begin(formula), end(formula), '\n'), end(formula));
+
+  std::string ellipses;
+  if (formula.length() + msg.length() > 80) {
+    formula = formula.substr(0, 80 - msg.length() - 3);
+    ellipses = "...";
+  }
+
+  format::message("{}{}{}", msg, formula, ellipses);
+}
+
+void solve(InputFormula const &input, int i)
+{
+  print_progress_status(input.formula, i);
+  format::message("Parsing...");
+
+  optional<LTL::FormulaPtr> parsed = LTL::parse(input.formula);
+
+  if (!parsed) {
+    format::error("Syntax error in formula n° {}. Skipping...", i);
+    return;
+  }
+
+  LTL::FormulaPtr formula = *parsed;
+
+  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()),
+                     Args::backtrackProb.getValue(),
+                     Args::minBacktrack.getValue(),
+                     Args::maxBacktrack.getValue(), Args::sat.getValue());
+
+  solver.solution();
+
+  bool sat = solver.satisfiability() == LTL::Solver::Result::SATISFIABLE;
+  format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
+                                            : colored(Red, "unsatisfiable"));
+
+  if (sat && Args::model.getValue()) {
+    LTL::ModelPtr model = solver.model();
+
+    format::message("The following model was found:\n{}", model);
+  }
+}
+
 int main(int argc, char *argv[])
 {
   TCLAP::CmdLine cmd("A simple LTL satisfiability checker", ' ',
@@ -134,6 +183,10 @@ int main(int argc, char *argv[])
   else
     data = ltl.getValue();
 
+  int i = 0;
+  for (auto &input : data.inputs()) {
+    solve(input, ++i);
+  }
   return 0;
 }
 // std::vector<std::string> readFile(std::istream &input);

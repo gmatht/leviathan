@@ -6,7 +6,7 @@ namespace LTL {
 
 namespace detail {
 
-std::pair<bool, LTL::FormulaPtr> parse(const std::string &formula)
+optional<LTL::FormulaPtr> parse(const std::string &formula)
 {
   std::stringstream ss;
   ss << formula;
@@ -15,9 +15,9 @@ std::pair<bool, LTL::FormulaPtr> parse(const std::string &formula)
   p.parse();
 
   if (p.error())
-    return {true, nullptr};
+    return {};
   else
-    return {false, p.result()};
+    return p.result();
 }
 }
 }

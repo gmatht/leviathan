@@ -18,11 +18,14 @@
 
 #include <tuple>
 #include "formula.hpp"
+#include "optional.hpp"
 
 namespace LTL {
 
 namespace detail {
 
-std::pair<bool, FormulaPtr> parse(const std::string &formula);
+using std::experimental::optional;
+
+optional<FormulaPtr> parse(const std::string &formula);
 }
 }
