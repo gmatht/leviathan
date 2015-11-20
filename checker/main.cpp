@@ -59,6 +59,7 @@ const std::string leviathan_version = "0.2.2";
  * If you add a new parameter, remember to register it in main()
  */
 namespace Args {
+
 TCLAP::UnlabeledValueArg<std::string> filename(
   "filename", "The name of the file to load the formulas from", false, "-",
   "path");
@@ -80,6 +81,14 @@ TCLAP::SwitchArg test(
   "contain the syntactic representation of the correct model of the given "
   "formula, if the formula is satisfiable, or be empty otherwise.",
   false);
+
+TCLAP::ValueArg<uint8_t> verbosity(
+  "v", "verbosity",
+  "The level of verbosity of solver's output."
+  "The higher the value, the more verbose the output will be. A verbosity of "
+  "zero means total silence, even for error messages. Five or higher means "
+  "total annoyance.",
+  false, uint8_t{format::Message}, "Number between 0 and 5");
 
 TCLAP::SwitchArg sat(
   "s", "sat",
@@ -171,11 +180,21 @@ int main(int argc, char *argv[])
   cmd.add(maxBacktrack);
   cmd.add(ltl);
   cmd.add(model);
+  cmd.add(verbosity);
   cmd.add(sat);
   cmd.add(filename);
 
   cmd.parse(argc, argv);
 
+  // Setup the verbosity first of all
+  auto level = static_cast<format::LogLevel>(
+    std::min(verbosity.getValue(), uint8_t{format::Verbose}));
+
+  format::max_log_level = level;
+
+  format::verbose("Verbose message. I told you this would be very verbose.");
+
+  // Begin to process inputs
   InputData data;
 
   if (filename.isSet())

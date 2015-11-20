@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <utility>
 #include <type_traits>
+#include <atomic>
 #include <iostream>
 
 #ifndef MSVC
@@ -157,9 +158,16 @@ using namespace colors;
 /*
  * Printing functions
  */
-enum LogLevel : uint8_t { Error = 0, Warning, Message, Debug, Verbose };
+enum LogLevel : uint8_t {
+  Silent = 0,
+  Error,
+  Warning,
+  Message,
+  Debug,
+  Verbose
+};
 
-extern LogLevel max_log_level;
+extern std::atomic<LogLevel> max_log_level;
 
 template <typename CharTy, typename... Args>
 auto log(LogLevel level, Color color, const CharTy *fmt, Args &&... args)

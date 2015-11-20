@@ -20,7 +20,7 @@ namespace LTL {
 namespace detail {
 namespace format {
 
-LogLevel max_log_level = Message;
+std::atomic<LogLevel> max_log_level{Message};
 }
 }
 }
