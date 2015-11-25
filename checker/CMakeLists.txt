@@ -5,8 +5,9 @@ project (checker CXX)
 # Checker executable
 #
 set (SRC main.cpp)
+set (HEADERS input.hpp)
 
-add_executable (checker ${SRC})
+add_executable (checker ${SRC} ${HEADERS})
 
 target_include_directories(
   checker 

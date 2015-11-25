@@ -20,6 +20,7 @@
 #include <vector>
 #include <set>
 #include <ostream>
+#include <iterator>
 
 namespace LTL {
 namespace detail {
@@ -70,10 +71,63 @@ struct Model {
 
 using ModelPtr = std::shared_ptr<Model>;
 
-// TODO
-inline std::ostream &operator<<(std::ostream &os, ModelPtr const &model)
+/*
+ * The following code is used to print the model in various ways
+ */
+
+inline std::ostream &operator<<(std::ostream &os, Literal const &lit)
 {
-  return os << "I should print the model at this point";
+  if (lit.negative())
+    os << "!";
+  return os << lit.atom();
+}
+
+class model_printer_t {
+  ModelPtr const &_model;
+  bool _parsable = false;
+
+public:
+  model_printer_t(ModelPtr const &model, bool parsable)
+    : _model(model), _parsable(parsable)
+  {
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, model_printer_t p)
+  {
+    if (p._parsable)
+      p.parsable_print(os);
+    else
+      p.readable_print(os);
+    return os;
+  }
+
+private:
+  void parsable_print(std::ostream &os) const
+  {
+    for (auto it = begin(_model->states); it != end(_model->states); ++it) {
+      os << "{";
+
+      State &state = *it;
+      for (auto it = begin(state); it != end(state); ++it) {
+        os << *it;
+        os << ",";
+      }
+
+      os << "}";
+      if (it != end(_model->states))
+        os << ";";
+    }
+  }
+
+  void readable_print(std::ostream &os) const
+  {
+    os << "I should print the model at this point.";
+  }
+};
+
+inline model_printer_t print_model(ModelPtr const &model, bool parsable)
+{
+  return {model, parsable};
 }
 }
 }
