@@ -5,7 +5,7 @@ install:
   - ./configure
 
 script: 
-  - make -j2
+  - make -j2 VERBOSE=1
 
 sudo: required
 dist: trusty
