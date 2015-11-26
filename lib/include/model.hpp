@@ -102,26 +102,44 @@ public:
   }
 
 private:
+  template <typename Iterator, typename Sep>
+  void print_sep(std::ostream &os, Iterator b, Iterator e, Sep sep) const
+  {
+    Iterator it = b;
+
+    if (it != e)
+      os << *it;
+    for (++it; it != e; ++it) {
+      os << sep << *it;
+    }
+  }
+
   void parsable_print(std::ostream &os) const
   {
-    for (auto it = begin(_model->states); it != end(_model->states); ++it) {
+    for (State &state : _model->states) {
       os << "{";
 
-      State &state = *it;
-      for (auto it = begin(state); it != end(state); ++it) {
-        os << *it;
-        os << ",";
-      }
+      print_sep(os, begin(state), end(state), ",");
 
-      os << "}";
-      if (it != end(_model->states))
-        os << ";";
+      os << "} -> ";
     }
+
+    os << "#" << _model->loop_state;
   }
 
   void readable_print(std::ostream &os) const
   {
-    os << "I should print the model at this point.";
+    int i = 0;
+    for (State &state : _model->states) {
+      os << "State " << i << ":\n";
+
+      print_sep(os, begin(state), end(state), ", ");
+      os << "\n";
+
+      ++i;
+    }
+
+    os << "Loops to state " << _model->loop_state;
   }
 };
 
