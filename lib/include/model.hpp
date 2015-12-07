@@ -108,8 +108,8 @@ private:
     Iterator it = b;
 
     if (it != e)
-      os << *it;
-    for (++it; it != e; ++it) {
+      os << *it++;
+    for (; it != e; ++it) {
       os << sep << *it;
     }
   }
@@ -131,11 +131,14 @@ private:
   {
     int i = 0;
     for (State &state : _model->states) {
-      os << "State " << i << ":\n";
+      if (state.empty())
+        os << "State " << i << " empty\n";
+      else {
+        os << "State " << i << ":\n";
 
-      print_sep(os, begin(state), end(state), ", ");
-      os << "\n";
-
+        print_sep(os, begin(state), end(state), ", ");
+        os << "\n";
+      }
       ++i;
     }
 

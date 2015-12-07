@@ -16,13 +16,13 @@
 
 #include "leviathan.hpp"
 
-#include "input.hpp"
-
 #include <limits>
 #include <utility>
 #include <string>
 #include <vector>
 #include <algorithm>
+
+#include "optional.hpp"
 
 #include "tclap/CmdLine.h"
 
@@ -46,6 +46,8 @@
 
 namespace format = LTL::format;
 using namespace format::colors;
+using std::experimental::optional;
+using std::experimental::nullopt;
 
 const std::string leviathan_version = "0.2.2";
 
@@ -140,12 +142,12 @@ void print_progress_status(std::string formula, int i)
   format::message("{}{}{}", msg, formula, ellipses);
 }
 
-void solve(InputFormula const &input, int i)
+void solve(std::string const &input, int i)
 {
-  print_progress_status(input.formula, i);
+  print_progress_status(input, i);
   format::debug("Parsing...");
 
-  optional<LTL::FormulaPtr> parsed = LTL::parse(input.formula);
+  optional<LTL::FormulaPtr> parsed = LTL::parse(input);
 
   if (!parsed) {
     format::error("Syntax error in formula n° {}. Skipping...", i);
