@@ -53,6 +53,9 @@
 // const. If --thread-safe is not provided, the state-tables are not defined
 // as const, since the lookup() function below will modify them
 
+#ifdef _MSC_VER
+#include <iso646.h>
+#endif
 
 namespace // anonymous
 {

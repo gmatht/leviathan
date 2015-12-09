@@ -7,7 +7,9 @@
 
 // $insert class_ih
 #include "Scanner.ih"
-
+#ifdef _MSC_VER
+#include <iso646.h>
+#endif
 
     // s_ranges__: use (unsigned) characters as index to obtain
     //           that character's range-number.

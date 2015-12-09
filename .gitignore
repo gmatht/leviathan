@@ -12,6 +12,7 @@ bin/
 build/
 xcodebuild/
 DerivedData
+winbuild
 
 ## Various settings
 *.pbxuser

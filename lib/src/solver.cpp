@@ -28,6 +28,10 @@
 #include <csignal>
 #include <atomic>
 
+#ifdef _MSC_VER
+#define __builtin_expect(cond, value) (cond)
+#endif
+
 namespace LTL {
 
 namespace detail {

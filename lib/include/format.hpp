@@ -28,7 +28,7 @@
 #include <atomic>
 #include <iostream>
 
-#ifndef MSVC
+#ifndef _MSC_VER
 #include <unistd.h>
 #endif
 

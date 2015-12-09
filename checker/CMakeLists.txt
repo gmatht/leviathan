@@ -5,9 +5,8 @@ project (checker CXX)
 # Checker executable
 #
 set (SRC main.cpp)
-set (HEADERS input.hpp)
 
-add_executable (checker ${SRC} ${HEADERS})
+add_executable (checker ${SRC})
 
 target_include_directories(
   checker 
@@ -18,7 +17,9 @@ target_include_directories(
     "${STDOPTIONAL_HEADERS}"
 )
 
-target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
+if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
+	target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
+endif ()
 set_property(TARGET checker 
              PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
