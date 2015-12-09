@@ -21,6 +21,7 @@ addons:
   apt:
     packages:
     - libboost-system1.55-dev
+    - libboost-thread1.55-dev
 #
 # Other configurations with other Clang and GCC versions
 #
@@ -33,6 +34,7 @@ matrix:
           packages:
           - clang-3.6
           - libboost-system1.55-dev
+          - libboost-thread1.55-dev
     - compiler: gcc
       env: TRAVIS_GNU_VERSION=4.9
       addons:
@@ -43,6 +45,7 @@ matrix:
           - g++-4.9
           - libstdc++-4.9-dev
           - libboost-system1.55-dev
+          - libboost-thread1.55-dev
     - compiler: gcc
       env: TRAVIS_GNU_VERSION=5
       addons:
@@ -53,3 +56,4 @@ matrix:
           - g++-5
           - libstdc++-5-dev
           - libboost-system1.55-dev
+          - libboost-thread1.55-dev
