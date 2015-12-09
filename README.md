@@ -6,6 +6,7 @@ An implementation of a Tableau method for LTL formula satisfiability checking ba
 * Version: 0.2.2
 
 [![Build Status](https://travis-ci.org/Corralx/leviathan.svg?branch=refactoring)](https://travis-ci.org/Corralx/leviathan)
+[![Build status](https://ci.appveyor.com/api/projects/status/d9pox240noqo6mo0/branch/refactoring?svg=true)](https://ci.appveyor.com/project/Corralx/leviathan/branch/refactoring)
 
 ## How To
 To compile the test application on Linux or Mac OS X run "./compile.sh".
