@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8.11)
 project (checker CXX)
 
 # Prevent Boost library autolink
-ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+add_definitions ("-DBOOST_ALL_NO_LIB")
 
 #
 # Checker executable
@@ -23,9 +23,10 @@ target_include_directories(
 if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
 	target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
 endif ()
+
 set_property(TARGET checker 
              PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
 target_link_libraries (checker leviathan)
 
-install(TARGETS checker RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install (TARGETS checker RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
