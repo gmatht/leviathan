@@ -80,26 +80,9 @@ namespace Minisat {
         // Vector interface:
         K        operator [] (int index) const  { return xs[index]; }
         
-        
         void     insert      (K k) { in_set.reserve(k, 0); if (!in_set[k]) { in_set[k] = 1; xs.push(k); } }
         bool     has         (K k) { in_set.reserve(k, 0); return in_set[k]; }
     };
-
-    #if 0
-    template<class K, class V, V nil, class MkIndex = MkIndexDefault<K> >
-    class IntMapNil {
-        vec<V> map;
-        V      nil;
-
-    public:
-        IntMap(){}
-        
-        void     reserve(K);
-        V&       find   (K);
-        const V& operator[](K k) const;
-
-    };
-    #endif
 
 //=================================================================================================
 } // namespace Minisat

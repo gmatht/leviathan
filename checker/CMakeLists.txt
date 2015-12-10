@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.8.11)
 project (checker CXX)
 
+# Prevent Boost library autolink
+ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+
 #
 # Checker executable
 #
