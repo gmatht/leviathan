@@ -45,8 +45,8 @@ private:
     Size cap;
 
     // Don't allow copying (error prone):
-    vec<T>&  operator=(vec<T>& other);
-             vec      (vec<T>& other);
+    vec<T>&  operator=(vec<T>& other) = delete;
+             vec      (vec<T>& other) = delete;
 
     static inline Size max(Size x, Size y){ return (x > y) ? x : y; }
 
@@ -55,7 +55,7 @@ public:
     vec()                        : data(NULL), sz(0), cap(0)    { }
     explicit vec(Size size)      : data(NULL), sz(0), cap(0)    { growTo(size); }
     vec(Size size, const T& pad) : data(NULL), sz(0), cap(0)    { growTo(size, pad); }
-   ~vec()                                                       { clear(true); }
+	~vec()                                                      { clear(true); }
 
     // Pointer to first element:
     operator T*       (void)           { return data; }
@@ -88,7 +88,7 @@ public:
     const T& operator [] (Size index) const { return data[index]; }
     T&       operator [] (Size index)       { return data[index]; }
 
-    // Duplicatation (preferred instead):
+    // Duplication (preferred instead):
     void copyTo(vec<T>& copy) const { copy.clear(); copy.growTo(sz); for (Size i = 0; i < sz; i++) copy[i] = data[i]; }
     void moveTo(vec<T>& dest) { dest.clear(true); dest.data = data; dest.sz = sz; dest.cap = cap; data = NULL; sz = 0; cap = 0; }
 };

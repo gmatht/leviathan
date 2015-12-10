@@ -52,7 +52,7 @@ struct Lit {
     int     x;
 
     // Use this as a constructor:
-    friend Lit mkLit(Var var, bool sign);
+    //friend Lit mkLit(Var var, bool sign);
 
     Lit(Var var, bool sign = false) : x(var + var + (int)sign) {}
     Lit() : x(0) {}
@@ -62,7 +62,7 @@ struct Lit {
     bool operator <  (Lit p) const { return x < p.x;  } // '<' makes p, ~p adjacent in the ordering.
 };
 
-inline Lit mkLit(Var var, bool sign = false) { Lit p; p.x = var + var + (int)sign; return p; }
+//inline	Lit mkLit(Var var, bool sign = false) { Lit p; p.x = var + var + (int)sign; return p; }
 inline  Lit  operator ~(Lit p)              { Lit q; q.x = p.x ^ 1; return q; }
 inline  Lit  operator ^(Lit p, bool b)      { Lit q; q.x = p.x ^ (unsigned int)b; return q; }
 inline  bool sign      (Lit p)              { return p.x & 1; }
@@ -93,6 +93,11 @@ class LSet : public IntSet<Lit, MkIndexLit>{};
 //       does enough constant propagation to produce sensible code, and this appears to be somewhat
 //       fragile unfortunately.
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4800)
+#endif
+
 class lbool {
     uint8_t value;
 
@@ -119,6 +124,11 @@ public:
     friend int   toInt  (lbool l);
     friend lbool toLbool(int   v);
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 inline int   toInt  (lbool l) { return l.value; }
 inline lbool toLbool(int   v) { return lbool((uint8_t)v);  }
 
@@ -136,6 +146,11 @@ inline lbool toLbool(int   v) { return lbool((uint8_t)v);  }
 // Clause -- a simple class for representing a clause:
 
 typedef RegionAllocator<uint32_t>::Ref CRef;
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4200)
+#endif
 
 class Clause {
     struct {
@@ -164,7 +179,7 @@ class Clause {
                 data[header.size].act = 0;
             else
                 calcAbstraction();
-    }
+		}
     }
 
     // NOTE: This constructor cannot be used directly (doesn't allocate enough memory).
@@ -189,7 +204,8 @@ public:
         uint32_t abstraction = 0;
         for (int i = 0; i < size(); i++)
             abstraction |= 1 << (var(data[i].lit) & 31);
-        data[header.size].abs = abstraction;  }
+        data[header.size].abs = abstraction;
+	}
 
 
     int          size        ()      const   { return header.size; }
@@ -218,6 +234,9 @@ public:
     void         strengthen  (Lit p);
 };
 
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 //=================================================================================================
 // ClauseAllocator -- a simple class for allocating memory for clauses:

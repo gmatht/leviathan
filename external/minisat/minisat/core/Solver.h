@@ -81,15 +81,15 @@ public:
 
     // Read state:
     //
-    lbool   value      (Var x) const;       // The current value of a variable.
-    lbool   value      (Lit p) const;       // The current value of a literal.
-    lbool   modelValue (Var x) const;       // The value of a variable in the last model. The last call to solve must have been satisfiable.
-    lbool   modelValue (Lit p) const;       // The value of a literal in the last model. The last call to solve must have been satisfiable.
-    int     nAssigns   ()      const;       // The current number of assigned literals.
-    int     nClauses   ()      const;       // The current number of original clauses.
-    int     nLearnts   ()      const;       // The current number of learnt clauses.
-    int     nVars      ()      const;       // The current number of variables.
-    int     nFreeVars  ()      const;
+    lbool		value      (Var x) const;       // The current value of a variable.
+    lbool		value      (Lit p) const;       // The current value of a literal.
+    lbool		modelValue (Var x) const;       // The value of a variable in the last model. The last call to solve must have been satisfiable.
+    lbool		modelValue (Lit p) const;       // The value of a literal in the last model. The last call to solve must have been satisfiable.
+    int			nAssigns   ()      const;       // The current number of assigned literals.
+    uint64_t	nClauses   ()      const;       // The current number of original clauses.
+    uint64_t	nLearnts   ()      const;       // The current number of learnt clauses.
+    int			nVars      ()      const;       // The current number of variables.
+    int			nFreeVars  ()      const;
 
     // Resource contraints:
     //
@@ -144,7 +144,7 @@ protected:
     // Helper structures:
     //
     struct VarData { CRef reason; int level; };
-    static inline VarData mkVarData(CRef cr, int l){ VarData d = {cr, l}; return d; }
+    //static inline VarData mkVarData(CRef cr, int l){ VarData d = {cr, l}; return d; }
 
     struct Watcher {
         CRef cref;
@@ -308,12 +308,16 @@ inline void Solver::varBumpActivity(Var v, double inc) {
         order_heap.decrease(v); }
 
 inline void Solver::claDecayActivity() { cla_inc *= (1 / clause_decay); }
-inline void Solver::claBumpActivity (Clause& c) {
-        if ( (c.activity() += cla_inc) > 1e20 ) {
-            // Rescale:
-            for (int i = 0; i < learnts.size(); i++)
-                ca[learnts[i]].activity() *= 1e-20;
-            cla_inc *= 1e-20; } }
+inline void Solver::claBumpActivity (Clause& c)
+{
+	if ((c.activity() += static_cast<float>(cla_inc)) > 1e20f)
+	{
+		// Rescale:
+        for (int i = 0; i < learnts.size(); i++)
+            ca[learnts[i]].activity() *= 1e-20f;
+        cla_inc *= 1e-20;
+	}
+}
 
 inline void Solver::checkGarbage(void){ return checkGarbage(garbage_frac); }
 inline void Solver::checkGarbage(double gf){
@@ -340,8 +344,8 @@ inline lbool    Solver::value         (Lit p) const   { return assigns[var(p)] ^
 inline lbool    Solver::modelValue    (Var x) const   { return model[x]; }
 inline lbool    Solver::modelValue    (Lit p) const   { return model[var(p)] ^ sign(p); }
 inline int      Solver::nAssigns      ()      const   { return trail.size(); }
-inline int      Solver::nClauses      ()      const   { return num_clauses; }
-inline int      Solver::nLearnts      ()      const   { return num_learnts; }
+inline uint64_t Solver::nClauses      ()      const   { return num_clauses; }
+inline uint64_t Solver::nLearnts      ()      const   { return num_learnts; }
 inline int      Solver::nVars         ()      const   { return next_var; }
 // TODO: nFreeVars() is not quite correct, try to calculate right instead of adapting it like below:
 inline int      Solver::nFreeVars     ()      const   { return (int)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }

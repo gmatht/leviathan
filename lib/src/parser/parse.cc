@@ -550,7 +550,7 @@ void ParserBase::pop__(size_t count)
         ABORT();
     }
 
-    d_stackIdx__ -= count;
+    d_stackIdx__ -= static_cast<int>(count);
     d_state__ = d_stateStack__[d_stackIdx__];
     d_vsp__ = &d_valueStack__[d_stackIdx__];
 }

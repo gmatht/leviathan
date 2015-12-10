@@ -124,10 +124,10 @@ Var Solver::newVar(lbool upol, bool dvar)
     }else
         v = next_var++;
 
-    watches  .init(mkLit(v, false));
-    watches  .init(mkLit(v, true ));
+    watches  .init(Lit(v, false));
+    watches  .init(Lit(v, true ));
     assigns  .insert(v, l_Undef);
-    vardata  .insert(v, mkVarData(CRef_Undef, 0));
+	vardata.insert(v, { CRef_Undef, 0 } /*mkVarData(CRef_Undef, 0)*/);
     activity .insert(v, rnd_init_act ? drand(random_seed) * 0.00001 : 0);
     seen     .insert(v, 0);
     polarity .insert(v, true);
@@ -243,6 +243,10 @@ void Solver::cancelUntil(int level) {
 //=================================================================================================
 // Major methods:
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4800)
+#endif
 
 Lit Solver::pickBranchLit()
 {
@@ -266,13 +270,16 @@ Lit Solver::pickBranchLit()
     if (next == var_Undef)
         return lit_Undef;
     else if (user_pol[next] != l_Undef)
-        return mkLit(next, user_pol[next] == l_True);
+        return Lit(next, user_pol[next] == l_True);
     else if (rnd_pol)
-        return mkLit(next, drand(random_seed) < 0.5);
+        return Lit(next, drand(random_seed) < 0.5);
     else
-        return mkLit(next, polarity[next]);
+        return Lit(next, polarity[next]);
 }
 
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 /*_________________________________________________________________________________________________
 |
@@ -485,7 +492,7 @@ void Solver::uncheckedEnqueue(Lit p, CRef from)
 {
     assert(value(p) == l_Undef);
     assigns[var(p)] = lbool(!sign(p));
-    vardata[var(p)] = mkVarData(from, decisionLevel());
+	vardata[var(p)] = { from, decisionLevel() }; // mkVarData(from, decisionLevel());
     trail.push_(p);
 }
 
@@ -553,7 +560,7 @@ CRef Solver::propagate()
 
         NextClause:;
         }
-        ws.shrink(i - j);
+        ws.shrink(static_cast<int>(i - j));
     }
     propagations += num_props;
     simpDB_props -= num_props;
@@ -848,7 +855,7 @@ lbool Solver::solve_()
     int curr_restarts = 0;
     while (status == l_Undef){
         double rest_base = luby_restart ? luby(restart_inc, curr_restarts) : pow(restart_inc, curr_restarts);
-        status = search(rest_base * restart_first);
+        status = search(static_cast<int>(rest_base * restart_first));
         if (!withinBudget()) break;
         curr_restarts++;
     }
@@ -899,13 +906,29 @@ void Solver::relocAll(ClauseAllocator& to)
     // All watchers:
     //
     watches.cleanAll();
-    for (int v = 0; v < nVars(); v++)
-        for (int s = 0; s < 2; s++){
-            Lit p = mkLit(v, s);
-            vec<Watcher>& ws = watches[p];
-            for (int j = 0; j < ws.size(); j++)
-                ca.reloc(ws[j].cref, to);
-        }
+	for (int v = 0; v < nVars(); v++)
+	{
+		/*
+		for (int s = 0; s < 2; s++){
+			Lit p = Lit(v, s);
+			vec<Watcher>& ws = watches[p];
+			for (int j = 0; j < ws.size(); j++)
+				ca.reloc(ws[j].cref, to);
+		}
+		*/
+		{
+			Lit p = Lit(v, true);
+			vec<Watcher>& ws = watches[p];
+			for (int j = 0; j < ws.size(); j++)
+				ca.reloc(ws[j].cref, to);
+		}
+		{
+			Lit p = Lit(v, false);
+			vec<Watcher>& ws = watches[p];
+			for (int j = 0; j < ws.size(); j++)
+				ca.reloc(ws[j].cref, to);
+		}
+	}
 
     // All reasons:
     //

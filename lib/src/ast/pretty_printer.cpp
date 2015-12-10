@@ -51,12 +51,12 @@ std::string PrettyPrinter::to_string(const Formula *formula)
 
 void PrettyPrinter::visit(const True *)
 {
-  _stream << "\u22a4";
+  _stream << u8"\u22a4";
 }
 
 void PrettyPrinter::visit(const False *)
 {
-  _stream << "\u22a5";
+  _stream << u8"\u22a5";
 }
 
 void PrettyPrinter::visit(const Atom *atom)
@@ -64,16 +64,16 @@ void PrettyPrinter::visit(const Atom *atom)
   _stream << atom->name();
 }
 
-UNARY_VISIT(Negation, "\u00AC")
-UNARY_VISIT(Tomorrow, "\u25CB")
-UNARY_VISIT(Always, "\u25A1")
-UNARY_VISIT(Eventually, "\u25C7")
+UNARY_VISIT(Negation, u8"\u00AC")
+UNARY_VISIT(Tomorrow, u8"\u25CB")
+UNARY_VISIT(Always, u8"\u25A1")
+UNARY_VISIT(Eventually, u8"\u25C7")
 
-BINARY_VISIT(Conjunction, "\u2227")
-BINARY_VISIT(Disjunction, "\u2228")
-BINARY_VISIT(Then, "\u2192")
-BINARY_VISIT(Iff, "\u2194")
-BINARY_VISIT(Until, "\u222a")
+BINARY_VISIT(Conjunction, u8"\u2227")
+BINARY_VISIT(Disjunction, u8"\u2228")
+BINARY_VISIT(Then, u8"\u2192")
+BINARY_VISIT(Iff, u8"\u2194")
+BINARY_VISIT(Until, u8"\u222a")
 
 #undef UNARY_VISIT
 #undef BINARY_VISIT

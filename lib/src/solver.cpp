@@ -987,7 +987,7 @@ ModelPtr Solver::model()
 
   if (_subformulas.size() == 1 && isa<True>(_subformulas[0])) {
     model->loop_state = 0;
-    model->states.push_back({Literal("\u22a4")});
+    model->states.push_back({Literal(u8"\u22a4")});
     return model;
   }
 

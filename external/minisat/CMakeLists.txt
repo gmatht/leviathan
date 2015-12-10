@@ -8,7 +8,16 @@ set(SRC minisat/core/Solver.cc)
 set (
   HEADERS 
   minisat/core/Solver.h
-  minisat/core/SolverTypes.h  
+  minisat/core/SolverTypes.h
+  minisat/mtl/Alg.h
+  minisat/mtl/Alloc.h
+  minisat/mtl/Heap.h
+  minisat/mtl/IntMap.h
+  minisat/mtl/IntTypes.h
+  minisat/mtl/Map.h
+  minisat/mtl/Sort.h
+  minisat/mtl/Vec.h
+  minisat/mtl/XAlloc.h
 )
 
 # Here adding the headers is redundant, but makes them appear in 

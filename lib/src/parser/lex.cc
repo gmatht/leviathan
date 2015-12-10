@@ -327,7 +327,7 @@ void ScannerBase::Input::reRead(size_t ch)
     {
         if (ch == '\n')
             --d_lineNr;
-        d_deque.push_front(ch);
+        d_deque.push_front(static_cast<char>(ch));
     }
 }
 
