@@ -35,14 +35,6 @@ matrix:
           - clang-3.6
           - libboost-system1.55-dev
           - libboost-thread1.55-dev
-    - compiler: clang
-      env: TRAVIS_CLANG_VERSION=3.7
-      addons:
-        apt:
-          packages:
-          - clang-3.7
-          - libboost-system1.59-dev
-          - libboost-thread1.59-dev
     - compiler: gcc
       env: TRAVIS_GNU_VERSION=4.9
       addons:
