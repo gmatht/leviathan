@@ -16,11 +16,11 @@
 
 #include "leviathan.hpp"
 
-#include <limits>
-#include <utility>
-#include <string>
-#include <vector>
 #include <algorithm>
+#include <limits>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "optional.hpp"
 
@@ -60,6 +60,15 @@ const std::string leviathan_version = "0.2.2";
  *
  * If you add a new parameter, remember to register it in main()
  */
+/*
+ * To register the type for verbosity arguments
+ */
+namespace TCLAP {
+template <>
+struct ArgTraits<format::LogLevel> : ValueLikeTrait {
+};
+}
+
 namespace Args {
 
 TCLAP::UnlabeledValueArg<std::string> filename(
@@ -75,9 +84,8 @@ TCLAP::SwitchArg model(
   "m", "model",
   "Generates and prints a model of the formula, when satisfiable", false);
 
-TCLAP::SwitchArg parsable(
-  "p", "parsable", "Generates machine-parsable output when printing the model",
-  false);
+TCLAP::SwitchArg parsable("p", "parsable", "Generates machine-parsable output",
+                          false);
 
 TCLAP::SwitchArg test(
   "t", "test",
@@ -89,13 +97,13 @@ TCLAP::SwitchArg test(
   "formula, if the formula is satisfiable, or be empty otherwise.",
   false);
 
-TCLAP::ValueArg<uint8_t> verbosity(
+TCLAP::ValueArg<format::LogLevel> verbosity(
   "v", "verbosity",
   "The level of verbosity of solver's output."
   "The higher the value, the more verbose the output will be. A verbosity of "
   "zero means total silence, even for error messages. Five or higher means "
   "total annoyance.",
-  false, uint8_t{format::Message}, "number between 0 and 5");
+  false, format::Message, "number between 0 and 5");
 
 TCLAP::SwitchArg sat(
   "s", "sat",
@@ -129,8 +137,14 @@ TCLAP::ValueArg<uint32_t> maxBacktrack(
 // We suppose 80 columns is a good width
 void print_progress_status(std::string formula, int i)
 {
+  if (Args::parsable.isSet())
+    return;
+
   std::string msg = format::format("Solving formula n° {}: ", i);
 
+  /*
+   * Formatting the formula on one line and printing up to 80 columns
+   */
   formula.erase(std::remove(begin(formula), end(formula), '\n'), end(formula));
 
   std::string ellipses;
@@ -145,8 +159,8 @@ void print_progress_status(std::string formula, int i)
 void solve(std::string const &input, int i)
 {
   print_progress_status(input, i);
-  format::debug("Parsing...");
 
+  format::debug("Parsing...");
   optional<LTL::FormulaPtr> parsed = LTL::parse(input);
 
   if (!parsed) {
@@ -164,14 +178,20 @@ void solve(std::string const &input, int i)
   solver.solution();
 
   bool sat = solver.satisfiability() == LTL::Solver::Result::SATISFIABLE;
-  format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
-                                            : colored(Red, "unsatisfiable"));
+
+  if (Args::parsable.isSet())
+    format::message("{}", sat ? colored(Green, "SAT") : colored(Red, "UNSAT"));
+  else
+    format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
+                                              : colored(Red, "unsatisfiable"));
 
   if (sat && Args::model.isSet()) {
     LTL::ModelPtr model = solver.model();
 
-    format::message("The following model was found:\n{}",
-                    print_model(model, Args::parsable.isSet()));
+    if (!Args::parsable.isSet()) {
+      format::message("The following model was found:");
+    }
+    format::message("{}", model_format(model, Args::parsable.isSet()));
   }
 }
 
@@ -196,10 +216,7 @@ int main(int argc, char *argv[])
   cmd.parse(argc, argv);
 
   // Setup the verbosity first of all
-  auto level = static_cast<format::LogLevel>(
-    std::min(verbosity.getValue(), uint8_t{format::Verbose}));
-
-  format::max_log_level = level;
+  format::set_verbosity_level(verbosity.getValue());
 
   format::verbose("Verbose message. I told you this would be very verbose.");
 

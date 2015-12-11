@@ -20,13 +20,13 @@
 #error "C++ Format must be compiled with support for variadic templates"
 #endif
 
-#include <cstdio>
-#include <cstdint>
-#include <cstdlib>
-#include <utility>
-#include <type_traits>
 #include <atomic>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
+#include <type_traits>
+#include <utility>
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -156,18 +156,28 @@ inline colored_t<const char *> colored(Color color, const char *str)
 using namespace colors;
 
 /*
- * Printing functions
+ * Verbosity level
  */
-enum LogLevel : uint8_t {
-  Silent = 0,
-  Error,
-  Warning,
-  Message,
-  Debug,
-  Verbose
-};
+enum LogLevel : uint8_t { Silent = 0, Error, Info, Message, Debug, Verbose };
 
-extern std::atomic<LogLevel> max_log_level;
+inline std::istream &operator>>(std::istream &s, LogLevel &level)
+{
+  unsigned in;
+  s >> in;
+  if (in > Verbose) {
+    s.setstate(std::ios::failbit);
+    return s;
+  }
+
+  level = static_cast<LogLevel>(in);
+  return s;
+}
+
+/*
+ * Functions to set and probe the verbosity level
+ */
+void set_verbosity_level(LogLevel level);
+LogLevel verbosity_level();
 
 template <typename CharTy, typename... Args>
 auto log(LogLevel level, Color color, const CharTy *fmt, Args &&... args)
@@ -176,7 +186,7 @@ auto log(LogLevel level, Color color, const CharTy *fmt, Args &&... args)
 {
   std::ostream &out = uint8_t(level) >= Message ? std::cout : std::cerr;
 
-  if (uint8_t(level) <= max_log_level) {
+  if (uint8_t(level) <= verbosity_level()) {
     out << set_color(color);
     fmt::print(out, fmt, std::forward<Args>(args)...);
     out << set_color(Reset) << std::endl;
@@ -221,20 +231,6 @@ auto error(const CharTy *fmt, Args &&... args)
 }
 
 template <typename CharTy, typename... Args>
-auto warning(Color color, const CharTy *fmt, Args &&... args)
-  -> decltype(log(Warning, fmt, std::forward<Args>(args)...))
-{
-  log(Warning, color, fmt, std::forward<Args>(args)...);
-}
-
-template <typename CharTy, typename... Args>
-auto warning(const CharTy *fmt, Args &&... args)
-  -> decltype(warning(Reset, fmt, std::forward<Args>(args)...))
-{
-  return warning(Reset, fmt, std::forward<Args>(args)...);
-}
-
-template <typename CharTy, typename... Args>
 auto message(Color color, const CharTy *fmt, Args &&... args)
   -> decltype(log(Message, fmt, std::forward<Args>(args)...))
 {
@@ -246,6 +242,20 @@ auto message(const CharTy *fmt, Args &&... args)
   -> decltype(message(Reset, fmt, std::forward<Args>(args)...))
 {
   return message(Reset, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto info(Color color, const CharTy *fmt, Args &&... args)
+  -> decltype(log(Info, fmt, std::forward<Args>(args)...))
+{
+  log(Info, color, fmt, std::forward<Args>(args)...);
+}
+
+template <typename CharTy, typename... Args>
+auto info(const CharTy *fmt, Args &&... args)
+  -> decltype(info(Reset, fmt, std::forward<Args>(args)...))
+{
+  return info(Reset, fmt, std::forward<Args>(args)...);
 }
 
 template <typename CharTy, typename... Args>

@@ -146,7 +146,7 @@ private:
   }
 };
 
-inline model_printer_t print_model(ModelPtr const &model, bool parsable)
+inline model_printer_t model_format(ModelPtr const &model, bool parsable)
 {
   return {model, parsable};
 }

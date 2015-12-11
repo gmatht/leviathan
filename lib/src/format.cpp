@@ -20,7 +20,19 @@ namespace LTL {
 namespace detail {
 namespace format {
 
-std::atomic<LogLevel> max_log_level{Message};
+namespace {
+std::atomic<LogLevel> level{Message};
+}
+
+void set_verbosity_level(LogLevel l)
+{
+  level = l;
+}
+
+LogLevel verbosity_level()
+{
+  return level;
+}
 }
 }
 }
