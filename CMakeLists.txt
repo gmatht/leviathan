@@ -10,7 +10,7 @@ include (GNUInstallDirs)
 
 if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
 	# Globally set C++11 standard
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 endif ()
 
 add_subdirectory (external/cppformat)

@@ -16,11 +16,13 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <set>
-#include <ostream>
 #include <iterator>
+#include <memory>
+#include <ostream>
+#include <set>
+#include <vector>
+
+#include "format.hpp"
 
 namespace LTL {
 namespace detail {
@@ -132,9 +134,9 @@ private:
     int i = 0;
     for (State &state : _model->states) {
       if (state.empty())
-        os << "State " << i << " empty\n";
+        os << format::format("State {} empty\n", i);
       else {
-        os << "State " << i << ":\n";
+        os << format::format("State {}:\n", i);
 
         print_sep(os, begin(state), end(state), ", ");
         os << "\n";

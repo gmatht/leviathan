@@ -126,7 +126,7 @@ inline std::ostream &set_color(std::ostream &os, Color c)
 template <typename T>
 class colored_t {
 public:
-  colored_t(Color color, T const &obj) : _color(color), _obj(obj) {}
+  colored_t(Color color, T const &obj) : _obj(obj), _color(color) {}
   friend std::ostream &operator<<(std::ostream &os, colored_t c)
   {
     return os << set_color(c._color) << c._obj << set_color(Reset);

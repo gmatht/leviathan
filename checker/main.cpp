@@ -17,6 +17,7 @@
 #include "leviathan.hpp"
 
 #include <algorithm>
+#include <fstream>
 #include <limits>
 #include <string>
 #include <utility>
@@ -135,12 +136,12 @@ TCLAP::ValueArg<uint32_t> maxBacktrack(
 }
 
 // We suppose 80 columns is a good width
-void print_progress_status(std::string formula, int i)
+void print_progress_status(std::string formula, size_t current)
 {
   if (Args::parsable.isSet())
     return;
 
-  std::string msg = format::format("Solving formula n° {}: ", i);
+  std::string msg = format::format("Solving formula n° {}: ", current);
 
   /*
    * Formatting the formula on one line and printing up to 80 columns
@@ -156,15 +157,16 @@ void print_progress_status(std::string formula, int i)
   format::message("{}{}{}", msg, formula, ellipses);
 }
 
-void solve(std::string const &input, int i)
+void solve(std::string const &input, optional<size_t> current = nullopt)
 {
-  print_progress_status(input, i);
+  if (current)
+    print_progress_status(input, *current);
 
-  format::debug("Parsing...");
   optional<LTL::FormulaPtr> parsed = LTL::parse(input);
 
   if (!parsed) {
-    format::error("Syntax error in formula n° {}. Skipping...", i);
+    format::error("Syntax error in formula{}. Skipping...",
+                  current ? format::format("n° {}", *current) : "");
     return;
   }
 
@@ -193,6 +195,11 @@ void solve(std::string const &input, int i)
     }
     format::message("{}", model_format(model, Args::parsable.isSet()));
   }
+}
+
+void batch(std::string const &filename)
+{
+  format::fatal("Batch processing unimplemented yet");
 }
 
 int main(int argc, char *argv[])
@@ -224,7 +231,7 @@ int main(int argc, char *argv[])
   if (ltl.isSet())
     solve(ltl.getValue(), 1);
   else
-    format::fatal("Batch solving unimplemented yet");
+    batch(filename.getValue());
 
   return 0;
 }
