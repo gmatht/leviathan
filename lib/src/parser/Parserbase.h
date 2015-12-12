@@ -3,9 +3,9 @@
 #ifndef ParserBase_h_included
 #define ParserBase_h_included
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
-#pragma clang diagnostic ignored "-Wunused-member-function"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-noreturn"
+#pragma GCC diagnostic ignored "-Wunused-member-function"
 
 #include <exception>
 #include <iostream>
@@ -325,6 +325,6 @@ inline SType &SType::operator=(Tp_ &&rhs)
 // symbols in the class Parser, too.
 #define Parser ParserBase
 
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
 #endif

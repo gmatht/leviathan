@@ -5,8 +5,8 @@
 // $insert class.h
 #include "Parser.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-noreturn"
 
 inline void Parser::error(char const *)
 {
@@ -41,4 +41,4 @@ inline void Parser::exceptionHandler__(std::exception const& /*exc*/)
 
 //using namespace std;
 
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop

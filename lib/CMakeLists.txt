@@ -47,12 +47,18 @@ set (
 add_library (leviathan ${SRC} ${HEADERS})
 
 set(
-  WARNINGS -Weverything 
+  CLANG_WARNINGS -Weverything -pedantic -Werror
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
   -Wno-padded -Wno-weak-vtables
 )
 
-target_compile_options(leviathan PUBLIC ${WARNINGS})
+set(GCC_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
+
+target_compile_options(
+  leviathan PUBLIC 
+  "$<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>"
+  "$<$<CXX_COMPILER_ID:Clang>:${CLANG_WARNINGS}>"
+)
 
 target_include_directories(
   leviathan 

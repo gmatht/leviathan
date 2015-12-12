@@ -3,9 +3,9 @@
 #ifndef ScannerBASE_H_INCLUDED
 #define ScannerBASE_H_INCLUDED
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wmissing-noreturn"
 
 #include <deque>
 #include <iostream>
@@ -368,6 +368,6 @@ inline void ScannerBase::noReturn__()
   d_return = false;
 }
 
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
 #endif  //  ScannerBASE_H_INCLUDED

@@ -32,17 +32,17 @@
 #include <unistd.h>
 #endif
 
-#pragma clang diagnostic push
+#pragma GCC diagnostic push
 
-#pragma clang diagnostic ignored "-Wundef"
-#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#pragma clang diagnostic ignored "-Wswitch-enum"
-#pragma clang diagnostic ignored "-Wweak-vtables"
+#pragma GCC diagnostic ignored "-Wundef"
+#pragma GCC diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+#pragma GCC diagnostic ignored "-Wweak-vtables"
 
 #include "cppformat/format.h"
 
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
 namespace LTL {
 namespace detail {
@@ -126,12 +126,12 @@ private:
 inline color_t set_color(Color c)
 {
   return color_t{c};
-};
+}
 
 inline std::ostream &set_color(std::ostream &os, Color c)
 {
   return os << set_color(c);
-};
+}
 
 template <typename T>
 class colored_t {

@@ -43,12 +43,15 @@
 # endif
 #
 # if defined __clang_major__
-#   if (__clang_major__ == 3 && __clang_minor__ >= 5)
-#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
+#   if (__clang_major__ == 3 && __clang_minor__ >= 3)
+#     define TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_
+#   elif (__clang_major__ == 3 && __clang_minor__ >= 5)
+#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
 #   elif (__clang_major__ > 3)
-#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
+#     define TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_
+#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
 #   endif
-#   if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
+#   if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
 #     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
 #   elif (__clang_major__ == 3 && __clang_minor__ == 4 && __clang_patchlevel__ >= 2)
 #     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
@@ -84,7 +87,7 @@
 #   define OPTIONAL_CONSTEXPR_INIT_LIST
 # endif
 
-# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_ && (defined __cplusplus) && (__cplusplus != 201103L)
+# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_ && (defined __cplusplus) && (__cplusplus != 201103L)
 #   define OPTIONAL_HAS_MOVE_ACCESSORS 1
 # else
 #   define OPTIONAL_HAS_MOVE_ACCESSORS 0
@@ -97,9 +100,7 @@
 #   define OPTIONAL_MUTABLE_CONSTEXPR constexpr
 # endif
 
-// clang 3.3 gcc 4.8
-
-# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
+# if defined TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
 #   define OPTIONAL_NORETURN [[noreturn]]
 # else
 #   define OPTIONAL_NORETURN 
