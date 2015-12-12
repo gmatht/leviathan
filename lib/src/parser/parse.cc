@@ -630,7 +630,7 @@ catch (std::exception const &exc) {
 
 inline void ParserBase::reduce__(PI__ const &pi)
 {
-  d_token__ = pi.d_nonTerm;
+  d_token__ = static_cast<int>(pi.d_nonTerm);
   pop__(pi.d_size);
 }
 

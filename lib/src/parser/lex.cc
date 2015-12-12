@@ -760,14 +760,14 @@ int Scanner::lex__()
 
   while (true) {
     size_t ch = get__();            // fetch next char
-    size_t range = getRange__(ch);  // determine the range
+    size_t range = getRange__(static_cast<int>(ch));  // determine the range
 
     updateFinals__();  // update the state's Final info
 
     switch (actionType__(range))  // determine the action
     {
       case ActionType__::CONTINUE:
-        continue__(ch);
+        continue__(static_cast<int>(ch));
         continue;
 
       case ActionType__::MATCH: {

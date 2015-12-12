@@ -37,6 +37,8 @@ set (
   include/parser.hpp
   include/pretty_printer.hpp
   include/simplifier.hpp
+  src/ast/generator.hpp
+  src/ast/clause_counter.hpp
   include/solver.hpp
   include/visitor.hpp
   include/format.hpp
@@ -54,7 +56,7 @@ set(
 
 set(GNU_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
 
-set(MSVC_WARNINGS -wd4068) # Disable unknown pragma warning
+set(MSVC_WARNINGS -wd4068 /MP)
 
 target_compile_options(
   leviathan PUBLIC 
