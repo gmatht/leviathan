@@ -52,11 +52,14 @@ set(
   -Wno-padded -Wno-weak-vtables
 )
 
-set(GCC_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
+set(GNU_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
+
+set(MSVC_WARNINGS -wd4068) # Disable unknown pragma warning
 
 target_compile_options(
   leviathan PUBLIC 
-  "$<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>"
+  "$<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>"
+  "$<$<CXX_COMPILER_ID:GNU>:${GNU_WARNINGS}>"
   "$<$<CXX_COMPILER_ID:Clang>:${CLANG_WARNINGS}>"
 )
 

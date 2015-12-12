@@ -30,7 +30,8 @@ set(
   -Wno-exit-time-destructors
 )
 
-target_compile_options(checker PUBLIC ${WARNINGS})
+target_compile_options(checker PUBLIC 
+  "$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:${WARNINGS}>")
 
 set_property(TARGET checker 
              PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
