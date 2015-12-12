@@ -16,8 +16,10 @@
 
 #pragma once
 
-#include "visitor.hpp"
 #include "format.hpp"
+#include "visitor.hpp"
+
+#include <sstream>
 
 namespace LTL {
 namespace detail {

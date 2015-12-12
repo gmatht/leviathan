@@ -24,6 +24,14 @@ if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
 	target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
 endif ()
 
+set(
+  WARNINGS
+  -Wno-global-constructors
+  -Wno-exit-time-destructors
+)
+
+target_compile_options(checker PUBLIC ${WARNINGS})
+
 set_property(TARGET checker 
              PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 

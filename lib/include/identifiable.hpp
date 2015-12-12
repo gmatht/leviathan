@@ -106,13 +106,13 @@ public:
   template <typename T>
   inline constexpr friend Derived operator+(const Derived &d, T c)
   {
-    return Derived(d._id + c);
+    return Derived(d._id + static_cast<uint64_t>(c));
   }
 
   template <typename T>
   inline constexpr friend Derived operator-(const Derived &d, T c)
   {
-    return Derived(d._id - c);
+    return Derived(d._id - static_cast<uint64_t>(c));
   }
 
   inline static constexpr Derived max()
@@ -134,6 +134,7 @@ public:
   constexpr FrameID() {}
   constexpr explicit FrameID(uint64_t id) : Identifiable(id) {}
   constexpr FrameID(const FrameID &id) : Identifiable(id) {}
+  FrameID &operator=(const FrameID &) = default;
 };
 
 class FormulaID : public Identifiable<FormulaID> {
@@ -141,6 +142,7 @@ public:
   constexpr FormulaID() {}
   constexpr explicit FormulaID(uint64_t id) : Identifiable(id) {}
   constexpr FormulaID(const FormulaID &id) : Identifiable(id) {}
+  FormulaID &operator=(const FormulaID &) = default;
 };
 }
 }
@@ -148,7 +150,7 @@ public:
 template <typename T>
 std::ostream &operator<<(std::ostream &os, LTL::detail::Identifiable<T> id)
 {
-  return os << (uint64_t)id;
+  return os << uint64_t(id);
 }
 
 namespace std {

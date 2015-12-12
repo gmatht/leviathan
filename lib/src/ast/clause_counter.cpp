@@ -14,8 +14,8 @@
     permission.
 */
 
-#include "clause_counter.hpp"
 #include <cassert>
+#include "clause_counter.hpp"
 
 namespace LTL {
 namespace detail {
@@ -50,19 +50,19 @@ void ClauseCounter::visit(const Negation *t)
          "Formula may have not been simplified!");
 }
 
-void ClauseCounter::visit(const Tomorrow *t)
+void ClauseCounter::visit(const Tomorrow *)
 {
 }
 
-void ClauseCounter::visit(const Always *t)
+void ClauseCounter::visit(const Always *)
 {
 }
 
-void ClauseCounter::visit(const Eventually *t)
+void ClauseCounter::visit(const Eventually *)
 {
 }
 
-void ClauseCounter::visit(const Conjunction *t)
+void ClauseCounter::visit(const Conjunction *)
 {
 }
 
@@ -83,7 +83,7 @@ void ClauseCounter::visit(const Iff *)
   assert(false && "Iff node found in the AST!");
 }
 
-void ClauseCounter::visit(const Until *t)
+void ClauseCounter::visit(const Until *)
 {
 }
 }

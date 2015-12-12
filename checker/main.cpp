@@ -25,7 +25,18 @@
 
 #include "optional.hpp"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wweak-vtables"
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+
 #include "tclap/CmdLine.h"
+
+#pragma clang diagnostic pop
 
 /*
  Rework the driver program.
@@ -50,7 +61,7 @@ using namespace format::colors;
 using std::experimental::optional;
 using std::experimental::nullopt;
 
-const std::string leviathan_version = "0.2.2";
+static constexpr auto leviathan_version = "0.2.2";
 
 /*
  * Command line arguments. It is not so bad to make them global objects
@@ -72,23 +83,23 @@ struct ArgTraits<format::LogLevel> : ValueLikeTrait {
 
 namespace Args {
 
-TCLAP::UnlabeledValueArg<std::string> filename(
+static TCLAP::UnlabeledValueArg<std::string> filename(
   "filename", "The name of the file to load the formulas from", false, "-",
   "path");
 
-TCLAP::ValueArg<std::string> ltl(
+static TCLAP::ValueArg<std::string> ltl(
   "l", "ltl",
   "The LTL formula to solve, provided directly on the command line", false, "",
   "LTL formula");
 
-TCLAP::SwitchArg model(
+static TCLAP::SwitchArg model(
   "m", "model",
   "Generates and prints a model of the formula, when satisfiable", false);
 
-TCLAP::SwitchArg parsable("p", "parsable", "Generates machine-parsable output",
-                          false);
+static TCLAP::SwitchArg parsable("p", "parsable",
+                                 "Generates machine-parsable output", false);
 
-TCLAP::SwitchArg test(
+static TCLAP::SwitchArg test(
   "t", "test",
   "Test the checker answer. In this mode, the '-f' flag is mandatory. The "
   "given filename will be read for the formula, together with a .answer "
@@ -98,7 +109,7 @@ TCLAP::SwitchArg test(
   "formula, if the formula is satisfiable, or be empty otherwise.",
   false);
 
-TCLAP::ValueArg<format::LogLevel> verbosity(
+static TCLAP::ValueArg<format::LogLevel> verbosity(
   "v", "verbosity",
   "The level of verbosity of solver's output."
   "The higher the value, the more verbose the output will be. A verbosity of "
@@ -106,34 +117,38 @@ TCLAP::ValueArg<format::LogLevel> verbosity(
   "total annoyance.",
   false, format::Message, "number between 0 and 5");
 
-TCLAP::SwitchArg sat(
+static TCLAP::SwitchArg sat(
   "s", "sat",
   "Uses sat solver to speed up propositional subformulas processing", false);
 
-TCLAP::ValueArg<uint64_t> depth(
+static TCLAP::ValueArg<uint64_t> depth(
   "", "maximum-depth",
   "The maximum depth to descend into the tableaux (aka the maximum size of "
   "the model)",
   false, std::numeric_limits<uint64_t>::max(), "number");
 
-TCLAP::ValueArg<uint32_t> backtrackProb(
+static TCLAP::ValueArg<unsigned> backtrackProb(
   "", "backtrack-probability",
   "The probability of doing a complete backtrack of the tableau to check "
   "the LOOP and PRUNE rules (between 0 and 100)",
   false, 100, "percentage");
 
-TCLAP::ValueArg<uint32_t> minBacktrack(
+static TCLAP::ValueArg<unsigned> minBacktrack(
   "", "min-backtrack",
   "The minimum percentage of the tableau depth to backtrack during the "
   "check of LOOP and PRUNE rules (between 0 and 100)",
   false, 100, "percentage");
 
-TCLAP::ValueArg<uint32_t> maxBacktrack(
+static TCLAP::ValueArg<unsigned> maxBacktrack(
   "", "max-backtrack",
   "The maximum percentage of the tableau depth to backtrack during the "
   "check of LOOP and PRUNE rules (between 0 and 100)",
   false, 100, "percentage");
 }
+
+void solve(std::string const &, optional<size_t> current = nullopt);
+void print_progress_status(std::string, size_t);
+void batch(std::string const &);
 
 // We suppose 80 columns is a good width
 void print_progress_status(std::string formula, size_t current)
@@ -157,7 +172,7 @@ void print_progress_status(std::string formula, size_t current)
   format::message("{}{}{}", msg, formula, ellipses);
 }
 
-void solve(std::string const &input, optional<size_t> current = nullopt)
+void solve(std::string const &input, optional<size_t> current)
 {
   if (current)
     print_progress_status(input, *current);
@@ -199,7 +214,10 @@ void solve(std::string const &input, optional<size_t> current = nullopt)
 
 void batch(std::string const &filename)
 {
-  format::fatal("Batch processing unimplemented yet");
+  std::ifstream file(filename, std::ios::in);
+  //  if (!file)
+  //    format::fatal("Unable to open the file {}: {}", filename,
+  //    strerror(errno));
 }
 
 int main(int argc, char *argv[])

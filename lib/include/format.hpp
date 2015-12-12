@@ -32,7 +32,17 @@
 #include <unistd.h>
 #endif
 
+#pragma clang diagnostic push
+
+#pragma clang diagnostic ignored "-Wundef"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wswitch-enum"
+#pragma clang diagnostic ignored "-Wweak-vtables"
+
 #include "cppformat/format.h"
+
+#pragma clang diagnostic pop
 
 namespace LTL {
 namespace detail {
@@ -53,7 +63,7 @@ using namespace fmt;
  *
  * TODO: implement on windows
  */
-inline bool isatty(std::ostream &os)
+inline bool isatty()
 {
 #ifdef _MSC_VER
   return false;
@@ -103,8 +113,8 @@ public:
   color_t(Color color) : _color(color) {}
   friend std::ostream &operator<<(std::ostream &os, color_t c)
   {
-    if (isatty(os)) {
-      os << "\033[" << (int)c._color << "m";
+    if (isatty()) {
+      os << "\033[" << int(c._color) << "m";
     }
     return os;
   }

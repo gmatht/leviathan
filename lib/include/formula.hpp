@@ -47,7 +47,7 @@ public:
 
   Formula() = delete;
   Formula(Type type) : _type(type) {}
-  virtual ~Formula() {}
+  virtual ~Formula();
   Type type() const { return _type; }
   template <typename T>
   bool isa() const

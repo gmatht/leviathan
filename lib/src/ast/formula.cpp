@@ -21,6 +21,10 @@ namespace LTL {
 
 namespace detail {
 
+// Out-of-line virtual destructor to silence -Wweak-vtables
+Formula::~Formula() = default;
+Visitor::~Visitor() = default;
+
 #define MAKE_UNARY(_Type, _type)               \
   _Type##Ptr make_##_type(const FormulaPtr &f) \
   {                                            \

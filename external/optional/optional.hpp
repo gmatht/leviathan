@@ -7,8 +7,8 @@
 // The idea and interface is based on Boost.Optional library
 // authored by Fernando Luis Cacciola Carballal
 
-# ifndef ___OPTIONAL_HPP___
-# define ___OPTIONAL_HPP___
+# ifndef OPTIONAL_HPP_GUARD
+# define OPTIONAL_HPP_GUARD
 
 # include <utility>
 # include <type_traits>
@@ -95,6 +95,14 @@
 #   define OPTIONAL_MUTABLE_CONSTEXPR
 # else
 #   define OPTIONAL_MUTABLE_CONSTEXPR constexpr
+# endif
+
+// clang 3.3 gcc 4.8
+
+# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
+#   define OPTIONAL_NORETURN [[noreturn]]
+# else
+#   define OPTIONAL_NORETURN 
 # endif
 
 namespace std{
@@ -200,13 +208,13 @@ template <class T> inline constexpr typename std::remove_reference<T>::type&& co
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) (EXPR)
 #elif defined __clang__ || defined __GNU_LIBRARY__
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) ((CHECK) ? (EXPR) : (fail(#CHECK, __FILE__, __LINE__), (EXPR)))
-  inline void fail(const char* expr, const char* file, int line)
+  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, int line) 
   {
     __assert(expr, file, line);
   }
 #elif defined __GNUC__
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) ((CHECK) ? (EXPR) : (fail(#CHECK, __FILE__, __LINE__), (EXPR)))
-  inline void fail(const char* expr, const char* file, unsigned line)
+  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, unsigned line) 
   {
     _assert(expr, file, line);
   }
@@ -217,6 +225,13 @@ template <class T> inline constexpr typename std::remove_reference<T>::type&& co
 #endif
 
 
+
+
+
+namespace detail_
+{
+
+// static_addressof: a constexpr version of addressof
 template <typename T>
 struct has_overloaded_addressof
 {
@@ -228,8 +243,6 @@ struct has_overloaded_addressof
 
   constexpr static bool value = has_overload<T>(true);
 };
-
-
 
 template <typename T, TR2_OPTIONAL_REQUIRES(!has_overloaded_addressof<T>)>
 constexpr T* static_addressof(T& ref)
@@ -244,18 +257,11 @@ T* static_addressof(T& ref)
 }
 
 
-
+// the call to convert<A>(b) has return type A and converts b to type A iff b decltype(b) is implicitly convertible to A  
 template <class U>
-struct is_not_optional
-{
-  constexpr static bool value = true;
-};
-
-template <class T>
-struct is_not_optional<optional<T>>
-{
-  constexpr static bool value = false;
-};
+U convert(U v) { return v; }
+  
+} // namespace detail
 
 
 constexpr struct trivial_init_t{} trivial_init{};
@@ -288,7 +294,7 @@ union storage_t
   unsigned char dummy_;
   T value_;
 
-  constexpr storage_t( trivial_init_t ) noexcept : dummy_() {};
+  constexpr storage_t( trivial_init_t ) noexcept : dummy_() {}
 
   template <class... Args>
   constexpr storage_t( Args&&... args ) : value_(constexpr_forward<Args>(args)...) {}
@@ -303,7 +309,7 @@ union constexpr_storage_t
     unsigned char dummy_;
     T value_;
 
-    constexpr constexpr_storage_t( trivial_init_t ) noexcept : dummy_() {};
+    constexpr constexpr_storage_t( trivial_init_t ) noexcept : dummy_() {}
 
     template <class... Args>
     constexpr constexpr_storage_t( Args&&... args ) : value_(constexpr_forward<Args>(args)...) {}
@@ -312,18 +318,13 @@ union constexpr_storage_t
 };
 
 
-constexpr struct only_set_initialized_t{} only_set_initialized{};
-
-
 template <class T>
 struct optional_base
 {
     bool init_;
     storage_t<T> storage_;
 
-    constexpr optional_base() noexcept : init_(false), storage_(trivial_init) {};
-
-    explicit constexpr optional_base(only_set_initialized_t, bool init) noexcept : init_(init), storage_(trivial_init) {};
+    constexpr optional_base() noexcept : init_(false), storage_(trivial_init) {}
 
     explicit constexpr optional_base(const T& v) : init_(true), storage_(v) {}
 
@@ -346,9 +347,7 @@ struct constexpr_optional_base
     bool init_;
     constexpr_storage_t<T> storage_;
 
-    constexpr constexpr_optional_base() noexcept : init_(false), storage_(trivial_init) {};
-
-    explicit constexpr constexpr_optional_base(only_set_initialized_t, bool init) noexcept : init_(init), storage_(trivial_init) {};
+    constexpr constexpr_optional_base() noexcept : init_(false), storage_(trivial_init) {}
 
     explicit constexpr constexpr_optional_base(const T& v) : init_(true), storage_(v) {}
 
@@ -382,7 +381,7 @@ class optional : private OptionalBase<T>
 
   constexpr bool initialized() const noexcept { return OptionalBase<T>::init_; }
   T* dataptr() {  return std::addressof(OptionalBase<T>::storage_.value_); }
-  constexpr const T* dataptr() const { return static_addressof(OptionalBase<T>::storage_.value_); }
+  constexpr const T* dataptr() const { return detail_::static_addressof(OptionalBase<T>::storage_.value_); }
   
 # if OPTIONAL_HAS_THIS_RVALUE_REFS == 1
   constexpr const T& contained_val() const& { return OptionalBase<T>::storage_.value_; }
@@ -423,11 +422,11 @@ public:
   typedef T value_type;
 
   // 20.5.5.1, constructors
-  constexpr optional() noexcept : OptionalBase<T>()  {};
-  constexpr optional(nullopt_t) noexcept : OptionalBase<T>() {};
+  constexpr optional() noexcept : OptionalBase<T>()  {}
+  constexpr optional(nullopt_t) noexcept : OptionalBase<T>() {}
 
   optional(const optional& rhs)
-  : OptionalBase<T>(only_set_initialized, false)
+  : OptionalBase<T>()
   {
     if (rhs.initialized()) {
         ::new (static_cast<void*>(dataptr())) T(*rhs);
@@ -436,7 +435,7 @@ public:
   }
 
   optional(optional&& rhs) noexcept(is_nothrow_move_constructible<T>::value)
-  : OptionalBase<T>(only_set_initialized, false)
+  : OptionalBase<T>()
   {
     if (rhs.initialized()) {
         ::new (static_cast<void*>(dataptr())) T(std::move(*rhs));
@@ -487,7 +486,7 @@ public:
   auto operator=(U&& v)
   -> typename enable_if
   <
-    is_same<typename remove_reference<U>::type, T>::value,
+    is_same<typename decay<U>::type, T>::value,
     optional&
   >::type
   {
@@ -592,7 +591,7 @@ public:
   template <class V>
   constexpr T value_or(V&& v) const&
   {
-    return *this ? **this : static_cast<T>(constexpr_forward<V>(v));
+    return *this ? **this : detail_::convert<T>(constexpr_forward<V>(v));
   }
   
 #   if OPTIONAL_HAS_MOVE_ACCESSORS == 1
@@ -600,7 +599,7 @@ public:
   template <class V>
   OPTIONAL_MUTABLE_CONSTEXPR T value_or(V&& v) &&
   {
-    return *this ? constexpr_move(const_cast<optional<T>&>(*this).contained_val()) : static_cast<T>(constexpr_forward<V>(v));
+    return *this ? constexpr_move(const_cast<optional<T>&>(*this).contained_val()) : detail_::convert<T>(constexpr_forward<V>(v));
   }
 
 #   else
@@ -608,7 +607,7 @@ public:
   template <class V>
   T value_or(V&& v) &&
   {
-    return *this ? constexpr_move(const_cast<optional<T>&>(*this).contained_val()) : static_cast<T>(constexpr_forward<V>(v));
+    return *this ? constexpr_move(const_cast<optional<T>&>(*this).contained_val()) : detail_::convert<T>(constexpr_forward<V>(v));
   }
   
 #   endif
@@ -618,7 +617,7 @@ public:
   template <class V>
   constexpr T value_or(V&& v) const
   {
-    return *this ? **this : static_cast<T>(constexpr_forward<V>(v));
+    return *this ? **this : detail_::convert<T>(constexpr_forward<V>(v));
   }
 
 # endif
@@ -640,13 +639,13 @@ public:
   
   constexpr optional(nullopt_t) noexcept : ref(nullptr) {}
    
-  constexpr optional(T& v) noexcept : ref(static_addressof(v)) {}
+  constexpr optional(T& v) noexcept : ref(detail_::static_addressof(v)) {}
   
   optional(T&&) = delete;
   
   constexpr optional(const optional& rhs) noexcept : ref(rhs.ref) {}
   
-  explicit constexpr optional(in_place_t, T& v) noexcept : ref(static_addressof(v)) {}
+  explicit constexpr optional(in_place_t, T& v) noexcept : ref(detail_::static_addressof(v)) {}
   
   explicit optional(in_place_t, T&&) = delete;
   
@@ -690,7 +689,7 @@ public:
   = delete;
   
   void emplace(T& v) noexcept {
-    ref = static_addressof(v);
+    ref = detail_::static_addressof(v);
   }
   
   void emplace(T&&) = delete;
@@ -721,7 +720,7 @@ public:
   template <class V>
   constexpr typename decay<T>::type value_or(V&& v) const
   {
-    return *this ? **this : static_cast<typename decay<T>::type>(constexpr_forward<V>(v));
+    return *this ? **this : detail_::convert<typename decay<T>::type>(constexpr_forward<V>(v));
   }
 };
 

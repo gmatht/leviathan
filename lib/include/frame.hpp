@@ -19,7 +19,8 @@
 #include "boost/dynamic_bitset.hpp"
 #include "boost/pool/pool_alloc.hpp"
 #include "identifiable.hpp"
-#include "minisat/core/Solver.h"
+#include "minisat.hpp"
+
 #include <memory>
 #include <unordered_map>
 #include <cstdint>

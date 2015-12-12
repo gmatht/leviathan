@@ -18,18 +18,18 @@
 
 #include "boost/pool/pool_alloc.hpp"
 #include "formula.hpp"
-#include "identifiable.hpp"
 #include "frame.hpp"
+#include "identifiable.hpp"
+#include "minisat.hpp"
 #include "model.hpp"
-#include "minisat/core/Solver.h"
 
-#include <vector>
-#include <tuple>
 #include <limits>
-#include <stack>
 #include <queue>
-#include <unordered_map>
 #include <random>
+#include <stack>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
 namespace LTL {
 namespace detail {
@@ -59,20 +59,20 @@ public:
   Solver &operator=(const Solver &&) = delete;
 
   Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(),
-         uint32_t backtrack_probability = 100, uint32_t min_backtrack = 100,
-         uint32_t max_backtrack = 100, bool use_sat = false);
+         unsigned backtrack_probability = 100, unsigned min_backtrack = 100,
+         unsigned max_backtrack = 100, bool use_sat = false);
 
   inline FormulaPtr Formula() const { return _formula; }
   inline State state() const { return _state; }
   inline Result satisfiability() const { return _result; }
   inline FrameID maximum_depth() const { return _maximum_depth; }
-  inline uint8_t backtrack_probability() const
+  inline unsigned backtrack_probability() const
   {
     return _backtrack_probability;
   }
 
-  inline uint8_t minimum_backtrack() const { return _minimum_backtrack; }
-  inline uint8_t maximum_backtrack() const { return _maximum_backtrack; }
+  inline unsigned minimum_backtrack() const { return _minimum_backtrack; }
+  inline unsigned maximum_backtrack() const { return _maximum_backtrack; }
   Result solution();
   ModelPtr model();
 
@@ -80,9 +80,9 @@ private:
   FormulaPtr _formula;
 
   FrameID _maximum_depth;
-  uint32_t _backtrack_probability;
-  uint32_t _minimum_backtrack;
-  uint32_t _maximum_backtrack;
+  unsigned _backtrack_probability;
+  unsigned _minimum_backtrack;
+  unsigned _maximum_backtrack;
   bool _use_sat_solver;
 
   State _state;

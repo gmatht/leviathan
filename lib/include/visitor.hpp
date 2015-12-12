@@ -51,7 +51,7 @@ protected:
   virtual void visit(const Until *until) = 0;
 
 public:
-  virtual ~Visitor() {}
+  virtual ~Visitor();
 };
 }
 }

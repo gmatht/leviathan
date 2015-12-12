@@ -33,6 +33,7 @@ set (
   include/identifiable.hpp
   include/leviathan.hpp
   include/model.hpp
+  include/minisat.hpp
   include/parser.hpp
   include/pretty_printer.hpp
   include/simplifier.hpp
@@ -44,6 +45,14 @@ set (
 # Here adding the headers is redundant, but makes them appear in 
 # project files made by IDE generators (Xcode, VS, ecc...)
 add_library (leviathan ${SRC} ${HEADERS})
+
+set(
+  WARNINGS -Weverything 
+  -Wno-c++98-compat -Wno-c++98-compat-pedantic
+  -Wno-padded -Wno-weak-vtables
+)
+
+target_compile_options(leviathan PUBLIC ${WARNINGS})
 
 target_include_directories(
   leviathan 

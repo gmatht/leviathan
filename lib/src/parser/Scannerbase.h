@@ -3,12 +3,16 @@
 #ifndef ScannerBASE_H_INCLUDED
 #define ScannerBASE_H_INCLUDED
 
-#include <limits>
-#include <iostream>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+
 #include <deque>
+#include <iostream>
+#include <limits>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 class ScannerBase {
   // idx: rule, value: tail length (NO_INCREMENTS if no tail)
@@ -363,5 +367,7 @@ inline void ScannerBase::noReturn__()
 {
   d_return = false;
 }
+
+#pragma clang diagnostic pop
 
 #endif  //  ScannerBASE_H_INCLUDED

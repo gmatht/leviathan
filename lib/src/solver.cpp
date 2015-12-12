@@ -16,17 +16,17 @@
 
 #include "solver.hpp"
 
-#include "ast/generator.hpp"
 #include "ast/clause_counter.hpp"
-#include "utility.hpp"
-#include "pretty_printer.hpp"
+#include "ast/generator.hpp"
 #include "format.hpp"
+#include "pretty_printer.hpp"
+#include "utility.hpp"
 
-#include "std14/memory"
-#include <stack>
+#include <atomic>
 #include <cassert>
 #include <csignal>
-#include <atomic>
+#include <stack>
+#include "std14/memory"
 
 #ifdef _MSC_VER
 #define __builtin_expect(cond, value) (cond)
@@ -306,7 +306,7 @@ void Solver::_initialize()
     if (isa<Disjunction>(fast_cast<Disjunction>(f)->left()))
       collect(fast_cast<Disjunction>(f)->left());
     else {
-      uint64_t index = static_cast<uint64_t>(
+      auto index = static_cast<Minisat::Var>(
         std::lower_bound(_subformulas.begin(), _subformulas.end(),
                          fast_cast<Disjunction>(f)->left(), compareFunc) -
         _subformulas.begin());
@@ -323,7 +323,7 @@ void Solver::_initialize()
     if (isa<Disjunction>(fast_cast<Disjunction>(f)->right()))
       collect(fast_cast<Disjunction>(f)->right());
     else {
-      uint64_t index = static_cast<uint64_t>(
+      auto index = static_cast<Minisat::Var>(
         std::lower_bound(_subformulas.begin(), _subformulas.end(),
                          fast_cast<Disjunction>(f)->right(), compareFunc) -
         _subformulas.begin());
@@ -345,23 +345,23 @@ void Solver::_initialize()
     if (isa<Atom>(f) || isa<Always>(f) || isa<Eventually>(f) ||
         isa<Until>(f)) {
       Clause clause;
-      clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+      clause.push(Minisat::Lit(static_cast<Minisat::Var>(current_index)));
       clause.moveTo(_clauses[current_index]);
     }
     else if (isa<Negation>(f))  // Note: Not until case implicitly handled here
     {
       Clause clause;
       clause.push(
-        Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
+        Minisat::Lit(static_cast<Minisat::Var>(current_index) - 1, true));
       clause.moveTo(_clauses[current_index]);
     }
     else if (isa<Tomorrow>(f)) {
       Clause clause;
       if (isa<Negation>(fast_cast<Tomorrow>(f)->formula()))
         clause.push(
-          Minisat::Lit(static_cast<uint64_t>(current_index) - 1, true));
+          Minisat::Lit(static_cast<Minisat::Var>(current_index) - 1, true));
       else
-        clause.push(Minisat::Lit(static_cast<uint64_t>(current_index)));
+        clause.push(Minisat::Lit(static_cast<Minisat::Var>(current_index)));
       clause.moveTo(_clauses[current_index]);
     }
     else if (isa<Disjunction>(f)) {
@@ -665,7 +665,7 @@ loop:
         frame.solver = std14::make_unique<Minisat::Solver>();
         Minisat::Solver &solver = *frame.solver;
         std::for_each(_subformulas.begin(), _subformulas.end(),
-                      [&solver](FormulaPtr f) { solver.newVar(); });
+                      [&solver](FormulaPtr) { solver.newVar(); });
 
         _bitset.temporary = _bitset.atom | _bitset.tomorrow |
                             ((_bitset.atom << 1) & _bitset.negation) |
@@ -686,7 +686,8 @@ loop:
           solver.addClause(_clauses[one]);
 
           for (uint64_t i = 0; i < _clause_size[one]; ++i)
-            frame.literals.push_back(Minisat::var(_clauses[one][i]));
+            frame.literals.push_back(
+              Minisat::var(_clauses[one][static_cast<int>(i)]));
 
           if (_bitset.disjunction[one])
             frame.to_process[one] = false;
@@ -701,7 +702,7 @@ loop:
         frame.literals.erase(last, frame.literals.end());
 
         std::for_each(frame.literals.begin(), frame.literals.end(),
-                      [&](int l) { solver.newVar(); });
+                      [&](int) { solver.newVar(); });
 
         if (!solver.solve()) {
           format::verbose("SAT says NO");
@@ -865,7 +866,7 @@ void Solver::_update_eventualities_satisfaction()
 {
   Frame &frame = _stack.top();
 
-  int i = 0;
+  size_t i = 0;
   std::for_each(frame.eventualities.begin(), frame.eventualities.end(),
                 [&, i](Eventuality &ev) mutable {
                   if (frame.formulas[_bw_eventualities_lut[i]])
