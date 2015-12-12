@@ -17,6 +17,7 @@
 #pragma once
 
 #include "visitor.hpp"
+#include <cstdint>
 
 namespace LTL {
 namespace detail {

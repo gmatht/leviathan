@@ -17,6 +17,8 @@
 #include "formula.hpp"
 #include "visitor.hpp"
 
+#include <cassert>
+
 namespace LTL {
 
 namespace detail {

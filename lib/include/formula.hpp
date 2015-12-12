@@ -18,9 +18,7 @@
 
 #include <string>
 #include <memory>
-#include <set>
 #include <cstdint>
-#include <cassert>
 
 namespace LTL {
 
@@ -175,8 +173,6 @@ inline auto fast_cast(FormulaPtr ptr)
 
   return static_cast<ReturnT *>(ptr.get());
 }
-
-using FormulaSet = std::set<FormulaPtr>;
 
 bool operator==(const FormulaPtr f1, const FormulaPtr f2);
 bool operator!=(const FormulaPtr f1, const FormulaPtr f2);

@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <tuple>
 #include "formula.hpp"
 #include "optional.hpp"
 
@@ -27,5 +26,6 @@ namespace detail {
 using std::experimental::optional;
 
 optional<FormulaPtr> parse(const std::string &formula);
+
 }
 }

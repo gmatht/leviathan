@@ -38,7 +38,6 @@ using detail::FrameID;
 
 using detail::FormulaPtr;
 using detail::PrettyPrinter;
-using detail::FormulaSet;
 
 using detail::isa;
 using detail::fast_cast;
