@@ -7,6 +7,12 @@
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4245)
+#pragma warning(disable : 4244)
+#endif
+
 // The FIRST element of SR arrays shown below uses `d_type', defining the
 // state's type, and `d_lastIdx' containing the last element's index. If
 // d_lastIdx contains the REQ_TOKEN bitflag (see below) then the state needs
@@ -658,7 +664,7 @@ void Parser::nextToken()
 // if the final transition is negative, then we should reduce by the rule
 // given by its positive value. Note that the `recovery' parameter is only
 // used with the --debug option
-int Parser::lookup(bool recovery)
+int Parser::lookup(bool /*recovery*/)
 {
   // $insert threading
   SR__ *sr = s_state[d_state__];  // get the appropriate state-table
@@ -836,3 +842,7 @@ int Parser::parse() try {
 catch (Return__ retValue) {
   return retValue;
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

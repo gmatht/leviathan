@@ -56,7 +56,7 @@ set(
 
 set(GNU_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
 
-set(MSVC_WARNINGS -wd4068 /MP)
+set(MSVC_WARNINGS /wd4068 /W4 /WX /MP)
 
 target_compile_options(
   leviathan PUBLIC 

@@ -29,6 +29,15 @@
 #pragma GCC diagnostic ignored "-Wzero-length-array"
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4245)
+#endif
+
 #include "minisat/core/Solver.h"
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #pragma GCC diagnostic pop
