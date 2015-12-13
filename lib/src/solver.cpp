@@ -592,7 +592,7 @@ loop:
 					if (_stack.size() > _stats.maximum_frames)
 						_stats.maximum_frames = _stack.size();
 					*/
-					_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
+					_stats.maximum_frames = std::max(_stats.maximum_frames, static_cast<uint64_t>(_stack.size()));
 
 					goto loop;
 				}
@@ -613,7 +613,7 @@ loop:
 				if (_stack.size() > _stats.maximum_frames)
 				_stats.maximum_frames = _stack.size();
 				*/
-				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
+				_stats.maximum_frames = std::max(_stats.maximum_frames, static_cast<uint64_t>(_stack.size()));
 
 				goto loop;
 			}
@@ -633,7 +633,7 @@ loop:
 				if (_stack.size() > _stats.maximum_frames)
 				_stats.maximum_frames = _stack.size();
 				*/
-				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
+				_stats.maximum_frames = std::max(_stats.maximum_frames, static_cast<uint64_t>(_stack.size()));
 
 				goto loop;
 			}
@@ -657,7 +657,7 @@ loop:
 				if (_stack.size() > _stats.maximum_frames)
 				_stats.maximum_frames = _stack.size();
 				*/
-				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
+				_stats.maximum_frames = std::max(_stats.maximum_frames, static_cast<uint64_t>(_stack.size()));
 
 				goto loop;
 			}
