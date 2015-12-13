@@ -661,9 +661,9 @@ loop:
 				/* https://github.com/niklasso/minisat-examples */
 				frame.type = Frame::SAT;
 
-				frame.solver = std::make_unique<Minisat::Solver>();
+				frame.solver = std14::make_unique<Minisat::Solver>();
 				Minisat::Solver& solver = *frame.solver;
-				std::for_each(_subformulas.begin(), _subformulas.end(), [&solver](FormulaPtr f) { solver.newVar(); });
+				std::for_each(_subformulas.begin(), _subformulas.end(), [&solver](const FormulaPtr& /*f*/) { solver.newVar(); });
 
 				_bitset.temporary = _bitset.atom | _bitset.tomorrow | ((_bitset.atom << 1) & _bitset.negation) | _bitset.disjunction;
 				//_bitset.temporary =  ~(_bitset.conjunction & _bitset.until & _bitset.not_until & _bitset.always & _bitset.eventually);
@@ -680,8 +680,8 @@ loop:
 				{
 					solver.addClause(_clauses[one]);
 
-					for (int i = 0; i < _clause_size[one]; ++i)
-						frame.literals.push_back(Minisat::var(_clauses[one][i]));
+					for (uint64_t i = 0; i < _clause_size[one]; ++i)
+						frame.literals.push_back(Minisat::var(_clauses[one][static_cast<int>(i)]));
 
 					if (_bitset.disjunction[one])
 						frame.to_process[one] = false;
@@ -818,7 +818,8 @@ void Solver::_update_eventualities_satisfaction()
 {
 	Frame& frame = _stack.top();
 
-	std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&, i = 0](Eventuality& ev) mutable
+	uint64_t i = 0;
+	std::for_each(frame.eventualities.begin(), frame.eventualities.end(), [&](Eventuality& ev)
 	{
 		if (frame.formulas[_bw_eventualities_lut[i]])
 			ev.set_satisfied(frame.id);
@@ -890,7 +891,8 @@ bool Solver::_check_prune_rule() const
 	if (top_frame.prev == top_frame.first)
 		return false;
 
-	return std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [&top_frame, i = 0](const Eventuality& ev) mutable
+	uint64_t i = 0;
+	return std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(), [&top_frame, &i](const Eventuality& ev)
 	{
 		if (ev.is_not_requested() || ev.is_not_satisfied() || ev.id() <= top_frame.prev->id)
 		{
