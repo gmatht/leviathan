@@ -7,10 +7,6 @@ install:
 script: 
   - make -j2 VERBOSE=1
 
-os:
-  - linux
-  - osx
-
 sudo: required
 dist: trusty
 
@@ -31,6 +27,9 @@ addons:
 #
 matrix:
   include:
+    - os: osx
+      compiler: clang
+      before_install: brew install boost
     - compiler: clang
       env: TRAVIS_CLANG_VERSION=3.6
       addons:
@@ -40,7 +39,7 @@ matrix:
           - libboost-system1.55-dev
           - libboost-thread1.55-dev
     - compiler: clang
-      env: TRAVIS_CLANG_VERSION=3.6
+      env: TRAVIS_CLANG_VERSION=3.7
       addons:
         apt:
           sources:
