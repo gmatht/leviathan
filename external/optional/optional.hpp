@@ -7,8 +7,8 @@
 // The idea and interface is based on Boost.Optional library
 // authored by Fernando Luis Cacciola Carballal
 
-# ifndef OPTIONAL_HPP_GUARD
-# define OPTIONAL_HPP_GUARD
+# ifndef ___OPTIONAL_HPP___
+# define ___OPTIONAL_HPP___
 
 # include <utility>
 # include <type_traits>
@@ -43,15 +43,12 @@
 # endif
 #
 # if defined __clang_major__
-#   if (__clang_major__ == 3 && __clang_minor__ >= 3)
-#     define TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_
-#   elif (__clang_major__ == 3 && __clang_minor__ >= 5)
-#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
+#   if (__clang_major__ == 3 && __clang_minor__ >= 5)
+#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
 #   elif (__clang_major__ > 3)
-#     define TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_
-#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
+#     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
 #   endif
-#   if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_
+#   if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
 #     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
 #   elif (__clang_major__ == 3 && __clang_minor__ == 4 && __clang_patchlevel__ >= 2)
 #     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
@@ -87,7 +84,7 @@
 #   define OPTIONAL_CONSTEXPR_INIT_LIST
 # endif
 
-# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHER_ && (defined __cplusplus) && (__cplusplus != 201103L)
+# if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_ && (defined __cplusplus) && (__cplusplus != 201103L)
 #   define OPTIONAL_HAS_MOVE_ACCESSORS 1
 # else
 #   define OPTIONAL_HAS_MOVE_ACCESSORS 0
@@ -209,13 +206,13 @@ template <class T> inline constexpr typename std::remove_reference<T>::type&& co
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) (EXPR)
 #elif defined __clang__ || defined __GNU_LIBRARY__
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) ((CHECK) ? (EXPR) : (fail(#CHECK, __FILE__, __LINE__), (EXPR)))
-  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, int line) 
+  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, int line)
   {
     __assert(expr, file, line);
   }
 #elif defined __GNUC__
 # define TR2_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) ((CHECK) ? (EXPR) : (fail(#CHECK, __FILE__, __LINE__), (EXPR)))
-  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, unsigned line) 
+  OPTIONAL_NORETURN inline void fail(const char* expr, const char* file, unsigned line)
   {
     _assert(expr, file, line);
   }
@@ -295,7 +292,7 @@ union storage_t
   unsigned char dummy_;
   T value_;
 
-  constexpr storage_t( trivial_init_t ) noexcept : dummy_() {}
+  constexpr storage_t( trivial_init_t ) noexcept : dummy_() {};
 
   template <class... Args>
   constexpr storage_t( Args&&... args ) : value_(constexpr_forward<Args>(args)...) {}
@@ -310,7 +307,7 @@ union constexpr_storage_t
     unsigned char dummy_;
     T value_;
 
-    constexpr constexpr_storage_t( trivial_init_t ) noexcept : dummy_() {}
+    constexpr constexpr_storage_t( trivial_init_t ) noexcept : dummy_() {};
 
     template <class... Args>
     constexpr constexpr_storage_t( Args&&... args ) : value_(constexpr_forward<Args>(args)...) {}
@@ -325,7 +322,7 @@ struct optional_base
     bool init_;
     storage_t<T> storage_;
 
-    constexpr optional_base() noexcept : init_(false), storage_(trivial_init) {}
+    constexpr optional_base() noexcept : init_(false), storage_(trivial_init) {};
 
     explicit constexpr optional_base(const T& v) : init_(true), storage_(v) {}
 
@@ -348,7 +345,7 @@ struct constexpr_optional_base
     bool init_;
     constexpr_storage_t<T> storage_;
 
-    constexpr constexpr_optional_base() noexcept : init_(false), storage_(trivial_init) {}
+    constexpr constexpr_optional_base() noexcept : init_(false), storage_(trivial_init) {};
 
     explicit constexpr constexpr_optional_base(const T& v) : init_(true), storage_(v) {}
 
@@ -423,8 +420,8 @@ public:
   typedef T value_type;
 
   // 20.5.5.1, constructors
-  constexpr optional() noexcept : OptionalBase<T>()  {}
-  constexpr optional(nullopt_t) noexcept : OptionalBase<T>() {}
+  constexpr optional() noexcept : OptionalBase<T>()  {};
+  constexpr optional(nullopt_t) noexcept : OptionalBase<T>() {};
 
   optional(const optional& rhs)
   : OptionalBase<T>()
