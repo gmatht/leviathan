@@ -101,7 +101,7 @@ void Simplifier::visit(const Negation *n)
   }
   else if (isa<Iff>(result)) {
     result = make_iff(make_negation(fast_cast<Iff>(result)->left()),
-                      make_negation(fast_cast<Iff>(result)->right()));
+                      fast_cast<Iff>(result)->right());
     rulesApplied = true;
   }
   else

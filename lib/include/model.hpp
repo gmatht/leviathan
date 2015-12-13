@@ -59,6 +59,21 @@ struct Literal {
                                         l2._atom.begin(), l2._atom.end());
   }
 
+  friend bool operator<=(const Literal& l1, const Literal& l2)
+  {
+	  return (l1 == l2) || (l1 < l2);
+  }
+
+  friend bool operator>(const Literal& l1, const Literal& l2)
+  {
+	  return !(l1 <= l2);
+  }
+
+  friend bool operator>=(const Literal& l1, const Literal& l2)
+  {
+	  return (l1 == l2) || (l1 > l2);
+  }
+
 private:
   bool _positive;
   std::string _atom;

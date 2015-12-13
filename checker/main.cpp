@@ -126,24 +126,6 @@ static TCLAP::ValueArg<uint64_t> depth(
   "The maximum depth to descend into the tableaux (aka the maximum size of "
   "the model)",
   false, std::numeric_limits<uint64_t>::max(), "number");
-
-static TCLAP::ValueArg<unsigned> backtrackProb(
-  "", "backtrack-probability",
-  "The probability of doing a complete backtrack of the tableau to check "
-  "the LOOP and PRUNE rules (between 0 and 100)",
-  false, 100, "percentage");
-
-static TCLAP::ValueArg<unsigned> minBacktrack(
-  "", "min-backtrack",
-  "The minimum percentage of the tableau depth to backtrack during the "
-  "check of LOOP and PRUNE rules (between 0 and 100)",
-  false, 100, "percentage");
-
-static TCLAP::ValueArg<unsigned> maxBacktrack(
-  "", "max-backtrack",
-  "The maximum percentage of the tableau depth to backtrack during the "
-  "check of LOOP and PRUNE rules (between 0 and 100)",
-  false, 100, "percentage");
 }
 
 void solve(std::string const &, optional<size_t> current = nullopt);
@@ -187,10 +169,7 @@ void solve(std::string const &input, optional<size_t> current)
 
   LTL::FormulaPtr formula = *parsed;
 
-  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()),
-                     Args::backtrackProb.getValue(),
-                     Args::minBacktrack.getValue(),
-                     Args::maxBacktrack.getValue(), Args::sat.getValue());
+  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()), Args::sat.getValue());
 
   solver.solution();
 
@@ -228,9 +207,6 @@ int main(int argc, char *argv[])
   using namespace Args;
 
   cmd.add(depth);
-  cmd.add(backtrackProb);
-  cmd.add(minBacktrack);
-  cmd.add(maxBacktrack);
   cmd.add(sat);
   cmd.add(verbosity);
   cmd.add(parsable);

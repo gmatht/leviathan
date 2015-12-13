@@ -37,7 +37,7 @@ namespace detail {
     _stream << ")";                         \
   }
 
-std::string PrettyPrinter::to_string(const FormulaPtr formula)
+std::string PrettyPrinter::to_string(const FormulaPtr& formula)
 {
   return to_string(formula.get());
 }

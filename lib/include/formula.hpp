@@ -67,7 +67,7 @@ public:
   virtual ~True() {}
   static const Type type = Type::True;
 
-  void accept(Visitor &v) const;
+  void accept(Visitor &v) const override;
 };
 
 using TruePtr = std::shared_ptr<True>;
@@ -80,7 +80,7 @@ public:
   virtual ~False() {}
   static const Type type = Type::False;
 
-  void accept(Visitor &v) const;
+  void accept(Visitor &v) const override;
 };
 
 using FalsePtr = std::shared_ptr<False>;
@@ -95,7 +95,7 @@ public:
   const std::string &name() const { return _name; }
   static const Type type = Type::Atom;
 
-  void accept(Visitor &v) const;
+  void accept(Visitor &v) const override;
 
 private:
   std::string _name;
@@ -114,7 +114,7 @@ AtomPtr make_atom(const std::string &name);
     const FormulaPtr &formula() const { return _f; }            \
     static const Type type = Type::_Type;                       \
                                                                 \
-    void accept(Visitor &v) const;                              \
+    void accept(Visitor &v) const override;                     \
                                                                 \
   private:                                                      \
     FormulaPtr _f;                                              \
@@ -135,7 +135,7 @@ AtomPtr make_atom(const std::string &name);
     const FormulaPtr &right() const { return _f2; }   \
     static const Type type = Type::_Type;             \
                                                       \
-    void accept(Visitor &v) const;                    \
+    void accept(Visitor &v) const override;           \
                                                       \
   private:                                            \
     FormulaPtr _f1;                                   \
@@ -159,13 +159,13 @@ DECLARE_BINARY(Until, until)
 #undef DECLARE_BINARY
 
 template <typename T>
-inline bool isa(const FormulaPtr f)
+inline bool isa(const FormulaPtr& f)
 {
   return T::type == f->type();
 }
 
 template <typename T, typename ReturnT = typename std::add_const<T>::type>
-inline auto fast_cast(FormulaPtr ptr)
+inline auto fast_cast(const FormulaPtr& ptr)
   -> decltype(ptr->type(), static_cast<ReturnT *>(nullptr))
 {
   if (T::type != ptr->type())
@@ -174,7 +174,7 @@ inline auto fast_cast(FormulaPtr ptr)
   return static_cast<ReturnT *>(ptr.get());
 }
 
-bool operator==(const FormulaPtr f1, const FormulaPtr f2);
-bool operator!=(const FormulaPtr f1, const FormulaPtr f2);
+bool operator==(const FormulaPtr& f1, const FormulaPtr& f2);
+bool operator!=(const FormulaPtr& f1, const FormulaPtr& f2);
 }
 }

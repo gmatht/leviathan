@@ -84,7 +84,7 @@ ACCEPT_VISITOR(Until)
 #undef MAKE_BINARY
 #undef ACCEPT_VISITOR
 
-bool operator==(const FormulaPtr f1, const FormulaPtr f2)
+bool operator==(const FormulaPtr& f1, const FormulaPtr& f2)
 {
   if (f1->type() != f2->type())
     return false;
@@ -137,7 +137,7 @@ bool operator==(const FormulaPtr f1, const FormulaPtr f2)
   return true;
 }
 
-bool operator!=(const FormulaPtr f1, const FormulaPtr f2)
+bool operator!=(const FormulaPtr& f1, const FormulaPtr& f2)
 {
   return !(f1 == f2);
 }

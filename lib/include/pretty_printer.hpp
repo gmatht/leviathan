@@ -31,7 +31,7 @@ public:
   PrettyPrinter() = default;
   virtual ~PrettyPrinter() = default;
 
-  std::string to_string(const FormulaPtr formula);
+  std::string to_string(const FormulaPtr& formula);
   std::string to_string(const Formula *formula);
 
 protected:
