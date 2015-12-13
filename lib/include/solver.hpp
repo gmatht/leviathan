@@ -42,6 +42,16 @@ public:
 		DONE
 	};
 
+	struct Stats
+	{
+		uint64_t maximum_frames = 1;
+		uint64_t total_frames = 1;
+		uint64_t maximum_model_size = 1;
+		uint64_t current_model_size = 0; // TODO: Currently not implemented
+		uint64_t cross_by_contradiction = 0;
+		uint64_t cross_by_prune = 0;
+	};
+
 	Solver() = delete;
 	~Solver() {}
 
@@ -68,6 +78,11 @@ public:
 	inline FrameID maximum_depth() const
 	{
 		return _maximum_depth;
+	}
+
+	inline const Stats& stats() const
+	{
+		return _stats;
 	}
 
 	Result solution();
@@ -110,6 +125,8 @@ private:
 
 	std::vector<FormulaPtr> _subformulas;
 	Stack _stack;
+
+	Stats _stats;
 
 	bool _has_eventually;
 	bool _has_until;

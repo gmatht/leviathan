@@ -29,7 +29,7 @@ namespace colors = format::colors;
 
 Solver::Solver(FormulaPtr formula, FrameID maximum_depth, bool use_sat)
 	: _formula(formula), _maximum_depth(maximum_depth), _use_sat_solver(use_sat), _state(State::UNINITIALIZED), _result(Result::UNDEFINED), _start_index(0),
-	_loop_state(0), _has_eventually(false), _has_until(false), _has_not_until(false)
+	_loop_state(0), _stats(), _has_eventually(false), _has_until(false), _has_not_until(false)
 {
 	_initialize();
 }
@@ -525,23 +525,18 @@ Solver::Result Solver::solution()
 	_state = State::RUNNING;
 	bool rules_applied;
 
-	uint64_t maximum_steps = 1;
-	uint64_t maximum_frames = 1;
-	uint64_t total_frames = 1;
-	uint64_t cross_by_contradiction = 0;
-	uint64_t cross_by_prune = 0;
-
+	// TODO: This should be handled by the checker application, not the library
 	std::signal(SIGINT, signal_handler);
 
 loop:
 	if (signal_status.load())
 	{
 		format::debug("/*-------------------------*/");
-		format::debug("Total frames: {}", total_frames);
-		format::debug("Maximum model size: {}", maximum_steps);
-		format::debug("Maximum depth: {}", maximum_frames);
-		format::debug("Cross by contradiction: {}", cross_by_contradiction);
-		format::debug("Cross by prune: {}", cross_by_prune);
+		format::debug("Total frames: {}", _stats.total_frames);
+		format::debug("Maximum model size: {}", _stats.maximum_model_size);
+		format::debug("Maximum depth: {}", _stats.maximum_frames);
+		format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
+		format::debug("Cross by prune: {}", _stats.cross_by_prune);
 		format::debug("/*-------------------------*/");
 
 		signal_status.store(false);
@@ -562,11 +557,11 @@ loop:
 				_result = Result::SATISFIABLE;
 				_loop_state = frame.chain->id;
 
-				format::debug("Total frames: {}", total_frames);
-				format::debug("Maximum model size: {}", maximum_steps);
-				format::debug("Maximum depth: {}", maximum_frames);
-				format::debug("Cross by contradiction: {}", cross_by_contradiction);
-				format::debug("Cross by prune: {}", cross_by_prune);
+				format::debug("Total frames: {}", _stats.total_frames);
+				format::debug("Maximum model size: {}", _stats.maximum_model_size);
+				format::debug("Maximum depth: {}", _stats.maximum_frames);
+				format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
+				format::debug("Cross by prune: {}", _stats.cross_by_prune);
 
 				return _result;
 			}
@@ -574,8 +569,8 @@ loop:
 			if (_check_contradiction_rule())
 			{
 				_rollback_to_latest_choice();
-				++total_frames;
-				++cross_by_contradiction;
+				++_stats.total_frames;
+				++_stats.cross_by_contradiction;
 				goto loop;
 			}
 
@@ -592,9 +587,12 @@ loop:
 					new_frame.formulas[_lhs[frame.choosenFormula]] = true;
 					_stack.push(std::move(new_frame));
 
-					++total_frames;
-					if (_stack.size() > maximum_frames)
-						maximum_frames = _stack.size();
+					++_stats.total_frames;
+					/*
+					if (_stack.size() > _stats.maximum_frames)
+						_stats.maximum_frames = _stack.size();
+					*/
+					_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
 
 					goto loop;
 				}
@@ -610,9 +608,12 @@ loop:
 				new_frame.formulas[_lhs[frame.choosenFormula]] = true;
 				_stack.push(std::move(new_frame));
 
-				++total_frames;
-				if (_stack.size() > maximum_frames)
-					maximum_frames = _stack.size();
+				++_stats.total_frames;
+				/*
+				if (_stack.size() > _stats.maximum_frames)
+				_stats.maximum_frames = _stack.size();
+				*/
+				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
 
 				goto loop;
 			}
@@ -627,9 +628,12 @@ loop:
 				new_frame.formulas[_rhs[frame.choosenFormula]] = true;
 				_stack.push(std::move(new_frame));
 
-				++total_frames;
-				if (_stack.size() > maximum_frames)
-					maximum_frames = _stack.size();
+				++_stats.total_frames;
+				/*
+				if (_stack.size() > _stats.maximum_frames)
+				_stats.maximum_frames = _stack.size();
+				*/
+				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
 
 				goto loop;
 			}
@@ -648,9 +652,12 @@ loop:
 				new_frame.formulas[_rhs[frame.choosenFormula]] = true;
 				_stack.push(std::move(new_frame));
 
-				++total_frames;
-				if (_stack.size() > maximum_frames)
-					maximum_frames = _stack.size();
+				++_stats.total_frames;
+				/*
+				if (_stack.size() > _stats.maximum_frames)
+				_stats.maximum_frames = _stack.size();
+				*/
+				_stats.maximum_frames = std::max(_stats.maximum_frames, _stack.size());
 
 				goto loop;
 			}
@@ -757,11 +764,11 @@ loop:
 			_result = Result::SATISFIABLE;
 			_state = State::PAUSED;
 
-			format::debug("Total frames: {}", total_frames);
-			format::debug("Maximum model size: {}", maximum_steps);
-			format::debug("Maximum depth: {}", maximum_frames);
-			format::debug("Cross by contradiction: {}", cross_by_contradiction);
-			format::debug("Cross by prune: {}", cross_by_prune);
+			format::debug("Total frames: {}", _stats.total_frames);
+			format::debug("Maximum model size: {}", _stats.maximum_model_size);
+			format::debug("Maximum depth: {}", _stats.maximum_frames);
+			format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
+			format::debug("Cross by prune: {}", _stats.cross_by_prune);
 
 			return _result;
 		}
@@ -769,15 +776,15 @@ loop:
 		if (_check_prune0_rule() || _check_prune_rule())
 		{
 			_rollback_to_latest_choice();
-			++total_frames;
-			++cross_by_prune;
+			++_stats.total_frames;
+			++_stats.cross_by_prune;
 			goto loop;
 		}
 
 		if (frame.id >= _maximum_depth)
 		{
 			_rollback_to_latest_choice();
-			++total_frames;
+			++_stats.total_frames;
 			goto loop;
 		}
 
@@ -798,20 +805,24 @@ loop:
 		frame.type = Frame::STEP;
 		_stack.push(std::move(new_frame));
 
-		++total_frames;
-		if (_stack.top().id > maximum_steps)
-			maximum_steps = _stack.top().id;
+		++_stats.total_frames;
+		
+		/*
+		if (_stack.top().id > maximum_model_size)
+			maximum_model_size = _stack.top().id;
+		*/
+		_stats.maximum_model_size = std::max(_stats.maximum_model_size, static_cast<uint64_t>(_stack.top().id));
 	}
 
 	_state = State::DONE;
 	if (_result == Result::UNDEFINED)
 		_result = Result::UNSATISFIABLE;
 
-	format::debug("Total frames: {}", total_frames);
-	format::debug("Maximum model size: {}", maximum_steps);
-	format::debug("Maximum depth: {}", maximum_frames);
-	format::debug("Cross by contradiction: {}", cross_by_contradiction);
-	format::debug("Cross by prune: {}", cross_by_prune);
+	format::debug("Total frames: {}", _stats.total_frames);
+	format::debug("Maximum model size: {}", _stats.maximum_model_size);
+	format::debug("Maximum depth: {}", _stats.maximum_frames);
+	format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
+	format::debug("Cross by prune: {}", _stats.cross_by_prune);
 
 	return _result;
 }
@@ -887,8 +898,6 @@ bool Solver::_check_prune0_rule() const
 bool Solver::_check_prune_rule() const
 {
 	const Frame& top_frame = _stack.top();
-	//const FrameID prev_frame_id = top_frame.prev->id;
-	//const FrameID first_frame_id = top_frame.first->id;
 
 	if (top_frame.prev == top_frame.first)
 		return false;
@@ -921,6 +930,7 @@ bool Solver::_check_my_prune() const
 	});
 }
 
+// This is probably not updating the solver stats correctly (what happens when we pop a STEP frame?)
 void Solver::_rollback_to_latest_choice()
 {
 	while (!_stack.empty())
