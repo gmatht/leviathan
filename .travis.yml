@@ -46,7 +46,7 @@ matrix:
           - llvm-toolchain-trusty-3.7
           - ubuntu-toolchain-r-test
           packages:
-          - clang-3.6
+          - clang-3.7
           - libboost-system1.55-dev
           - libboost-thread1.55-dev
     - compiler: gcc
