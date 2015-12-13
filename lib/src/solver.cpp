@@ -23,6 +23,8 @@ namespace LTL
 namespace detail
 {
 
+static void signal_handler(int /*signal*/);
+
 namespace colors = format::colors;
 
 Solver::Solver(FormulaPtr formula, FrameID maximum_depth, bool use_sat)
@@ -507,7 +509,7 @@ namespace
 volatile std::atomic_bool signal_status;
 }
 
-void signal_handler(int /*signal*/)
+static void signal_handler(int /*signal*/)
 {
 	signal_status.store(true);
 }
@@ -885,8 +887,8 @@ bool Solver::_check_prune0_rule() const
 bool Solver::_check_prune_rule() const
 {
 	const Frame& top_frame = _stack.top();
-	const FrameID prev_frame_id = top_frame.prev->id;
-	const FrameID first_frame_id = top_frame.first->id;
+	//const FrameID prev_frame_id = top_frame.prev->id;
+	//const FrameID first_frame_id = top_frame.first->id;
 
 	if (top_frame.prev == top_frame.first)
 		return false;
