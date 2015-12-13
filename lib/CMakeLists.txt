@@ -51,7 +51,7 @@ add_library (leviathan ${SRC} ${HEADERS})
 set(
   CLANG_WARNINGS -Weverything -pedantic -Werror
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
-  -Wno-padded -Wno-weak-vtables
+  -Wno-padded -Wno-weak-vtables -Wno-extra-semi
 )
 
 set(GNU_WARNINGS -Wall -Wextra -pedantic -Werror -Wno-pragmas)
