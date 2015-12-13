@@ -5,6 +5,12 @@
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic ignored "-Wunreachable-code-break"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4245)
+#pragma warning(disable : 4244)
+#endif
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -807,3 +813,7 @@ int Scanner::lex__()
 void ScannerBase::print__() const
 {
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
