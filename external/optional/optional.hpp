@@ -47,12 +47,16 @@
 #     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
 #   elif (__clang_major__ > 3)
 #     define TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
+#	  define TR2_OPTIONAL_CLANG_3_3_AND_HIGHTER_
 #   endif
 #   if defined TR2_OPTIONAL_CLANG_3_5_AND_HIGHTER_
-#     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
+#     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_ù
 #   elif (__clang_major__ == 3 && __clang_minor__ == 4 && __clang_patchlevel__ >= 2)
 #     define TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_
 #   endif
+#	if (__clang_major__ == 3 && __clang_minor__ >= 3)
+#	  define TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_
+#	endif
 # endif
 #
 # if defined _MSC_VER
@@ -97,7 +101,7 @@
 #   define OPTIONAL_MUTABLE_CONSTEXPR constexpr
 # endif
 
-# if defined TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
+# if defined TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
 #   define OPTIONAL_NORETURN [[noreturn]]
 # else
 #   define OPTIONAL_NORETURN 
