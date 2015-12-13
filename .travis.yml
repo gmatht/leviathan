@@ -38,17 +38,17 @@ matrix:
           - clang-3.6
           - libboost-system1.55-dev
           - libboost-thread1.55-dev
-    - compiler: clang
-      env: TRAVIS_CLANG_VERSION=3.7
-      addons:
-        apt:
-          sources:
-          - llvm-toolchain-trusty-3.7
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang-3.7
-          - libboost-system1.55-dev
-          - libboost-thread1.55-dev
+    # - compiler: clang
+    #   env: TRAVIS_CLANG_VERSION=3.7
+    #   addons:
+    #     apt:
+    #       sources:
+    #       - llvm-toolchain-trusty-3.7
+    #       - ubuntu-toolchain-r-test
+    #       packages:
+    #       - clang-3.7
+    #       - libboost-system1.55-dev
+    #       - libboost-thread1.55-dev
     - compiler: gcc
       env: TRAVIS_GNU_VERSION=4.9
       addons:
