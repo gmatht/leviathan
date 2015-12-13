@@ -29,8 +29,8 @@ matrix:
   include:
     - os: osx
       compiler: clang
-      before_install: brew install boost
-    - compiler: clang
+    - os: linux
+      compiler: clang
       env: TRAVIS_CLANG_VERSION=3.6
       addons:
         apt:
