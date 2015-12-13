@@ -29,7 +29,7 @@ xcuserdata
 *.xccheckout
 *.moved-aside
 *.xcuserstate
-
+.DS_Store
 
 ### CMake ###
 CMakeCache.txt
