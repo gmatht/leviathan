@@ -97,7 +97,7 @@
 #   define OPTIONAL_MUTABLE_CONSTEXPR constexpr
 # endif
 
-# if defined TR2_OPTIONAL_CLANG_3_3_AND_HIGHER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
+# if defined TR2_OPTIONAL_CLANG_3_4_2_AND_HIGHER_ || defined TR2_OPTIONAL_GCC_4_8_1_AND_HIGHER___ || defined TR2_OPTIONAL_MSVC_2015_AND_HIGHER___
 #   define OPTIONAL_NORETURN [[noreturn]]
 # else
 #   define OPTIONAL_NORETURN 
