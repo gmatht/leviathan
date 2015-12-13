@@ -7,6 +7,10 @@ install:
 script: 
   - make -j2 VERBOSE=1
 
+os:
+  - linux
+  - osx
+
 sudo: required
 dist: trusty
 
@@ -31,6 +35,17 @@ matrix:
       env: TRAVIS_CLANG_VERSION=3.6
       addons:
         apt:
+          packages:
+          - clang-3.6
+          - libboost-system1.55-dev
+          - libboost-thread1.55-dev
+    - compiler: clang
+      env: TRAVIS_CLANG_VERSION=3.6
+      addons:
+        apt:
+          sources:
+          - llvm-toolchain-trusty-3.7
+          - ubuntu-toolchain-r-test
           packages:
           - clang-3.6
           - libboost-system1.55-dev
