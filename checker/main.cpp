@@ -210,7 +210,6 @@ void batch(std::string const &filename)
     char error_msg[error_length];
     strerror_safe(error_msg, error_length, errno);
     format::fatal("Unable to open the file \"{}\": {}", filename, error_msg);
-    return;
   }
 
   std::string line;

@@ -212,7 +212,7 @@ auto log(LogLevel level, const CharTy *fmt, Args &&... args)
 
 // Same as error() but terminates the process. Don't use lightly
 template <typename CharTy, typename... Args>
-auto fatal(Color color, const CharTy *fmt, Args &&... args)
+[[noreturn]] auto fatal(Color color, const CharTy *fmt, Args &&... args)
   -> decltype(log(Error, fmt, std::forward<Args>(args)...))
 {
   log(Error, color, fmt, std::forward<Args>(args)...);
