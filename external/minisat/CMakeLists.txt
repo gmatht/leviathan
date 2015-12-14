@@ -24,4 +24,9 @@ set (
 # project files made by IDE generators (Xcode, VS, ecc...)
 add_library(minisat STATIC ${SRC} ${HEADERS})
 
+target_compile_options(
+  minisat PUBLIC
+  "$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-std=c++11>"
+)
+
 target_include_directories(minisat PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

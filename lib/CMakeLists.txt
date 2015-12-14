@@ -48,6 +48,35 @@ set (
 # project files made by IDE generators (Xcode, VS, ecc...)
 add_library (leviathan ${SRC} ${HEADERS})
 
+target_include_directories(
+  leviathan
+  PRIVATE src/
+  PUBLIC
+    include/
+    "${CPPUTILS_HEADERS}"
+    "${TCLAP_HEADERS}"
+    "${STDOPTIONAL_HEADERS}"
+    "${Boost_INCLUDE_DIRS}"
+)
+
+# Dependencies
+target_link_libraries (leviathan minisat cppformat ${Boost_LIBRARIES})
+
+# General options
+set(MSVC_OPTIONS /MP)
+
+set(GNU_OPTIONS -std=c++11)
+
+set(CLANG_OPTIONS -std=c++11)
+
+target_compile_options(
+  leviathan PUBLIC
+  "$<$<CXX_COMPILER_ID:MSVC>:${MSVC_OPTIONS}>"
+  "$<$<CXX_COMPILER_ID:GNU>:${GNU_OPTIONS}>"
+  "$<$<CXX_COMPILER_ID:Clang>:${CLANG_OPTIONS}>"
+)
+
+# Warnings
 set(
   CLANG_WARNINGS -Weverything -pedantic -Werror
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
@@ -59,7 +88,7 @@ set(
   -Wno-pragmas -Wno-unknown-pragmas
 )
 
-set(MSVC_WARNINGS /wd4068 /wd4702 /W4 /WX /MP)
+set(MSVC_WARNINGS /wd4068 /wd4702 /W4 /WX)
 
 target_compile_options(
   leviathan PUBLIC 
@@ -68,16 +97,4 @@ target_compile_options(
   "$<$<CXX_COMPILER_ID:Clang>:${CLANG_WARNINGS}>"
 )
 
-target_include_directories(
-  leviathan 
-  PRIVATE src/
-  PUBLIC 
-    include/ 
-    "${CPPUTILS_HEADERS}"
-    "${TCLAP_HEADERS}"
-    "${STDOPTIONAL_HEADERS}"
-    "${Boost_INCLUDE_DIRS}"
-)
 
-# Dependencies
-target_link_libraries (leviathan minisat cppformat ${Boost_LIBRARIES})
