@@ -22,8 +22,12 @@
 #include <string>
 #include <utility>
 #include <vector>
-#define __STDC_WANT_LIB_EXT1__ 1
-#include <cstring>
+
+#ifdef _MSC_VER
+#define strerror_safe(error_msg, error_length, errno) (strerror_s(error_msg, error_length, errno))
+#else
+#define strerror_safe(error_msg, error_length, errno) (strerror_r(errno, error_msg, error_length))
+#endif
 
 #include "optional.hpp"
 
@@ -201,10 +205,9 @@ void batch(std::string const &filename)
   
 	if (!file)
 	{
-		// MSVC doesn't implement strerrorlen_s(...)
 		static constexpr size_t error_length = 128;
 		char error_msg[error_length];
-		strerror_s(error_msg, error_length, errno);
+		strerror_safe(error_msg, error_length, errno);
 		format::fatal("Unable to open the file \"{}\": {}", filename, error_msg);
 		return;
 	}
