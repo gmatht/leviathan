@@ -1072,8 +1072,6 @@ ModelPtr Solver::model()
 			}
 		}
 
-		std::cout << std::endl;
-
 		model->states.push_back(state);
 		++i;
 	}

@@ -116,7 +116,7 @@ public:
     if (isatty()) {
       os << "\033[" << int(c._color) << "m";
     }
-    return os;
+	return os;
   }
 
 private:
