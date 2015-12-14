@@ -186,7 +186,8 @@ void solve(const std::string &input, optional<size_t> current)
   bool sat = solver.satisfiability() == LTL::Solver::Result::SATISFIABLE;
 
   if (Args::parsable.isSet())
-    format::message("{}", sat ? colored(Green, "SAT") : colored(Red, "UNSAT"));
+    format::message(format::NoNewLine, "{}",
+                    sat ? colored(Green, "SAT") : colored(Red, "UNSAT"));
   else
     format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
                                               : colored(Red, "unsatisfiable"));
@@ -197,7 +198,7 @@ void solve(const std::string &input, optional<size_t> current)
     if (!Args::parsable.isSet())
       format::message("The following model was found:");
 
-    format::message("{}", model_format(model, Args::parsable.isSet()));
+    format::message(";{}", model_format(model, Args::parsable.isSet()));
   }
 }
 
