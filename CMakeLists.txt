@@ -13,6 +13,12 @@ if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 endif ()
 
+message(${CMAKE_GENERATOR})
+
+if(CMAKE_GENERATOR MATCHES "Xcode")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isysroot /")
+endif ()
+
 add_subdirectory (external/cppformat)
 add_subdirectory (external/minisat)
 add_subdirectory (external/cpputils)
