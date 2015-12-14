@@ -136,14 +136,14 @@ inline std::ostream &set_color(std::ostream &os, Color c)
 template <typename T>
 class colored_t {
 public:
-  colored_t(Color color, T const &obj) : _obj(obj), _color(color) {}
-  friend std::ostream &operator<<(std::ostream &os, colored_t c)
+  colored_t(Color color, T obj) : _obj(obj), _color(color) {}
+  friend std::ostream &operator<<(std::ostream &os, colored_t const &c)
   {
     return os << set_color(c._color) << c._obj << set_color(Reset);
   }
 
 private:
-  T const &_obj;
+  T _obj;
   Color _color;
 };
 
@@ -151,9 +151,9 @@ private:
  * wrapper object to set colors in format::log's output
  */
 template <typename T>
-colored_t<T> colored(Color color, T &&obj)
+colored_t<T const &> colored(Color color, T &&obj)
 {
-  return colored_t<T>(color, std::forward<T>(obj));
+  return colored_t<T const &>(color, std::forward<T>(obj));
 }
 
 inline colored_t<const char *> colored(Color color, const char *str)
