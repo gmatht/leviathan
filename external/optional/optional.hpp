@@ -7,8 +7,8 @@
 // The idea and interface is based on Boost.Optional library
 // authored by Fernando Luis Cacciola Carballal
 
-# ifndef ___OPTIONAL_HPP___
-# define ___OPTIONAL_HPP___
+# ifndef OPTIONAL_HPP_
+# define OPTIONAL_HPP_
 
 # include <utility>
 # include <type_traits>
