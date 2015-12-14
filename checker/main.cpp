@@ -61,7 +61,7 @@ using namespace format::colors;
 using std::experimental::optional;
 using std::experimental::nullopt;
 
-static constexpr auto leviathan_version = "0.2.2";
+static constexpr auto leviathan_version = "0.3.0";
 
 /*
  * Command line arguments. It is not so bad to make them global objects
@@ -72,6 +72,7 @@ static constexpr auto leviathan_version = "0.2.2";
  *
  * If you add a new parameter, remember to register it in main()
  */
+
 /*
  * To register the type for verbosity arguments
  */
@@ -154,7 +155,7 @@ void print_progress_status(std::string formula, size_t current)
   format::message("{}{}{}", msg, formula, ellipses);
 }
 
-void solve(std::string const &input, optional<size_t> current)
+void solve(const std::string& input, optional<size_t> current)
 {
   if (current)
     print_progress_status(input, *current);
@@ -163,7 +164,7 @@ void solve(std::string const &input, optional<size_t> current)
 
   if (!parsed) {
     format::error("Syntax error in formula{}. Skipping...",
-                  current ? format::format("n° {}", *current) : "");
+                  current ? format::format(" n° {}", *current) : "");
     return;
   }
 
@@ -181,22 +182,38 @@ void solve(std::string const &input, optional<size_t> current)
     format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
                                               : colored(Red, "unsatisfiable"));
 
-  if (sat && Args::model.isSet()) {
+  if (sat && Args::model.isSet())
+  {
     LTL::ModelPtr model = solver.model();
 
-    if (!Args::parsable.isSet()) {
+    if (!Args::parsable.isSet())
       format::message("The following model was found:");
-    }
+    
     format::message("{}", model_format(model, Args::parsable.isSet()));
   }
 }
 
 void batch(std::string const &filename)
 {
-  std::ifstream file(filename, std::ios::in);
-  //  if (!file)
-  //    format::fatal("Unable to open the file {}: {}", filename,
-  //    strerror(errno));
+	std::ifstream file(filename, std::ios::in);
+  
+	if (!file)
+	{
+		// MSVC doesn't implement strerrorlen_s(...)
+		static constexpr size_t error_length = 128;
+		char error_msg[error_length];
+		strerror_s(error_msg, error_length, errno);
+		format::fatal("Unable to open the file \"{}\": {}", filename, error_msg);
+		return;
+	}
+
+	std::string line;
+	size_t line_number = 1;
+	while (std::getline(file, line))
+	{
+		solve(line, line_number);
+		++line_number;
+	}
 }
 
 int main(int argc, char *argv[])
