@@ -22,6 +22,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+#define __STDC_WANT_LIB_EXT1__ 1
+#include <cstring>
 
 #include "optional.hpp"
 
