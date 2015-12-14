@@ -48,6 +48,7 @@ void ClauseCounter::visit(const Negation *t)
 {
   assert((isa<Atom>(t->formula()) || isa<Until>(t->formula())) &&
          "Formula may have not been simplified!");
+  (void)(t); // To silence unused variable warning
 }
 
 void ClauseCounter::visit(const Tomorrow *)
