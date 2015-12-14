@@ -24,9 +24,11 @@
 #include <vector>
 
 #ifdef _MSC_VER
-#define strerror_safe(error_msg, error_length, errno) (strerror_s(error_msg, error_length, errno))
+#define strerror_safe(error_msg, error_length, errno) \
+  (strerror_s(error_msg, error_length, errno))
 #else
-#define strerror_safe(error_msg, error_length, errno) (strerror_r(errno, error_msg, error_length))
+#define strerror_safe(error_msg, error_length, errno) \
+  (strerror_r(errno, error_msg, error_length))
 #endif
 
 #include "optional.hpp"
@@ -161,7 +163,7 @@ void print_progress_status(std::string formula, size_t current)
   format::message("{}{}{}", msg, formula, ellipses);
 }
 
-void solve(const std::string& input, optional<size_t> current)
+void solve(const std::string &input, optional<size_t> current)
 {
   if (current)
     print_progress_status(input, *current);
@@ -176,49 +178,47 @@ void solve(const std::string& input, optional<size_t> current)
 
   LTL::FormulaPtr formula = *parsed;
 
-  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()), Args::sat.getValue());
+  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()),
+                     Args::sat.getValue());
 
   solver.solution();
 
   bool sat = solver.satisfiability() == LTL::Solver::Result::SATISFIABLE;
 
   if (Args::parsable.isSet())
-    format::message("{}", sat ? colored(Green, "SAT") : colored(Red, "UNSAT"));
+    format::message("{}", sat ? "SAT" : "UNSAT");
   else
     format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
                                               : colored(Red, "unsatisfiable"));
 
-  if (sat && Args::model.isSet())
-  {
+  if (sat && Args::model.isSet()) {
     LTL::ModelPtr model = solver.model();
 
     if (!Args::parsable.isSet())
       format::message("The following model was found:");
-    
+
     format::message("{}", model_format(model, Args::parsable.isSet()));
   }
 }
 
 void batch(std::string const &filename)
 {
-	std::ifstream file(filename, std::ios::in);
-  
-	if (!file)
-	{
-		static constexpr size_t error_length = 128;
-		char error_msg[error_length];
-		strerror_safe(error_msg, error_length, errno);
-		format::fatal("Unable to open the file \"{}\": {}", filename, error_msg);
-		return;
-	}
+  std::ifstream file(filename, std::ios::in);
 
-	std::string line;
-	size_t line_number = 1;
-	while (std::getline(file, line))
-	{
-		solve(line, line_number);
-		++line_number;
-	}
+  if (!file) {
+    static constexpr size_t error_length = 128;
+    char error_msg[error_length];
+    strerror_safe(error_msg, error_length, errno);
+    format::fatal("Unable to open the file \"{}\": {}", filename, error_msg);
+    return;
+  }
+
+  std::string line;
+  size_t line_number = 1;
+  while (std::getline(file, line)) {
+    solve(line, line_number);
+    ++line_number;
+  }
 }
 
 int main(int argc, char *argv[])
