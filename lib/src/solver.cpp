@@ -1,16 +1,16 @@
 #include "solver.hpp"
 
-#include "ast/generator.hpp"
-#include "utility.hpp"
-#include "pretty_printer.hpp"
-#include "format.hpp"
 #include "ast/clause_counter.hpp"
+#include "ast/generator.hpp"
+#include "format.hpp"
+#include "pretty_printer.hpp"
+#include "utility.hpp"
 
-#include <stack>
-#include <iostream>
+#include <atomic>
 #include <cassert>
 #include <csignal>
-#include <atomic>
+#include <iostream>
+#include <stack>
 #include "std14/memory"
 
 #ifdef _MSC_VER
@@ -20,8 +20,6 @@
 namespace LTL {
 
 namespace detail {
-
-static void signal_handler(int /*signal*/);
 
 namespace colors = format::colors;
 
@@ -529,14 +527,14 @@ APPLY_RULE(not_until)
 
 #undef APPLY_RULE
 
-namespace {
-volatile std::atomic_bool signal_status;
-}
-
-static void signal_handler(int /*signal*/)
-{
-  signal_status.store(true);
-}
+// namespace {
+// volatile std::atomic_bool signal_status;
+// void signal_handler(int /*signal*/);
+// void signal_handler(int /*signal*/)
+//{
+//  signal_status.store(true);
+//}
+//}
 
 Solver::Result Solver::solution()
 {
@@ -549,21 +547,26 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
-  // TODO: This should be handled by the checker application, not the library
-  std::signal(SIGINT, signal_handler);
+// TODO: This should be handled by the checker application, not the library
+//  std::signal(SIGINT, signal_handler);
 
 loop:
-  if (signal_status.load()) {
-    format::debug("/*-------------------------*/");
-    format::debug("Total frames: {}", _stats.total_frames);
-    format::debug("Maximum model size: {}", _stats.maximum_model_size);
-    format::debug("Maximum depth: {}", _stats.maximum_frames);
-    format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
-    format::debug("Cross by prune: {}", _stats.cross_by_prune);
-    format::debug("/*-------------------------*/");
-
-    signal_status.store(false);
-  }
+  //  if (signal_status.load()) {
+  //    constexpr auto msg = R"(
+  ///*-------------------------*/
+  // Total frames: {}
+  // Maximum model size: {}
+  // Maximum depth: {}
+  // Cross by contradiction: {}
+  // Cross by prune: {}
+  ///*-------------------------*/)";
+  //
+  //    format::message(msg, _stats.total_frames, _stats.maximum_model_size,
+  //                    _stats.maximum_frames, _stats.cross_by_contradiction,
+  //                    _stats.cross_by_prune);
+  //
+  //    signal_status.store(false);
+  //  }
 
   while (!_stack.empty()) {
     Frame &frame = _stack.top();
