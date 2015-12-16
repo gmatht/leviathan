@@ -23,7 +23,7 @@ add_subdirectory (checker)
 #
 # Testing
 #
-if (TEST_CHECKER MATCHES "yes")
+if (ENABLE_TESTS MATCHES "yes")
   enable_testing()
 
   execute_process(
