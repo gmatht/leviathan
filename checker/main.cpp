@@ -189,17 +189,21 @@ void solve(const std::string &input, optional<size_t> current)
     format::message(format::NoNewLine, "{}",
                     sat ? colored(Green, "SAT") : colored(Red, "UNSAT"));
   else
-    format::message("The formula is {}!", sat ? colored(Green, "satisfiable")
-                                              : colored(Red, "unsatisfiable"));
+    format::message(
+      NoNewLine, "The formula is {}!",
+      sat ? colored(Green, "satisfiable") : colored(Red, "unsatisfiable"));
 
   if (sat && Args::model.isSet()) {
     LTL::ModelPtr model = solver.model();
 
     if (!Args::parsable.isSet())
-      format::message("The following model was found:");
-
-    format::message(";{}", model_format(model, Args::parsable.isSet()));
+      format::message("\nThe following model was found:");
+    else
+      format::message(NoNewLine, ";");
+    format::message(NoNewLine, "{}",
+                    model_format(model, Args::parsable.isSet()));
   }
+  format::newline(format::Message);
 }
 
 void batch(std::string const &filename)

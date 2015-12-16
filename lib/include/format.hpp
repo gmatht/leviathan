@@ -273,6 +273,11 @@ auto verbose(Args &&... args)
   log(Verbose, std::forward<Args>(args)...);
 }
 
+inline void newline(LogLevel level, Color color = Reset)
+{
+  log(level, color, NewLine, "");
+}
+
 }  // namespace format
 }  // namespace detail
 }  // namespace LTL
