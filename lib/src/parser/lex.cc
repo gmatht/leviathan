@@ -19,7 +19,7 @@
 // $insert class_ih
 #include "Scanner.ih"
 #ifdef _MSC_VER
-#include <iso646.h>
+#include <ciso646>
 #endif
 
 // s_ranges__: use (unsigned) characters as index to obtain

@@ -41,7 +41,7 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth, bool use_sat)
 
 void Solver::_initialize()
 {
-  format::debug("\nInitializing solver...");
+  format::debug("Initializing solver...");
   _atom_set.clear();
 
   format::debug("Simplifing formula...");

@@ -66,8 +66,8 @@ class Map {
     int        size;
 
     // Don't allow copying (error prone):
-    Map<K,D,H,E>&  operator = (Map<K,D,H,E>& other);
-                   Map        (Map<K,D,H,E>& other);
+    Map<K,D,H,E>&  operator = (Map<K,D,H,E>& other) = delete;
+                   Map        (Map<K,D,H,E>& other) = delete;
 
     bool    checkCap(int new_size) const { return new_size > cap; }
 
