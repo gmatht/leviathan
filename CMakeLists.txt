@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8.11)
 
-if (NOT (CMAKE_BUILD_TYPE MATCHES ""))
+if (NOT CMAKE_BUILD_TYPE MATCHES "")
 	message(STATUS "Configuring in ${CMAKE_BUILD_TYPE} mode")
 endif ()
 
@@ -23,26 +23,27 @@ add_subdirectory (checker)
 #
 # Testing
 #
-if (ENABLE_TESTS MATCHES "yes")
+if (NOT ENABLE_TESTS MATCHES "no")
   enable_testing()
 
-  execute_process(
-    COMMAND find tests -type f -name "*.alaska"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE TESTS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+  message("-- Configuring tests")
 
-  # Make the output into a CMake list
-  string(REPLACE "\n" ";" TESTS ${TESTS})
+  file(STRINGS tests/tests.index TESTS)
+
+  list(LENGTH TESTS TESTSLENGTH)
+  message("-- Found ${TESTSLENGTH} tests")
 
   foreach(TEST IN LISTS TESTS)
-    execute_process(COMMAND echo ${TEST} OUTPUT_VARIABLE TESTNAME)
-    string(STRIP ${TESTNAME} TESTNAME)
+    string(REPLACE " " ";" DATA ${TEST})
+    list(GET DATA 0 FILE)
+    list(GET DATA 1 RESULT)
+
     add_test(
-      NAME ${TEST}
+      NAME ${FILE}
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      COMMAND checker --parsable ${TEST}
+      COMMAND
+        /bin/bash -c
+        "test $($<TARGET_FILE:checker> --parsable '${FILE}') = '${RESULT}'"
     )
   endforeach()
 endif()

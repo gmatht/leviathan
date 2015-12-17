@@ -5,6 +5,14 @@
 # it's useless to call it directly
 #
 
+#
+# Additional configure options
+#
+DISABLE_VARS="tests|no|ENABLE_TESTS"
+
+#
+# Chose compiler from Travis
+#
 if [ "x$TRAVIS_CLANG_VERSION" != "x" ]; then
 
   if [ "$CC" = "clang" ]; then

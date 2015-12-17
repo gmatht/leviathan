@@ -6,6 +6,7 @@ install:
 
 script: 
   - make -j2 VERBOSE=1
+  - ctest
 
 sudo: required
 dist: trusty
