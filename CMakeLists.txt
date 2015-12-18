@@ -34,9 +34,8 @@ if (NOT ENABLE_TESTS MATCHES "no")
   message("-- Found ${TESTSLENGTH} tests")
 
   foreach(TEST IN LISTS TESTS)
-    string(REPLACE " " ";" DATA ${TEST})
-    list(GET DATA 0 FILE)
-    list(GET DATA 1 RESULT)
+    list(GET TEST 0 FILE)
+    list(GET TEST 1 RESULT)
 
     add_test(
       NAME ${FILE}

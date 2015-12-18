@@ -17,12 +17,15 @@ timeout() {
 
 test -d .git || die
 
-while IFS=, read -r -a LINE; do
+while IFS=", " read -r -a LINE; do
   [ ${LINE[8]} != "UNK" ] || continue
   
-  if timeout --foreground -s KILL 3s \
-    ./bin/checker --parsable --verbosity 0 ${LINE[0]}
-  then
-    echo ${LINE[0]} ${LINE[8]} | sed 's/UNS/UNSAT/'
+  timeout --foreground -s KILL 3s \
+    ./bin/checker --verbosity 0 ${LINE[0]}
+
+  # timeout returns 124 or 137 if it had to kill the process
+  # Yes I love Unix...
+  if [ $? -ne 124 -a $? -ne 137 ]; then
+    echo "${LINE[0]};${LINE[8]}" | sed 's/UNS/UNSAT/'
   fi
 done 

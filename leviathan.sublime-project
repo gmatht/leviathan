@@ -5,5 +5,41 @@
 			"path": ".",
       "folder_exclude_patterns": ["build", "bin", "xcodebuild"]
 		}
-	]
+	],
+  "build_systems": [
+    {
+      "name": "Build Leviathan",
+      "path": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "working_dir": "$project_path",
+      "shell": true,
+      "file_regex": "^(...*?):([0-9]*):?([0-9]*):?([0-9]*):(.*)",
+
+      "cmd": [
+        "([ -e build ] || mkdir build) && cd build && ../configure && make -j3"
+      ],
+
+      "variants": [
+        {
+          "name": "Configure",
+          "cmd": ["(test -e build || mkdir build) && cd build && ../configure"]
+        },
+        {
+          "name": "Create Xcode Project",
+          "cmd": ["([ -e xcodebuild ] || mkdir xcodebuild) && cd xcodebuild && ../configure --pass-thru -G Xcode"]
+        },
+        {
+          "name": "Open Xcode",
+          "cmd": ["open xcodebuild/leviathan.xcodeproj"]
+        },
+        {
+          "name": "Make Clean",
+          "cmd": ["[ -e build ] && cd build && make clean || true"]
+        },
+        {
+          "name": "Hard Clean",
+          "cmd": ["rm -rf bin && rm -rf build && rm -rf xcodebuild"]
+        }
+      ]
+    }
+  ]
 }
