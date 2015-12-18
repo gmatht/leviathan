@@ -23,13 +23,16 @@
 "<->"		return Parser::IFF;
 "<=>"		return Parser::IFF;
 "IFF"		return Parser::IFF;
+"="			return Parser::IFF;
 "U"         return Parser::UNTIL;
 "V"         return Parser::RELEASE;
 "R" 		return Parser::RELEASE;
 "TRUE"		return Parser::TRUE;
 "true"		return Parser::TRUE;
+"True"		return Parser::TRUE;
 "FALSE"     return Parser::FALSE;
 "false"		return Parser::FALSE;
-[a-z0-9:_]+ 	return Parser::ATOM;
+"False"		return Parser::FALSE;
+[a-zA-Z0-9:_]+ 	return Parser::ATOM;
 
 %%
