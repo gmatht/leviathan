@@ -44,9 +44,14 @@ void Solver::_initialize()
   format::debug("Initializing solver...");
   _atom_set.clear();
 
+  //PrettyPrinter p;
+  //format::verbose("{}", p.to_string(_formula));
+
   format::debug("Simplifing formula...");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
+
+  //format::verbose("{}", p.to_string(_formula));
 
   format::debug("Generating subformulas...");
   Generator gen;
@@ -547,6 +552,9 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
+  //format::verbose(format::NoNewLine, "Initial formula: ");
+  //__dump_current_formulas();
+
 // TODO: This should be handled by the checker application, not the library
 //  std::signal(SIGINT, signal_handler);
 
@@ -621,10 +629,15 @@ loop:
         }
       }
 
+	  // TODO: Don't generate eventualities here at all
       if (_has_eventually && _apply_eventually_rule()) {
         auto &ev =
           frame
             .eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
+
+		//PrettyPrinter p;
+		//format::verbose("{}", p.to_string(_subformulas[_lhs[frame.choosenFormula]]));
+
         if (__builtin_expect(ev.is_not_requested(), 0))
           ev.set_not_satisfied();
 
@@ -696,7 +709,8 @@ loop:
       if (rules_applied)
         goto loop;
 
-      if (_should_use_sat_solver()) {
+      if (_should_use_sat_solver())
+	  {
         /* https://github.com/niklasso/minisat-examples */
         frame.type = Frame::SAT;
 
@@ -792,6 +806,9 @@ loop:
       }
     }
 
+	//format::verbose("Current formula set:");
+	//__dump_current_formulas();
+
     _update_eventualities_satisfaction();
     _update_history();
 
@@ -840,6 +857,9 @@ loop:
 
     frame.type = Frame::STEP;
     _stack.push(std::move(new_frame));
+
+	//format::verbose("Starting new frame with formulas: ");
+	//__dump_current_formulas();
 
     ++_stats.total_frames;
 
@@ -914,6 +934,7 @@ std::tuple<bool, FrameID> Solver::_check_loop_rule() const
   return std::tuple<bool, FrameID>{ret, first_frame_id};
 }
 
+// TODO: Remove const& from lambdas
 bool Solver::_check_prune0_rule() const
 {
   const Frame &top_frame = _stack.top();
@@ -1143,7 +1164,6 @@ void Solver::__dump_current_formulas() const
   for (uint64_t i = 0; i < _subformulas.size(); ++i)
     if (_stack.top().formulas[i])
       format::verbose("{}", p.to_string(_subformulas[i]));
-  std::cout << std::endl;
 }
 
 void Solver::__dump_current_eventualities() const
