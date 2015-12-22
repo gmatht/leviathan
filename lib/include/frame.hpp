@@ -29,6 +29,7 @@ namespace detail {
 
 using Bitset = boost::dynamic_bitset<uint64_t>;
 
+// TODO: Remove set_ and is_ from functions name
 class Eventuality {
 public:
   Eventuality() : _id(NOT_REQUESTED) {}
@@ -38,6 +39,7 @@ public:
   bool is_not_requested() const { return _id == FrameID(NOT_REQUESTED); }
   bool is_not_satisfied() const { return _id == FrameID(NOT_SATISFIED); }
   bool is_satisfied() const { return _id < FrameID(NOT_SATISFIED); }
+  void set_not_requested() { _id = FrameID(NOT_REQUESTED); }
   void set_not_satisfied() { _id = FrameID(NOT_SATISFIED); }
   void set_satisfied(const FrameID &id) { _id = id; }
 private:
@@ -123,6 +125,13 @@ struct Frame {
 	  first(nullptr)
   {
     to_process.set();
+	// TODO: Check if this is needed when we don't generate eventualities beforehand
+	std::for_each(eventualities.begin(), eventualities.end(),
+				  [&](Eventuality &ev)
+	{
+		if (ev.is_satisfied())
+			ev.set_not_requested();
+	});
   }
 };
 }
