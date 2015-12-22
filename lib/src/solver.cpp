@@ -44,14 +44,14 @@ void Solver::_initialize()
   format::debug("Initializing solver...");
   _atom_set.clear();
 
-  //PrettyPrinter p;
-  //format::verbose("{}", p.to_string(_formula));
+  PrettyPrinter p;
+  format::verbose("{}", p.to_string(_formula));
 
   format::debug("Simplifing formula...");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
 
-  //format::verbose("{}", p.to_string(_formula));
+  format::verbose("{}", p.to_string(_formula));
 
   format::debug("Generating subformulas...");
   Generator gen;
@@ -541,6 +541,7 @@ APPLY_RULE(not_until)
 //}
 //}
 
+// TODO: Broken rule: !((!p U p) U a)
 Solver::Result Solver::solution()
 {
   if (_state == State::RUNNING || _state == State::DONE)
@@ -679,6 +680,7 @@ loop:
       }
 
       if (_has_not_until && _apply_not_until_rule()) {
+		  /*
         auto &ev =
           frame
             .eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
@@ -689,7 +691,7 @@ loop:
             .eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]];
         if (__builtin_expect(ev.is_not_requested(), 0))
           ev.set_not_satisfied();
-
+		  */
         Frame new_frame(frame);
         new_frame.formulas[_lhs[frame.choosenFormula]] = true;
         new_frame.formulas[_rhs[frame.choosenFormula]] = true;
