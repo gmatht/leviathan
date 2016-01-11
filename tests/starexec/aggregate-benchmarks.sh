@@ -45,5 +45,8 @@ done
 cat $output                       \
   | sed "s/timeout (.*)/timeout/" \
   | column -t -s ,                \
-  | tee $output > /dev/null
+  > $output.temp
+
+mv $output.temp $output
+
 
