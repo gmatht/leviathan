@@ -4,15 +4,15 @@ project (lib CXX)
 # Boost library
 add_definitions ("-DBOOST_ALL_NO_LIB")
 
-if(STATIC_BOOST MATCHES "y")
+if(STATIC_LIBS MATCHES "y")
   set (Boost_USE_STATIC_LIBS ON)
-  message("-- Linking Boost static libraries")
+  set (Boost_USE_STATIC_RUNTIME ON)
 else()
   set (Boost_USE_STATIC_LIBS OFF)
+  set (Boost_USE_STATIC_RUNTIME OFF)
 endif()
 
 set (Boost_USE_MULTITHREADED ON)
-set (Boost_USE_STATIC_RUNTIME OFF)
 set (Boost_USE_DEBUG_RUNTIME OFF)
 find_package (Boost 1.36.0 REQUIRED COMPONENTS system thread)
 
@@ -53,7 +53,7 @@ set (
 
 # Here adding the headers is redundant, but makes them appear in 
 # project files made by IDE generators (Xcode, VS, ecc...)
-add_library (leviathan ${SRC} ${HEADERS})
+add_library (leviathan STATIC ${SRC} ${HEADERS})
 
 target_include_directories(
   leviathan

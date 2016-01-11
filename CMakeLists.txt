@@ -8,6 +8,13 @@ project (leviathan)
 
 include (GNUInstallDirs)
 
+if(STATIC_LIBS MATCHES "y")
+  set(BUILD_SHARED_LIBS OFF)
+  message("-- Linking a static project")
+else()
+  set(BUILD_SHARED_LIBS ON)
+endif()
+
 if(CMAKE_GENERATOR MATCHES "Xcode")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isysroot /")
 endif ()

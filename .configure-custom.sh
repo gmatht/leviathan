@@ -10,7 +10,7 @@
 #
 DISABLE_VARS="tests|no|ENABLE_TESTS"
 
-WITH_VARS="static-boost|no|STATIC_BOOST"
+WITH_VARS="static-libs|no|STATIC_LIBS"
 
 #
 # Chose compiler from Travis

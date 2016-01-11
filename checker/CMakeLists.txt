@@ -21,7 +21,7 @@ target_include_directories(
 )
 
 if (NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
-	target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
+   target_compile_definitions(checker PRIVATE HAVE_LONG_LONG)
 endif ()
 
 set(
@@ -32,6 +32,10 @@ set(
 
 target_compile_options(checker PUBLIC 
   "$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:${WARNINGS}>")
+
+if(STATIC_LIBS MATCHES "y")
+  set_target_properties(checker PROPERTIES LINK_FLAGS "-static -pthread")
+endif()
 
 set_property(TARGET checker 
              PROPERTY RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
