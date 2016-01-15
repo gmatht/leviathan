@@ -44,14 +44,14 @@ void Solver::_initialize()
   format::debug("Initializing solver...");
   _atom_set.clear();
 
-  PrettyPrinter p;
-  format::verbose("{}", p.to_string(_formula));
+  //PrettyPrinter p;
+  //format::verbose("{}", p.to_string(_formula));
 
   format::debug("Simplifing formula...");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
 
-  format::verbose("{}", p.to_string(_formula));
+  //format::verbose("{}", p.to_string(_formula));
 
   format::debug("Generating subformulas...");
   Generator gen;
@@ -733,8 +733,7 @@ loop:
         assert(frame.literals.empty());
 
         PrettyPrinter p;
-        format::verbose(colors::Green,
-                        "Inserting formulas in the SAT solver: ");
+        //format::verbose(colors::Green, "Inserting formulas in the SAT solver: ");
 
         size_t one = _bitset.temporary.find_first();
         while (one != Bitset::npos) {
@@ -747,7 +746,7 @@ loop:
           if (_bitset.disjunction[one])
             frame.to_process[one] = false;
 
-          format::verbose("{}", p.to_string(_subformulas[one]));
+          //format::verbose("{}", p.to_string(_subformulas[one]));
 
           one = _bitset.temporary.find_next(one);
         }
@@ -760,7 +759,7 @@ loop:
                       [&](int /*lit*/) { solver.newVar(); });
 
         if (!solver.solve()) {
-          format::verbose("SAT says NO");
+          //format::verbose("SAT says NO");
           frame.type =
             Frame::UNKNOWN;  // This frame will be deallocated right now anyway
           _rollback_to_latest_choice();
@@ -770,8 +769,7 @@ loop:
         Frame new_frame(frame);
         Clause c;
 
-        format::verbose(colors::Green,
-                        "Extracting formulas from the SAT solver: ");
+        //format::verbose(colors::Green, "Extracting formulas from the SAT solver: ");
         for (int l : frame.literals) {
           uint64_t id = static_cast<uint64_t>(l);
 
@@ -779,8 +777,8 @@ loop:
             c.push(Minisat::Lit(l, true));
             new_frame.formulas[id] = true;
 
-            format::verbose(colors::Green, "TRUE ");
-            format::verbose("{}", p.to_string(_subformulas[id]));
+            //format::verbose(colors::Green, "TRUE ");
+            //format::verbose("{}", p.to_string(_subformulas[id]));
           }
           else if (_bitset.negation[id + 1] ||
                    (isa<Tomorrow>(_subformulas[id + 1]) &&
@@ -790,8 +788,8 @@ loop:
             c.push(Minisat::Lit(l));
             new_frame.formulas[id + 1] = true;
 
-            format::verbose(colors::Red, "FALSE ");
-            format::verbose("{}", p.to_string(_subformulas[id + 1]));
+            //format::verbose(colors::Red, "FALSE ");
+            //format::verbose("{}", p.to_string(_subformulas[id + 1]));
           }
           else  // TODO
           {
@@ -1027,8 +1025,18 @@ void Solver::_rollback_to_latest_choice()
       {
         new_frame.formulas[_rhs[top.choosenFormula]] = true;
         if (_bitset.tomorrow[top.choosenFormula + 1]) {
+		  /*
           new_frame.formulas[top.choosenFormula + 1] = true;
+		  PrettyPrinter p;
+		  format::verbose("choosen: {}", p.to_string(_subformulas[top.choosenFormula]));
+		  format::verbose("next: {}", p.to_string(_subformulas[top.choosenFormula + 1]));
+		  format::verbose("next next: {}", p.to_string(_subformulas[top.choosenFormula + 2]));
           assert(_lhs[top.choosenFormula + 1] == top.choosenFormula);
+		  */
+			if (_lhs[top.choosenFormula + 1] == top.choosenFormula)
+				new_frame.formulas[top.choosenFormula + 1] = true;
+			else
+				new_frame.formulas[top.choosenFormula + 2] = true;
         }
         else {
           new_frame.formulas[top.choosenFormula + 2] = true;
