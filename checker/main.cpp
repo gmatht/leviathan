@@ -126,10 +126,6 @@ static TCLAP::ValueArg<format::LogLevel> verbosity(
   "total annoyance.",
   false, format::Message, "number between 0 and 5");
 
-static TCLAP::SwitchArg sat(
-  "s", "sat",
-  "Uses sat solver to speed up propositional subformulas processing", false);
-
 static TCLAP::ValueArg<uint64_t> depth(
   "", "maximum-depth",
   "The maximum depth to descend into the tableaux (aka the maximum size of "
@@ -178,8 +174,7 @@ void solve(const std::string &input, optional<size_t> current)
 
   LTL::FormulaPtr formula = *parsed;
 
-  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()),
-                     Args::sat.getValue());
+  LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()));
 
   solver.solution();
 
@@ -233,7 +228,6 @@ int main(int argc, char *argv[])
   using namespace Args;
 
   cmd.add(depth);
-  cmd.add(sat);
   cmd.add(verbosity);
   cmd.add(parsable);
   cmd.add(model);

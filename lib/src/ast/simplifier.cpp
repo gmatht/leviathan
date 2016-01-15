@@ -384,6 +384,7 @@ void Simplifier::visit(const Iff *i)
                             make_disjunction(left, make_negation(right)));
 }
 
+// TODO: !p U p =?= F p
 void Simplifier::visit(const Until *u)
 {
   u->left()->accept(*this);

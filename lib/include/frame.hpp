@@ -19,7 +19,6 @@
 #include "boost/dynamic_bitset.hpp"
 #include "boost/pool/pool_alloc.hpp"
 #include "identifiable.hpp"
-#include "minisat.hpp"
 
 #include <memory>
 #include <cstdint>
@@ -53,19 +52,16 @@ private:
 
 using Eventualities =
   std::vector<Eventuality, boost::fast_pool_allocator<Eventuality>>;
-using Literals = std::vector<int>;
 
 struct Frame {
-  enum Type : uint8_t { UNKNOWN = 0, STEP = 1, CHOICE = 2, SAT = 3 };
+  enum Type : uint8_t { UNKNOWN = 0, STEP = 1, CHOICE = 2 };
 
   Bitset formulas;
   Bitset to_process;
   Eventualities eventualities;
-  Literals literals;
   FrameID id;
   FormulaID choosenFormula;
   Frame *chain;
-  std::unique_ptr<Minisat::Solver> solver;
   Type type;
   Frame* prev;
   Frame* first;
@@ -77,11 +73,9 @@ struct Frame {
     : formulas(number_of_formulas),
       to_process(number_of_formulas),
       eventualities(number_of_eventualities),
-      literals(),
       id(_id),
       choosenFormula(FormulaID::max()),
       chain(nullptr),
-      solver(nullptr),
       type(UNKNOWN),
 	  prev(nullptr),
 	  first(nullptr)
@@ -97,11 +91,9 @@ struct Frame {
       to_process(_frame.to_process),
       eventualities(_frame.eventualities,
                     _frame.eventualities.get_allocator()),
-      literals(),
       id(_frame.id),
       choosenFormula(FormulaID::max()),
       chain(_frame.chain),
-      solver(nullptr),
       type(UNKNOWN),
 	  prev(nullptr),
 	  first(nullptr)
@@ -115,11 +107,9 @@ struct Frame {
     : formulas(number_of_formulas),
       to_process(number_of_formulas),
       eventualities(_eventualities, _eventualities.get_allocator()),
-      literals(),
       id(_id),
       choosenFormula(FormulaID::max()),
       chain(chainPtr),
-      solver(nullptr),
       type(UNKNOWN),
 	  prev(nullptr),
 	  first(nullptr)

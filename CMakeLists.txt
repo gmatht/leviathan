@@ -20,7 +20,6 @@ if(CMAKE_GENERATOR MATCHES "Xcode")
 endif ()
 
 add_subdirectory (external/cppformat)
-add_subdirectory (external/minisat)
 add_subdirectory (external/cpputils)
 add_subdirectory (external/tclap)
 add_subdirectory (external/optional)

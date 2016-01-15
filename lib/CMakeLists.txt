@@ -40,7 +40,6 @@ set (
   include/identifiable.hpp
   include/leviathan.hpp
   include/model.hpp
-  include/minisat.hpp
   include/parser.hpp
   include/pretty_printer.hpp
   include/simplifier.hpp
@@ -67,7 +66,7 @@ target_include_directories(
 )
 
 # Dependencies
-target_link_libraries (leviathan minisat cppformat ${Boost_LIBRARIES})
+target_link_libraries (leviathan cppformat ${Boost_LIBRARIES})
 
 # General options
 set(MSVC_OPTIONS /MP)

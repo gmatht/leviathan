@@ -5,7 +5,6 @@
 #include "identifiable.hpp"
 #include "frame.hpp"
 #include "model.hpp"
-#include "minisat.hpp"
 
 #include <vector>
 #include <tuple>
@@ -21,7 +20,6 @@ namespace detail
 {
 
 using Stack = std::stack<Frame, std::deque<Frame, boost::fast_pool_allocator<Frame>>>;
-using Clause = Minisat::vec<Minisat::Lit>;
 
 class Solver
 {
@@ -61,7 +59,7 @@ public:
 	Solver& operator=(const Solver&) = delete;
 	Solver& operator=(Solver&&) = delete;
 
-	Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max(), bool use_sat = false);
+	Solver(FormulaPtr formula, FrameID maximum_depth = FrameID::max());
 
 	FormulaPtr inline Formula() const;
 
@@ -92,7 +90,6 @@ private:
 	FormulaPtr _formula;
 
 	FrameID _maximum_depth;
-	bool _use_sat_solver;
 
 	State _state;
 	Result _result;
@@ -117,7 +114,6 @@ private:
 	std::vector<uint64_t> _clause_size;
 	std::vector<FormulaID> _fw_eventualities_lut;
 	std::vector<FormulaID> _bw_eventualities_lut;
-	std::vector<Clause> _clauses;
 
 	size_t _number_of_formulas;
 	FormulaID _start_index;
@@ -152,8 +148,6 @@ private:
 	inline bool _check_prune0_rule() const;
 	inline bool _check_prune_rule() const;
 	inline bool _check_my_prune() const;
-
-	inline bool _should_use_sat_solver();
 
 	void __dump_current_formulas() const;
 	void __dump_current_eventualities() const;
