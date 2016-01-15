@@ -11,8 +11,7 @@
 - *Code refactoring*: easier maintenance and easier comprehension of the code
   * Small hand-written parser (eliminate the need of Bison++)
   * A lot of things already listed in TODO.md
-  * Factor out the SAT solver support to be able to integrate different solvers
-    instead of being tied to minisat
+  * Propositional SAT solver support through a common interface
 
 - *Testing and benchmarking*: To have scientifically valid and reproducible 
   results to present in the paper.

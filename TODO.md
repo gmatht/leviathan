@@ -10,6 +10,4 @@
 - Treat Not Untils as an explicit formula type since they have always been a special negation case for us?
 - Stack trace on crash: http://oroboro.com/stack-trace-on-crash/ (http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes)
 - Refactor duplicated code during branch frame initialization? (Inside the main loop and the roolback function)
-- Not Untils are not stored as Negations in the bitsets. Check if this breaks something
 - Not every field of Frame is needed in every type of Frame, check if something can be compressed with unions like (FormulaID, FrameID) or (Eventualities, Literal vector)
-- Reduce minisat computation time by either pooling and reusing the solver or add a contructor which takes the number of variables (Both doesn't seems to do anything, investigate)
