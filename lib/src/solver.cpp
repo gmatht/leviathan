@@ -355,6 +355,7 @@ bool Solver::_check_contradiction_rule()
   return _bitset.temporary.any();
 }
 
+// TODO: extract every conjunction, even when nested
 bool Solver::_apply_conjunction_rule()
 {
   Frame &frame = _stack.top();
@@ -423,7 +424,7 @@ bool Solver::_apply_always_rule()
       assert(frame.to_process[one]);             \
                                                  \
       frame.to_process[one] = false;             \
-      frame.choosenFormula = FormulaID(one);     \
+      frame.choosen_formula = FormulaID(one);     \
       frame.type = Frame::CHOICE;                \
       return true;                               \
     }                                            \
@@ -486,7 +487,7 @@ loop:
 
       if (_apply_disjunction_rule()) {
         Frame new_frame(frame);
-        new_frame.formulas[_lhs[frame.choosenFormula]] = true;
+        new_frame.formulas[_lhs[frame.choosen_formula]] = true;
         _stack.push(std::move(new_frame));
 
         ++_stats.total_frames;
@@ -499,13 +500,13 @@ loop:
 	  // TODO: Don't generate eventualities here at all
       if (_has_eventually && _apply_eventually_rule()) {
         auto &ev =
-          frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosenFormula]]];
+          frame.eventualities[_fw_eventualities_lut[_lhs[frame.choosen_formula]]];
 
         if (__builtin_expect(ev.is_not_requested(), 0))
           ev.set_not_satisfied();
 
         Frame new_frame(frame);
-        new_frame.formulas[_lhs[frame.choosenFormula]] = true;
+        new_frame.formulas[_lhs[frame.choosen_formula]] = true;
         _stack.push(std::move(new_frame));
 
         ++_stats.total_frames;
@@ -518,12 +519,12 @@ loop:
       if (_has_until && _apply_until_rule())
 	  {
         auto &ev =
-          frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosenFormula]]];
+          frame.eventualities[_fw_eventualities_lut[_rhs[frame.choosen_formula]]];
         if (__builtin_expect(ev.is_not_requested(), 0))
           ev.set_not_satisfied();
 
         Frame new_frame(frame);
-        new_frame.formulas[_rhs[frame.choosenFormula]] = true;
+        new_frame.formulas[_rhs[frame.choosen_formula]] = true;
         _stack.push(std::move(new_frame));
 
         ++_stats.total_frames;
@@ -536,8 +537,8 @@ loop:
       if (_has_not_until && _apply_not_until_rule())
 	  {
         Frame new_frame(frame);
-        new_frame.formulas[_lhs[frame.choosenFormula]] = true;
-        new_frame.formulas[_rhs[frame.choosenFormula]] = true;
+        new_frame.formulas[_lhs[frame.choosen_formula]] = true;
+        new_frame.formulas[_rhs[frame.choosen_formula]] = true;
         _stack.push(std::move(new_frame));
 
         ++_stats.total_frames;
@@ -734,35 +735,35 @@ void Solver::_rollback_to_latest_choice()
 {
   while (!_stack.empty()) {
     if (_stack.top().type == Frame::CHOICE &&
-        _stack.top().choosenFormula != FormulaID::max()) {
+        _stack.top().choosen_formula != FormulaID::max()) {
       Frame &top = _stack.top();
       ;
       Frame new_frame(top);
 
-      if (_bitset.disjunction[top.choosenFormula])
-        new_frame.formulas[_rhs[top.choosenFormula]] = true;
-      else if (_bitset.eventually[top.choosenFormula]) {
-        new_frame.formulas[top.choosenFormula + 1] = true;
-        assert(_bitset.tomorrow[top.choosenFormula + 1] &&
-               _lhs[top.choosenFormula + 1] == top.choosenFormula);
+      if (_bitset.disjunction[top.choosen_formula])
+        new_frame.formulas[_rhs[top.choosen_formula]] = true;
+      else if (_bitset.eventually[top.choosen_formula]) {
+        new_frame.formulas[top.choosen_formula + 1] = true;
+        assert(_bitset.tomorrow[top.choosen_formula + 1] &&
+               _lhs[top.choosen_formula + 1] == top.choosen_formula);
       }
-      else if (_bitset.until[top.choosenFormula]) {
-        new_frame.formulas[_lhs[top.choosenFormula]] = true;
-        if (_bitset.tomorrow[top.choosenFormula + 1]) {
-          new_frame.formulas[top.choosenFormula + 1] = true;
-          assert(_lhs[top.choosenFormula + 1] == top.choosenFormula);
+      else if (_bitset.until[top.choosen_formula]) {
+        new_frame.formulas[_lhs[top.choosen_formula]] = true;
+        if (_bitset.tomorrow[top.choosen_formula + 1]) {
+          new_frame.formulas[top.choosen_formula + 1] = true;
+          assert(_lhs[top.choosen_formula + 1] == top.choosen_formula);
         }
         else {
-          new_frame.formulas[top.choosenFormula + 2] = true;
-          assert(_lhs[top.choosenFormula + 2] == top.choosenFormula);
+          new_frame.formulas[top.choosen_formula + 2] = true;
+          assert(_lhs[top.choosen_formula + 2] == top.choosen_formula);
         }
       }
-      else if (_bitset.not_until[top.choosenFormula])  // TODO: Negation are
+      else if (_bitset.not_until[top.choosen_formula])  // TODO: Negation are
                                                        // not always in the + 1
                                                        // position
       {
-        new_frame.formulas[_rhs[top.choosenFormula]] = true;
-        if (_bitset.tomorrow[top.choosenFormula + 1]) {
+        new_frame.formulas[_rhs[top.choosen_formula]] = true;
+        if (_bitset.tomorrow[top.choosen_formula + 1]) {
 		  /*
           new_frame.formulas[top.choosenFormula + 1] = true;
 		  PrettyPrinter p;
@@ -771,20 +772,20 @@ void Solver::_rollback_to_latest_choice()
 		  format::verbose("next next: {}", p.to_string(_subformulas[top.choosenFormula + 2]));
           assert(_lhs[top.choosenFormula + 1] == top.choosenFormula);
 		  */
-			if (_lhs[top.choosenFormula + 1] == top.choosenFormula)
-				new_frame.formulas[top.choosenFormula + 1] = true;
+			if (_lhs[top.choosen_formula + 1] == top.choosen_formula)
+				new_frame.formulas[top.choosen_formula + 1] = true;
 			else
-				new_frame.formulas[top.choosenFormula + 2] = true;
+				new_frame.formulas[top.choosen_formula + 2] = true;
         }
         else {
-          new_frame.formulas[top.choosenFormula + 2] = true;
-          assert(_lhs[top.choosenFormula + 2] == top.choosenFormula);
+          new_frame.formulas[top.choosen_formula + 2] = true;
+          assert(_lhs[top.choosen_formula + 2] == top.choosen_formula);
         }
       }
       else
         assert(false);
 
-      top.choosenFormula = FormulaID::max();
+      top.choosen_formula = FormulaID::max();
       _stack.push(std::move(new_frame));
 
       return;
