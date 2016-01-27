@@ -1,34 +1,57 @@
 #!/bin/bash
 
-[ "$1" != "" ] || (echo "Give me the args, bro" && exit 1)
+case $1 in
+  --field=time)
+   field=5
+  ;;
+  --field=memory)
+   field=7
+  ;;
+  --field=[0-9])
+    field=$(echo $1 | cut -d= -f2)
+  ;;
+  *)
+    cat <<MSG 1>&2
+Please specify 'time' or 'memory' or a column index as first argument
+MSG
+    exit 1
+  ;;
+esac
+shift
 
-solvers="aalta trp++ ls4 Leviathan-06d4951 NuSMV-2.6.0,BMC NuSMV-2.6.0,BDD pltl,graph pltl,tree"
+files=$@
 
-formulae=$(find acacia alaska/lift schuppan trp -depth 1; find rozier anzu -depth 2)
+solvers="aalta trp++ ls4 Leviathan-06d4951 NuSMV-2.6.0,BDD pltl,graph pltl,tree"
 
-filt() {
-  cat $1 | grep $formula | grep $solver | grep $2 | wc -l
+formulae() {
+  find acacia alaska/lift schuppan trp -depth 1
+  find rozier anzu -depth 2
+  echo forobots
 }
 
-memory() {
-  cat $1 | grep $formula | grep $solver | grep -v timeout | grep -v memout | \
-    cut -d',' -f 7 | awk '{s+=$1;n+=1} END {if (n == 0) {print "-"} else {print s/n}}'
+data() {
+  cat $files | grep $1 | grep $2 | cut -d',' -f $field | st --avg --fmt=%f
+}
+
+solver_names() {
+  sed 's/Leviathan-06d4951/Leviathan/g ; s/NuSMV-2.6.0,BDD/NuSMV/g'
+}
+
+sanitize() {
+  sed 's#/.*/#/#g; s#/#-#g; s/formula//g; s/arry//g; s/inear//g; s/[,_]/-/g'
 }
 
 (
-echo -n "formula "
-for solver in $solvers; do
-  #echo -n "$solver-memouts $solver-timeouts "
-  echo -n "$solver-memory "
-done
-echo
-
-for formula in $formulae; do
-  echo -n "$formula "
-  for solver in $solvers; do
-    #echo -n "$(filt $1 memout) $(filt $1 timeout) "
-    echo -n "$(memory $1) "
+  echo "group $solvers" # Header
+  
+  for formula in $(formulae); do
+    echo -n "$formula "
+    for solver in $solvers; do
+      echo -n "$(data $formula $solver) "
+    done
+    echo
   done
-  echo
-done
-) | column -t
+) | solver_names | sanitize | column -t
+
+
+# # 10.43
