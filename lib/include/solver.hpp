@@ -22,7 +22,6 @@ permission.
 #include "identifiable.hpp"
 #include "frame.hpp"
 #include "model.hpp"
-#include "stack.hpp"
 
 #include <vector>
 #include <tuple>

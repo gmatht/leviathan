@@ -75,9 +75,9 @@ struct Frame {
       id(_id),
       choosen_formula(FormulaID::max()),
       chain(nullptr),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
     formulas.set(_formula);
     to_process.set();
@@ -93,9 +93,9 @@ struct Frame {
       id(_frame.id),
       choosen_formula(FormulaID::max()),
       chain(_frame.chain),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
   }
 
@@ -109,9 +109,9 @@ struct Frame {
       id(_id),
       choosen_formula(FormulaID::max()),
       chain(chainPtr),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
     to_process.set();
 	// TODO: Check if this is needed when we don't generate eventualities beforehand

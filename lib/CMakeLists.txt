@@ -48,7 +48,6 @@ set (
   include/solver.hpp
   include/visitor.hpp
   include/format.hpp
-  include/stack.hpp
 )
 
 # Here adding the headers is redundant, but makes them appear in 
