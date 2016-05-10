@@ -8,7 +8,10 @@ project (leviathan)
 
 include (GNUInstallDirs)
 
-if(STATIC_LIBS MATCHES "y")
+option(STATIC_LIBS "Enable static linking" OFF)
+option(ENABLE_TESTS "Enable test suite" ON)
+
+if(STATIC_LIBS)
   set(BUILD_SHARED_LIBS OFF)
   message("-- Linking a static project")
 else()
@@ -29,7 +32,7 @@ add_subdirectory (checker)
 #
 # Testing
 #
-if (NOT ENABLE_TESTS MATCHES "no")
+if (ENABLE_TESTS)
   enable_testing()
 
   message("-- Configuring tests")

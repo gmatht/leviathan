@@ -71,7 +71,7 @@ function print_help() {
   -h, --help              display this help and exit
   --debug                 compile in Debug mode [default]
   --release               compile in Release mode
-  --pass-thru             pass remaining arguments through to CMake
+  --                      pass remaining arguments through to CMake
 
   --prefix=PREFIX         install architecture-independent files in PREFIX
                           [/usr/local]
@@ -236,7 +236,7 @@ while [ $# != 0 ]; do
         "-h")
             print_help;;
 
-        "--pass-thru")
+        "--")
             shift;
             while [ $# != 0 ]; do
                 CMAKE_ARGS=("${CMAKE_ARGS[@]}" "${1}");
