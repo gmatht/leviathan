@@ -1,5 +1,5 @@
 # License
-Copyright (c) 2016, Matteo Bertello
+Copyright (c) 2016, Matteo Bertello (bertello.matteo@gmail.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
