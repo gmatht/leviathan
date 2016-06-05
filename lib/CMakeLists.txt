@@ -25,7 +25,6 @@ set (
   src/ast/generator.cpp
   src/ast/simplifier.cpp
   src/ast/pretty_printer.cpp
-  src/ast/clause_counter.cpp
   src/solver.cpp
   src/parser/lex.cc
   src/parser/parse.cc
@@ -44,7 +43,6 @@ set (
   include/pretty_printer.hpp
   include/simplifier.hpp
   src/ast/generator.hpp
-  src/ast/clause_counter.hpp
   include/solver.hpp
   include/visitor.hpp
   include/format.hpp

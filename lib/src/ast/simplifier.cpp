@@ -322,14 +322,14 @@ void Simplifier::visit(const Disjunction *d)
     result = make_true();
     rulesApplied = true;
   }
-  else if (isa<Conjunction>(left))  // To CNF
+  else if (isa<Conjunction>(left))
   {
     result = make_conjunction(
       make_disjunction(fast_cast<Conjunction>(left)->left(), right),
       make_disjunction(fast_cast<Conjunction>(left)->right(), right));
     rulesApplied = true;
   }
-  else if (isa<Conjunction>(right))  // To CNF
+  else if (isa<Conjunction>(right))
   {
     result = make_conjunction(
       make_disjunction(left, fast_cast<Conjunction>(right)->left()),

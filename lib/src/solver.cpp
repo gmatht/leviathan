@@ -1,17 +1,11 @@
 #include "solver.hpp"
 
-#include "ast/clause_counter.hpp"
 #include "ast/generator.hpp"
 #include "format.hpp"
 #include "pretty_printer.hpp"
 #include "utility.hpp"
 
-#include <atomic>
 #include <cassert>
-#include <csignal>
-#include <iostream>
-#include <stack>
-#include "std14/memory"
 
 #ifdef _MSC_VER
 #define __builtin_expect(cond, value) (cond)
@@ -31,32 +25,34 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth)
     _start_index(0),
     _loop_state(0),
     _stats(),
-    _has_eventually(false),
-    _has_until(false),
-    _has_not_until(false)
+    _has_eventually(true),
+    _has_until(true),
+    _has_not_until(true)
 {
   _initialize();
 }
 
+// Forward declaration
+static bool formula_ordering_func(const FormulaPtr& a, const FormulaPtr& b);
+
+// TODO: Break this down
 void Solver::_initialize()
 {
   format::debug("Initializing solver...");
   _atom_set.clear();
 
-  //PrettyPrinter p;
-  //format::verbose("{}", p.to_string(_formula));
-
+  /* Simplify the formula and put it in normal form */
   format::debug("Simplifing formula...");
   Simplifier simplifier;
   _formula = simplifier.simplify(_formula);
 
-  //format::verbose("{}", p.to_string(_formula));
-
+  /* Generate every subformulas */
   format::debug("Generating subformulas...");
   Generator gen;
   gen.generate(_formula);
   _subformulas = gen.formulas();
 
+  /* The simplification might just have produces a True or False */
   if (_subformulas.size() == 1) {
     if (isa<True>(_subformulas[0])) {
       _result = Result::SATISFIABLE;
@@ -70,97 +66,8 @@ void Solver::_initialize()
     }
   }
 
-  std::function<bool(const FormulaPtr &, const FormulaPtr &)> compareFunc =
-    [&compareFunc](const FormulaPtr &a, const FormulaPtr &b) {
-      if (isa<Atom>(a) && isa<Atom>(b))
-        return std::lexicographical_compare(fast_cast<Atom>(a)->name().begin(),
-                                            fast_cast<Atom>(a)->name().end(),
-                                            fast_cast<Atom>(b)->name().begin(),
-                                            fast_cast<Atom>(b)->name().end());
-
-      if (isa<Negation>(a) && isa<Negation>(b))
-        return compareFunc(fast_cast<Negation>(a)->formula(),
-                           fast_cast<Negation>(b)->formula());
-
-      if (isa<Negation>(a)) {
-        if (fast_cast<Negation>(a)->formula() == b)
-          return false;
-
-        return compareFunc(fast_cast<Negation>(a)->formula(), b);
-      }
-
-      if (isa<Negation>(b)) {
-        if (fast_cast<Negation>(b)->formula() == a)
-          return true;
-
-        return compareFunc(a, fast_cast<Negation>(b)->formula());
-      }
-
-      if (isa<Tomorrow>(a) && isa<Tomorrow>(b))
-        return compareFunc(fast_cast<Tomorrow>(a)->formula(),
-                           fast_cast<Tomorrow>(b)->formula());
-
-      if (isa<Tomorrow>(a)) {
-        if (fast_cast<Tomorrow>(a)->formula() == b)
-          return false;
-
-        return compareFunc(fast_cast<Tomorrow>(a)->formula(), b);
-      }
-
-      if (isa<Tomorrow>(b)) {
-        if (fast_cast<Tomorrow>(b)->formula() == a)
-          return true;
-
-        return compareFunc(a, fast_cast<Tomorrow>(b)->formula());
-      }
-
-      if (isa<Always>(a) && isa<Always>(b))
-        return compareFunc(fast_cast<Always>(a)->formula(),
-                           fast_cast<Always>(b)->formula());
-
-      if (isa<Eventually>(a) && isa<Eventually>(b))
-        return compareFunc(fast_cast<Eventually>(a)->formula(),
-                           fast_cast<Eventually>(b)->formula());
-
-      if (isa<Conjunction>(a) && isa<Conjunction>(b)) {
-        if (fast_cast<Conjunction>(a)->left() !=
-            fast_cast<Conjunction>(b)->left())
-          return compareFunc(fast_cast<Conjunction>(a)->left(),
-                             fast_cast<Conjunction>(b)->left());
-        else
-          return compareFunc(fast_cast<Conjunction>(a)->right(),
-                             fast_cast<Conjunction>(b)->right());
-      }
-
-      if (isa<Disjunction>(a) && isa<Disjunction>(b)) {
-        if (fast_cast<Disjunction>(a)->left() !=
-            fast_cast<Disjunction>(b)->left())
-          return compareFunc(fast_cast<Disjunction>(a)->left(),
-                             fast_cast<Disjunction>(b)->left());
-        else
-          return compareFunc(fast_cast<Disjunction>(a)->right(),
-                             fast_cast<Disjunction>(b)->right());
-      }
-
-      if (isa<Until>(a) && isa<Until>(b)) {
-        if (fast_cast<Until>(a)->left() != fast_cast<Until>(b)->left())
-          return compareFunc(fast_cast<Until>(a)->left(),
-                             fast_cast<Until>(b)->left());
-        else
-          return compareFunc(fast_cast<Until>(a)->right(),
-                             fast_cast<Until>(b)->right());
-      }
-
-      if (isa<Then>(a) || isa<Then>(b))
-        assert(false);
-
-      if (isa<Iff>(a) && isa<Iff>(b))
-        assert(false);
-
-      return a->type() < b->type();
-    };
-
-  std::sort(_subformulas.begin(), _subformulas.end(), compareFunc);
+  /* Sort the subformulas in an order suitable for the computation and remove the duplicates */
+  std::sort(_subformulas.begin(), _subformulas.end(), formula_ordering_func);
 
   auto last = std::unique(_subformulas.begin(), _subformulas.end());
   _subformulas.erase(last, _subformulas.end());
@@ -168,6 +75,7 @@ void Solver::_initialize()
   format::debug("Found {} subformulas", _subformulas.size());
   format::debug("Building data structure...");
 
+  /* Initialize the bitsets and arrays used to represent the subformulas */
   FormulaID current_index(0);
 
   _number_of_formulas = _subformulas.size();
@@ -189,6 +97,7 @@ void Solver::_initialize()
     if (f == _formula)
       _start_index = current_index;
 
+	// TODO: 0 may not be a good default value as an ID even though it's unused
     FormulaID lhs(0), rhs(0);
     FormulaPtr left = nullptr, right = nullptr;
 
@@ -227,18 +136,17 @@ void Solver::_initialize()
 
     if (left)
       lhs = FormulaID(static_cast<uint64_t>(
-        std::lower_bound(_subformulas.begin(), _subformulas.end(), left,
-                         compareFunc) -
-        _subformulas.begin()));
+        std::lower_bound(_subformulas.begin(), _subformulas.end(), left, formula_ordering_func) -
+		_subformulas.begin()));
     if (right)
       rhs = FormulaID(static_cast<uint64_t>(
-        std::lower_bound(_subformulas.begin(), _subformulas.end(), right,
-                         compareFunc) -
+        std::lower_bound(_subformulas.begin(), _subformulas.end(), right, formula_ordering_func) -
         _subformulas.begin()));
 
     _add_formula_for_position(f, current_index++, lhs, rhs);
   }
 
+  /* Generate every possible eventualities beforehand and the look-up tables */
   format::debug("Generating eventualities...");
   _fw_eventualities_lut =
     std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
@@ -254,7 +162,7 @@ void Solver::_initialize()
     }
   }
 
-  std::sort(eventualities.begin(), eventualities.end(), compareFunc);
+  std::sort(eventualities.begin(), eventualities.end(), formula_ordering_func);
   last = std::unique(eventualities.begin(), eventualities.end());
   eventualities.erase(last, eventualities.end());
 
@@ -262,7 +170,7 @@ void Solver::_initialize()
   for (uint64_t i = 0; i < eventualities.size(); ++i) {
     uint64_t position = static_cast<uint64_t>(
       std::lower_bound(_subformulas.begin(), _subformulas.end(),
-                       eventualities[i], compareFunc) -
+                       eventualities[i], formula_ordering_func) -
       _subformulas.begin());
     _fw_eventualities_lut[position] = FormulaID(i);
     _bw_eventualities_lut[i] = FormulaID(position);
@@ -270,6 +178,7 @@ void Solver::_initialize()
 
   format::debug("Found {} eventualities", eventualities.size());
 
+  /* We are now ready to start the computation */
   _has_eventually = _bitset.eventually.any();
   _has_until = _bitset.until.any();
   _has_not_until = _bitset.not_until.any();
@@ -281,9 +190,8 @@ void Solver::_initialize()
   format::debug("Solver initialized!");
 }
 
-void Solver::_add_formula_for_position(const FormulaPtr &formula,
-                                       FormulaID position, FormulaID lhs,
-                                       FormulaID rhs)
+// TODO: The logic in this can be simplified
+void Solver::_add_formula_for_position(const FormulaPtr &formula, FormulaID position, FormulaID lhs, FormulaID rhs)
 {
   switch (formula->type()) {
     case Formula::Type::Atom:
@@ -463,12 +371,7 @@ loop:
         _result = Result::SATISFIABLE;
         _loop_state = frame.chain->id;
 
-        format::debug("Total frames: {}", _stats.total_frames);
-        format::debug("Maximum model size: {}", _stats.maximum_model_size);
-        format::debug("Maximum depth: {}", _stats.maximum_frames);
-        format::debug("Cross by contradiction: {}",
-                      _stats.cross_by_contradiction);
-        format::debug("Cross by prune: {}", _stats.cross_by_prune);
+		_print_stats();
 
         return _result;
       }
@@ -563,12 +466,7 @@ loop:
       _result = Result::SATISFIABLE;
       _state = State::PAUSED;
 
-      format::debug("Total frames: {}", _stats.total_frames);
-      format::debug("Maximum model size: {}", _stats.maximum_model_size);
-      format::debug("Maximum depth: {}", _stats.maximum_frames);
-      format::debug("Cross by contradiction: {}",
-                    _stats.cross_by_contradiction);
-      format::debug("Cross by prune: {}", _stats.cross_by_prune);
+	  _print_stats();
 
       return _result;
     }
@@ -614,11 +512,7 @@ loop:
   if (_result == Result::UNDEFINED)
     _result = Result::UNSATISFIABLE;
 
-  format::debug("Total frames: {}", _stats.total_frames);
-  format::debug("Maximum model size: {}", _stats.maximum_model_size);
-  format::debug("Maximum depth: {}", _stats.maximum_frames);
-  format::debug("Cross by contradiction: {}", _stats.cross_by_contradiction);
-  format::debug("Cross by prune: {}", _stats.cross_by_prune);
+  _print_stats();
 
   return _result;
 }
@@ -655,25 +549,24 @@ void Solver::_update_history()
   top_frame.first = &top_frame;
 }
 
-std::tuple<bool, FrameID> Solver::_check_loop_rule() const
+std::pair<bool, FrameID> Solver::_check_loop_rule() const
 {
   const Frame &top_frame = _stack.top();
   const FrameID first_frame_id = top_frame.first->id;
 
   if (top_frame.first == &top_frame)
-    return std::tuple<bool, FrameID>{false, FrameID(0)};
+    return std::make_pair(false, FrameID(0));
 
   bool ret =
     std::all_of(top_frame.eventualities.begin(), top_frame.eventualities.end(),
-                [first_frame_id](const Eventuality &ev) {
+                [first_frame_id](Eventuality ev) {
                   return ev.is_not_requested() ||
                          (ev.is_satisfied() && ev.id() > first_frame_id);
                 });
 
-  return std::tuple<bool, FrameID>{ret, first_frame_id};
+  return std::make_pair(ret, first_frame_id);
 }
 
-// TODO: Remove const& from lambdas
 bool Solver::_check_prune0_rule() const
 {
   const Frame &top_frame = _stack.top();
@@ -685,7 +578,7 @@ bool Solver::_check_prune0_rule() const
   return !top_frame.eventualities.empty() &&
          std::none_of(top_frame.eventualities.begin(),
                       top_frame.eventualities.end(),
-                      [&, prev_frame_id](const Eventuality &ev) {
+                      [&, prev_frame_id](Eventuality ev) {
                         if (ev.is_not_requested() || ev.is_not_satisfied())
                           return false;
 
@@ -703,7 +596,7 @@ bool Solver::_check_prune_rule() const
   uint64_t i = 0;
   return std::all_of(
     top_frame.eventualities.begin(), top_frame.eventualities.end(),
-    [&top_frame, &i](const Eventuality &ev) {
+    [&top_frame, &i](Eventuality ev) {
       if (ev.is_not_requested() || ev.is_not_satisfied() ||
           ev.id() <= top_frame.prev->id) {
         ++i;
@@ -715,18 +608,6 @@ bool Solver::_check_prune_rule() const
       ++i;
       return ret;
     });
-}
-
-bool Solver::_check_my_prune() const
-{
-  const Frame &top_frame = _stack.top();
-
-  if (top_frame.prev == &top_frame)
-    return false;
-
-  return std::any_of(
-    top_frame.eventualities.begin(), top_frame.eventualities.end(),
-    [](const Eventuality &ev) { return ev.is_not_satisfied(); });
 }
 
 // This is probably not updating the solver stats correctly (what happens when
@@ -758,20 +639,10 @@ void Solver::_rollback_to_latest_choice()
           assert(_lhs[top.choosen_formula + 2] == top.choosen_formula);
         }
       }
-      else if (_bitset.not_until[top.choosen_formula])  // TODO: Negation are
-                                                       // not always in the + 1
-                                                       // position
+      else if (_bitset.not_until[top.choosen_formula])
       {
         new_frame.formulas[_rhs[top.choosen_formula]] = true;
         if (_bitset.tomorrow[top.choosen_formula + 1]) {
-		  /*
-          new_frame.formulas[top.choosenFormula + 1] = true;
-		  PrettyPrinter p;
-		  format::verbose("choosen: {}", p.to_string(_subformulas[top.choosenFormula]));
-		  format::verbose("next: {}", p.to_string(_subformulas[top.choosenFormula + 1]));
-		  format::verbose("next next: {}", p.to_string(_subformulas[top.choosenFormula + 2]));
-          assert(_lhs[top.choosenFormula + 1] == top.choosenFormula);
-		  */
 			if (_lhs[top.choosen_formula + 1] == top.choosen_formula)
 				new_frame.formulas[top.choosen_formula + 1] = true;
 			else
@@ -795,7 +666,6 @@ void Solver::_rollback_to_latest_choice()
   }
 }
 
-// TODO: This crash when the formula simplifies to True
 ModelPtr Solver::model()
 {
   if (_state != State::PAUSED)
@@ -845,6 +715,16 @@ FormulaPtr inline Solver::Formula() const
   return _formula;
 }
 
+void Solver::_print_stats() const
+{
+	format::debug("Total frames: {}", _stats.total_frames);
+	format::debug("Maximum model size: {}", _stats.maximum_model_size);
+	format::debug("Maximum depth: {}", _stats.maximum_frames);
+	format::debug("Cross by contradiction: {}",
+				  _stats.cross_by_contradiction);
+	format::debug("Cross by prune: {}", _stats.cross_by_prune);
+}
+
 void Solver::__dump_current_formulas() const
 {
   PrettyPrinter p;
@@ -873,9 +753,107 @@ void Solver::__dump_eventualities(FrameID id) const
   }
 
   for (uint64_t i = 0; i < _bw_eventualities_lut.size(); ++i)
-    format::verbose(
-      "{} : {}", _subformulas[_bw_eventualities_lut[i]],
-      static_cast<uint64_t>(Container(_stack)[id].eventualities[i].id()));
+	  format::verbose(
+		  "{} : {}", _subformulas[_bw_eventualities_lut[i]],
+		  static_cast<uint64_t>(Container(_stack)[id].eventualities[i].id()));
 }
+
+static bool formula_ordering_func(const FormulaPtr& a, const FormulaPtr& b)
+{
+	if (isa<Atom>(a) && isa<Atom>(b))
+		return std::lexicographical_compare(fast_cast<Atom>(a)->name().begin(),
+											fast_cast<Atom>(a)->name().end(),
+											fast_cast<Atom>(b)->name().begin(),
+											fast_cast<Atom>(b)->name().end());
+
+	if (isa<Negation>(a) && isa<Negation>(b))
+		return formula_ordering_func(fast_cast<Negation>(a)->formula(),
+									 fast_cast<Negation>(b)->formula());
+
+	if (isa<Negation>(a))
+	{
+		if (fast_cast<Negation>(a)->formula() == b)
+			return false;
+
+		return formula_ordering_func(fast_cast<Negation>(a)->formula(), b);
+	}
+
+	if (isa<Negation>(b))
+	{
+		if (fast_cast<Negation>(b)->formula() == a)
+			return true;
+
+		return formula_ordering_func(a, fast_cast<Negation>(b)->formula());
+	}
+
+	if (isa<Tomorrow>(a) && isa<Tomorrow>(b))
+		return formula_ordering_func(fast_cast<Tomorrow>(a)->formula(),
+									 fast_cast<Tomorrow>(b)->formula());
+
+	if (isa<Tomorrow>(a))
+	{
+		if (fast_cast<Tomorrow>(a)->formula() == b)
+			return false;
+
+		return formula_ordering_func(fast_cast<Tomorrow>(a)->formula(), b);
+	}
+
+	if (isa<Tomorrow>(b))
+	{
+		if (fast_cast<Tomorrow>(b)->formula() == a)
+			return true;
+
+		return formula_ordering_func(a, fast_cast<Tomorrow>(b)->formula());
+	}
+
+	if (isa<Always>(a) && isa<Always>(b))
+		return formula_ordering_func(fast_cast<Always>(a)->formula(),
+									 fast_cast<Always>(b)->formula());
+
+	if (isa<Eventually>(a) && isa<Eventually>(b))
+		return formula_ordering_func(fast_cast<Eventually>(a)->formula(),
+									 fast_cast<Eventually>(b)->formula());
+
+	if (isa<Conjunction>(a) && isa<Conjunction>(b))
+	{
+		if (fast_cast<Conjunction>(a)->left() !=
+			fast_cast<Conjunction>(b)->left())
+			return formula_ordering_func(fast_cast<Conjunction>(a)->left(),
+										 fast_cast<Conjunction>(b)->left());
+		else
+			return formula_ordering_func(fast_cast<Conjunction>(a)->right(),
+										 fast_cast<Conjunction>(b)->right());
+	}
+
+	if (isa<Disjunction>(a) && isa<Disjunction>(b))
+	{
+		if (fast_cast<Disjunction>(a)->left() !=
+			fast_cast<Disjunction>(b)->left())
+			return formula_ordering_func(fast_cast<Disjunction>(a)->left(),
+										 fast_cast<Disjunction>(b)->left());
+		else
+			return formula_ordering_func(fast_cast<Disjunction>(a)->right(),
+										 fast_cast<Disjunction>(b)->right());
+	}
+
+	if (isa<Until>(a) && isa<Until>(b))
+	{
+		if (fast_cast<Until>(a)->left() != fast_cast<Until>(b)->left())
+			return formula_ordering_func(fast_cast<Until>(a)->left(),
+										 fast_cast<Until>(b)->left());
+		else
+			return formula_ordering_func(fast_cast<Until>(a)->right(),
+										 fast_cast<Until>(b)->right());
+	}
+
+	if (isa<Then>(a) || isa<Then>(b))
+		assert(false);
+
+	if (isa<Iff>(a) && isa<Iff>(b))
+		assert(false);
+
+	return a->type() < b->type();
+}
+
 }
 }

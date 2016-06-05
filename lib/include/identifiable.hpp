@@ -35,17 +35,6 @@ public:
   }
 
   inline constexpr operator size_t() const { return static_cast<size_t>(_id); }
-  /*
-  inline constexpr operator unsigned long() const
-  {
-          return static_cast<unsigned long>(_id);
-  }
-
-  inline constexpr operator unsigned long long() const
-  {
-          return static_cast<unsigned long long>(_id);
-  }
-  */
 
   inline constexpr friend bool operator==(const Derived &d1, const Derived &d2)
   {
