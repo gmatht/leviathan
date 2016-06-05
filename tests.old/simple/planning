@@ -1,1 +1,0 @@
-ata & (!atb) & (F atb) & G(goab -> ata) & G(goba -> atb) & G((X ata) <-> ((ata & !goab) | goba)) & G((X atb) <-> ((atb & !goba) | goab))

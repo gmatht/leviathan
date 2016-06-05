@@ -1,1 +1,0 @@
-a & G(a <-> X!a) & GFb1 & GFb2 & G(b1 -> !a) & G(b2 -> !a) & G!(b1 & b2)
