@@ -23,9 +23,3 @@
     - http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes
   * Let the user choose the application order of the tableaux rules
   * Investigate caching of common crossed subtrees
-
-- *Testing and benchmarking*: To have scientifically valid and reproducible 
-  results to present in the paper.
-  * Setup the tool on StarExec
-  * Eventually add other tools and other benchmark sets to StarExec
-  * Setup a compact rendering of benchmark results
