@@ -16,10 +16,29 @@ Moreover several command line options are present:
 * **-l** or **--ltl** let the user specify the formula directly on the command line
 * **-m** or **--model** generates and prints a model of the formula, if any
 * **-p** or **--parsable** generates machine-parsable output
-* **-v \<0-5>** or **--verbose \<0-5>** specifies the verbosity of the output
 * **--maximum-depth** specifies the maximum depth of the tableau (and therefore the maximum size of the model)
+* **-v \<0-5>** or **--verbose \<0-5>** specifies the verbosity of the output
 * **--version** prints the current version of the tool
 * **-h** or **--help** displays the usage message
+
+### Usage example
+
+The following sample:
+> ./checker.exe --ltl "G (req => X grant) & req" --model
+
+Outputs the following answer:
+> The formula is satisfiable!<br>
+> The following model was found:<br>
+> State 0:<br>
+> req<br>
+> State 1:<br>
+> grant, !req<br>
+> State 2:<br>
+> !req<br>
+> Loops to state 2
+
+While with the addition of the parsable flag the output is the following:
+> SAT;{req} -> {grant,!req} -> {!req} -> #2
 
 ### Compatibility
 
