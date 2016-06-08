@@ -43,8 +43,9 @@ For the complete license see the provided [LICENSE](https://github.com/Corralx/l
 ## Thanks
 
 Several open-source third-party libraries are currently used in this project:
-* [Boost](https://www.libsdl.org/index.php) for the dynamic bitset and pool allocator
+* [Boost](http://www.boost.org/) for the dynamic bitset and pool allocator
 * [Optional](https://github.com/akrzemi1/Optional) std::optional implementation for C++11
 * [cppformat](https://github.com/fmtlib/fmt) to format the output
 * [tclap](http://tclap.sourceforge.net/) to parse the command line arguments
+* [flexc++](https://fbb-git.github.io/flexcpp/) and [bisonc++](https://fbb-git.github.io/bisoncpp/) as the parser generators
 
