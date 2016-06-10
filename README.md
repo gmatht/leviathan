@@ -7,6 +7,8 @@
 
 Leviathan is an implementation of a tableau method for [LTL](https://en.wikipedia.org/wiki/Linear_temporal_logic) satisfiability checking based on the paper "A new rule for a traditional tree-style LTL tableau" by [Mark Reynolds](http://www.csse.uwa.edu.au/~mark/research/Online/ltlsattab.html).
 
+This work has been accepted for publication at [IJCAI-16](http://ijcai-16.org/index.php/welcome/view/home) and a preprint can be found [here](http://corralx.me/public/leviathan_preprint.pdf).
+
 ### Usage
 
 Just call the tool passing the path to a file which contains the formulas to check. The parser is very flexible and supports every common LTL syntax used in other tools. Every line of the file is treated as an independent formula, so more than one formula at a time can be checked.
