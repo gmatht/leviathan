@@ -14,68 +14,47 @@
  permission.
  */
 
+
 #ifndef PARSER_H_
 #define PARSER_H_
 
-#include <istream>
-#include <ostream>
-#include <cassert>
-#include <cctype>
+#include "formula.hpp"
+#include "lex.h"
 
-#include <optional.hpp>
+#include <istream>
+#include <functional>
 
 namespace LTL {
 namespace detail {
 
-using std::experimental::optional;
-using std::experimental::make_optional;
-using std::experimental::nullopt;
+class Parser
+{
 
-struct Token {
-  enum TokenType {
-    Atom,
-    LParen,
-    RParen,
-    Not,
-    And,
-    Or,
-    Implies,
-    Iff,
-    Tomorrow,
-    Until,
-    Release,
-    Always,
-    Eventually,
-    Yesterday,
-    Since,
-    Triggered,
-    Past,
-    Historically
-  };
+  Parser(std::istream &stream, std::function<void(std::string)> error)
+    : _lex(stream), _error(error)
+  {
+    _lex.get();
+  }
 
-  Token(TokenType t) : type(t) {}
-  Token(std::string a) : type(TokenType::Atom), atom(std::move(a)) {}
-  TokenType type;
-  optional<std::string> atom = nullopt;
-};
+  FormulaPtr parseFormula();
 
-class Lexer {
-public:
-  explicit Lexer(std::istream &stream) : _stream(stream) {}
-  optional<Token> get() { return _token = _lex(); }
-  optional<Token> peek() const { return _token; }
 private:
-  optional<Token> _lex();
+  optional<Token> peek(Token::Type, std::string const&err);
+  optional<Token> consume(Token::Type, std::string const&err);
+  FormulaPtr error(std::string const&s);
 
-  optional<Token> _token = nullopt;
-  std::istream &_stream;
+
+  FormulaPtr parseAtom();
+  FormulaPtr parseParens();
+  FormulaPtr parsePrimary();
+
+private:
+  Lexer _lex;
+  std::function<void(std::string)> _error;
 };
 
-std::ostream &operator<<(std::ostream &s, Token const &t);
-}
 
-using detail::Lexer;
-using detail::Token;
-}
+} // namespace detail
+} // namespace LTL
 
-#endif
+#endif // PARSER_H_

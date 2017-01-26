@@ -29,6 +29,7 @@ set (
   src/parser/lex.cc
   src/parser/parse.cc
   src/parser/parser.cpp
+  src/new_parser/lex.cpp
   src/new_parser/parser.cpp
   src/format.cpp
 )
@@ -87,7 +88,7 @@ set(
   CLANG_WARNINGS -Weverything -pedantic -Werror
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
   -Wno-padded -Wno-weak-vtables -Wno-unknown-pragmas
-  -Wno-exit-time-destructors
+  -Wno-exit-time-destructors -Wno-switch-enum
 )
 
 set(
