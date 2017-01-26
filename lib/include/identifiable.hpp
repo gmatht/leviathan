@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include <limits>
+#include <ostream>
 
 namespace LTL {
 namespace detail {
