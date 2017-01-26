@@ -16,11 +16,9 @@
 
 #include "leviathan.hpp"
 
-#include <algorithm>
 #include <fstream>
 #include <limits>
 #include <string>
-#include <utility>
 #include <vector>
 
 #ifdef _MSC_VER
@@ -120,7 +118,7 @@ static TCLAP::SwitchArg test(
 
 static TCLAP::ValueArg<format::LogLevel> verbosity(
   "v", "verbosity",
-  "The level of verbosity of solver's output."
+  "The level of verbosity of solver's output. "
   "The higher the value, the more verbose the output will be. A verbosity of "
   "zero means total silence, even for error messages. Five or higher means "
   "total annoyance.",
@@ -239,7 +237,7 @@ int main(int argc, char *argv[])
   // Setup the verbosity first of all
   format::set_verbosity_level(verbosity.getValue());
 
-  format::verbose("Verbose message. I told you this would be very verbose.");
+  // format::verbose("Verbose message. I told you this would be very verbose.");
 
   // Begin to process inputs
   if (ltl.isSet())

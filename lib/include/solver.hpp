@@ -1,3 +1,20 @@
+/*
+Copyright (c) 2014, Matteo Bertello
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+* The names of its contributors may not be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+*/
+
+
 #pragma once
 
 #include "boost/pool/pool_alloc.hpp"
@@ -105,13 +122,15 @@ private:
 		Bitset disjunction;
 		Bitset until;
 		Bitset not_until;
+
+		/* This is used to do computations avoiding allocations */
 		Bitset temporary;
 	} _bitset;
 
 	std::vector<FormulaID> _lhs;
 	std::vector<FormulaID> _rhs;
 	std::unordered_map<FormulaID, std::string> _atom_set;
-	std::vector<uint64_t> _clause_size;
+	
 	std::vector<FormulaID> _fw_eventualities_lut;
 	std::vector<FormulaID> _bw_eventualities_lut;
 
@@ -129,7 +148,6 @@ private:
 	bool _has_not_until;
 
 	void _initialize();
-
 	void _add_formula_for_position(const FormulaPtr& formula, FormulaID position, FormulaID lhs, FormulaID rhs);
 
 	inline bool _check_contradiction_rule();
@@ -144,10 +162,12 @@ private:
 	inline void _update_eventualities_satisfaction();
 	inline void _update_history();
 
-	inline std::tuple<bool, FrameID> _check_loop_rule() const;
+	inline std::pair<bool, FrameID> _check_loop_rule() const;
 	inline bool _check_prune0_rule() const;
 	inline bool _check_prune_rule() const;
 	inline bool _check_my_prune() const;
+
+	void _print_stats() const;
 
 	void __dump_current_formulas() const;
 	void __dump_current_eventualities() const;

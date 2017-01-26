@@ -20,7 +20,6 @@
 #include "boost/pool/pool_alloc.hpp"
 #include "identifiable.hpp"
 
-#include <memory>
 #include <cstdint>
 
 namespace LTL {
@@ -60,11 +59,11 @@ struct Frame {
   Bitset to_process;
   Eventualities eventualities;
   FrameID id;
-  FormulaID choosenFormula;
-  Frame *chain;
-  Type type;
-  Frame* prev;
+  FormulaID choosen_formula;
+  Frame* chain;
   Frame* first;
+  Frame* prev;
+  Type type;
 
   // Builds a frame with a single formula in it (represented by the index in
   // the table) -> Start of the process
@@ -74,11 +73,11 @@ struct Frame {
       to_process(number_of_formulas),
       eventualities(number_of_eventualities),
       id(_id),
-      choosenFormula(FormulaID::max()),
+      choosen_formula(FormulaID::max()),
       chain(nullptr),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
     formulas.set(_formula);
     to_process.set();
@@ -92,11 +91,11 @@ struct Frame {
       eventualities(_frame.eventualities,
                     _frame.eventualities.get_allocator()),
       id(_frame.id),
-      choosenFormula(FormulaID::max()),
+      choosen_formula(FormulaID::max()),
       chain(_frame.chain),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
   }
 
@@ -108,11 +107,11 @@ struct Frame {
       to_process(number_of_formulas),
       eventualities(_eventualities, _eventualities.get_allocator()),
       id(_id),
-      choosenFormula(FormulaID::max()),
+      choosen_formula(FormulaID::max()),
       chain(chainPtr),
-      type(UNKNOWN),
+	  first(nullptr),
 	  prev(nullptr),
-	  first(nullptr)
+      type(UNKNOWN)
   {
     to_process.set();
 	// TODO: Check if this is needed when we don't generate eventualities beforehand
