@@ -45,7 +45,7 @@
 #pragma GCC diagnostic pop
 
 #include <sstream>
-#include "parser.h"
+#include "lex.h"
 
 /*
  Rework the driver program.
@@ -102,9 +102,9 @@ static TCLAP::ValueArg<std::string> ltl(
   "The LTL formula to solve, provided directly on the command line", false, "",
   "LTL formula");
 
-static TCLAP::ValueArg<std::string> parser("n", "new-parser",
-                                           "Test the new parser", false, "",
-                                           "LTL formula");
+static TCLAP::ValueArg<std::string> parser(
+  "n", "new-parser",
+  "Test the new parser", false, "", "LTL formula");
 
 static TCLAP::SwitchArg model(
   "m", "model",
@@ -245,20 +245,19 @@ int main(int argc, char *argv[])
   // Setup the verbosity first of all
   format::set_verbosity_level(verbosity.getValue());
 
-  // format::verbose("Verbose message. I told you this would be very
-  // verbose.");
+  // format::verbose("Verbose message. I told you this would be very verbose.");
 
   // Begin to process inputs
   if (ltl.isSet()) {
     solve(ltl.getValue(), 1);
-  }
-  else if (parser.isSet()) {
+  } else if(parser.isSet())
+  {
     std::stringstream s(parser.getValue());
 
     LTL::Lexer l{s};
 
     optional<LTL::Token> t;
-    while ((t = l.get())) {
+    while((t = l.get())) {
       std::cout << *t << "\n";
     }
   }

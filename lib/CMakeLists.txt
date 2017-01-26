@@ -29,6 +29,7 @@ set (
   src/parser/lex.cc
   src/parser/parse.cc
   src/parser/parser.cpp
+  src/new_parser/lex.cpp
   src/new_parser/parser.cpp
   src/format.cpp
 )
