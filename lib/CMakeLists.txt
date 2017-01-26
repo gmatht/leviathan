@@ -29,6 +29,7 @@ set (
   src/parser/lex.cc
   src/parser/parse.cc
   src/parser/parser.cpp
+  src/new_parser/parser.cpp
   src/format.cpp
 )
 
@@ -57,6 +58,7 @@ target_include_directories(
   PRIVATE src/
   PUBLIC
     include/
+    src/new_parser/
     "${CPPUTILS_HEADERS}"
     "${TCLAP_HEADERS}"
     "${STDOPTIONAL_HEADERS}"
@@ -85,6 +87,7 @@ set(
   CLANG_WARNINGS -Weverything -pedantic -Werror
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
   -Wno-padded -Wno-weak-vtables -Wno-unknown-pragmas
+  -Wno-exit-time-destructors
 )
 
 set(
