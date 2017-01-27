@@ -27,7 +27,7 @@ Solver::Solver(FormulaPtr formula, FrameID maximum_depth)
     _stats(),
     _has_eventually(true),
     _has_until(true),
-    _has_not_until(true)
+    _has_release(true)
 {
   _initialize();
 }
@@ -82,12 +82,15 @@ void Solver::_initialize()
   _bitset.atom.resize(_number_of_formulas);
   _bitset.negation.resize(_number_of_formulas);
   _bitset.tomorrow.resize(_number_of_formulas);
+  _bitset.yesterday.resize(_number_of_formulas);
   _bitset.always.resize(_number_of_formulas);
   _bitset.eventually.resize(_number_of_formulas);
   _bitset.conjunction.resize(_number_of_formulas);
   _bitset.disjunction.resize(_number_of_formulas);
   _bitset.until.resize(_number_of_formulas);
-  _bitset.not_until.resize(_number_of_formulas);
+  _bitset.release.resize(_number_of_formulas);
+  _bitset.since.resize(_number_of_formulas);
+  _bitset.triggered.resize(_number_of_formulas);
   _bitset.temporary.resize(_number_of_formulas);
 
   _lhs = std::vector<FormulaID>(_number_of_formulas, FormulaID::max());
@@ -156,7 +159,7 @@ void Solver::_initialize()
       eventualities.push_back(_subformulas[_lhs[i]]);
     else if (_bitset.until[i])
       eventualities.push_back(_subformulas[_rhs[i]]);
-    else if (_bitset.not_until[i]) {
+    else if (_bitset.release[i]) {
       eventualities.push_back(_subformulas[_lhs[i]]);
       eventualities.push_back(_subformulas[_rhs[i]]);
     }
@@ -181,7 +184,7 @@ void Solver::_initialize()
   /* We are now ready to start the computation */
   _has_eventually = _bitset.eventually.any();
   _has_until = _bitset.until.any();
-  _has_not_until = _bitset.not_until.any();
+  _has_release = _bitset.release.any();
 
   _stack.push(Frame(FrameID(0), _start_index, _number_of_formulas,
                     _bw_eventualities_lut.size()));
@@ -201,7 +204,7 @@ void Solver::_add_formula_for_position(const FormulaPtr &formula, FormulaID posi
 
     case Formula::Type::Negation:
       if (isa<Until>(fast_cast<Negation>(formula)->formula())) {
-        _bitset.not_until[position] = true;
+        _bitset.release[position] = true;
         _lhs[position] = lhs;
         _rhs[position] = rhs;
         break;
@@ -212,6 +215,11 @@ void Solver::_add_formula_for_position(const FormulaPtr &formula, FormulaID posi
 
     case Formula::Type::Tomorrow:
       _bitset.tomorrow[position] = true;
+      _lhs[position] = lhs;
+      break;
+
+    case Formula::Type::Yesterday:
+      _bitset.yesterday[position] = true;
       _lhs[position] = lhs;
       break;
 
@@ -239,6 +247,36 @@ void Solver::_add_formula_for_position(const FormulaPtr &formula, FormulaID posi
 
     case Formula::Type::Until:
       _bitset.until[position] = true;
+      _lhs[position] = lhs;
+      _rhs[position] = rhs;
+      break;
+
+    case Formula::Type::Release:
+      _bitset.release[position] = true;
+      _lhs[position] = lhs;
+      _rhs[position] = rhs;
+      break;
+
+    case Formula::Type::Since:
+      _bitset.since[position] = true;
+      _lhs[position] = lhs;
+      _rhs[position] = rhs;
+      break;
+
+    case Formula::Type::Triggered:
+      _bitset.triggered[position] = true;
+      _lhs[position] = lhs;
+      _rhs[position] = rhs;
+      break;
+
+    case Formula::Type::Past:
+      _bitset.past[position] = true;
+      _lhs[position] = lhs;
+      _rhs[position] = rhs;
+      break;
+
+    case Formula::Type::Historically:
+      _bitset.historically[position] = true;
       _lhs[position] = lhs;
       _rhs[position] = rhs;
       break;
@@ -343,7 +381,7 @@ bool Solver::_apply_always_rule()
 APPLY_RULE(disjunction)
 APPLY_RULE(eventually)
 APPLY_RULE(until)
-APPLY_RULE(not_until)
+APPLY_RULE(release)
 
 #undef APPLY_RULE
 
@@ -437,7 +475,7 @@ loop:
         goto loop;
       }
 
-      if (_has_not_until && _apply_not_until_rule())
+      if (_has_release && _apply_release_rule())
 	  {
         Frame new_frame(frame);
         new_frame.formulas[_lhs[frame.choosen_formula]] = true;
@@ -639,7 +677,7 @@ void Solver::_rollback_to_latest_choice()
           assert(_lhs[top.choosen_formula + 2] == top.choosen_formula);
         }
       }
-      else if (_bitset.not_until[top.choosen_formula])
+      else if (_bitset.release[top.choosen_formula])
       {
         new_frame.formulas[_rhs[top.choosen_formula]] = true;
         if (_bitset.tomorrow[top.choosen_formula + 1]) {

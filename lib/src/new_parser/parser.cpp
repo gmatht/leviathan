@@ -15,18 +15,35 @@
  */
 
 #include "parser.h"
-
+#include "lex.h"
 
 namespace LTL {
 namespace detail {
 
+namespace {
+  //constexpr int[Token::NumberOfTokenTypes] precedence = {
+
+  //}
+}
+
+optional<Token> Parser::peek() {
+  return _lex.peek();
+}
+
 optional<Token> Parser::peek(Token::Type t, std::string const&err) {
-  auto tok = _lex.peek();
-  if(!tok || tok->type != t) {
+  auto tok = peek();
+  if(!tok || tok->type == t) {
     _error("Expected " + err);
     return nullopt;
   }
 
+  return tok;
+}
+
+optional<Token> Parser::consume() {
+  auto tok = peek();
+  if(tok)
+    _lex.get();
   return tok;
 }
 
@@ -42,19 +59,49 @@ FormulaPtr Parser::error(std::string const&s) {
   return nullptr;
 }
 
-
 FormulaPtr Parser::parseAtom() {
-  auto tok = consume(Token::Atom, "atom");
+  assert(peek() && peek()->type == Token::Atom);
 
-  if(!tok)
-    return nullptr;
+  auto tok = consume(); // Assume we are at an atom
+
+  assert(tok);
 
   return make_atom(*tok->atom);
 }
 
+FormulaPtr Parser::parseUnary() {
+  assert(peek() && peek()->type >=
+         Token::FirstUnaryOp && peek()->type <= Token::LastUnaryOp);
+
+  auto tok = consume(); // consume unary op
+
+  FormulaPtr formula = parsePrimary();
+  switch(tok->type) {
+    case Token::Not:
+      return make_negation(formula);
+    case Token::Tomorrow:
+      return make_tomorrow(formula);
+    case Token::Yesterday:
+      return make_yesterday(formula);
+    case Token::Always:
+      return make_always(formula);
+    case Token::Eventually:
+      return make_eventually(formula);
+    case Token::Past:
+      return make_past(formula);
+    case Token::Historically:
+      return make_historically(formula);
+    default:
+      break;
+  }
+
+  assert(false && "Unknown unary operator!");
+}
+
 FormulaPtr Parser::parseParens() {
-  if(!consume(Token::LParen, "'('"))
-    return nullptr;
+  assert(peek() && peek()->type == Token::LParen);
+
+  consume(); // Consume LParen ')'
 
   FormulaPtr formula = parseFormula();
   if(!formula)
@@ -67,17 +114,18 @@ FormulaPtr Parser::parseParens() {
 }
 
 FormulaPtr Parser::parsePrimary() {
-  if(!_lex.peek())
+  if(!peek())
     return nullptr;
 
-  switch(_lex.peek()->type) {
-    case Token::Atom:
-      return parseAtom();
-    case Token::LParen:
-      return parseParens();
-    default:
-      return error("Expected formula");
-  }
+  Token::Type t = peek()->type;
+  if(t == Token::Atom)
+    return parseAtom();
+  if(t >= Token::FirstUnaryOp && t <= Token::LastUnaryOp)
+    return parseUnary();
+  if(t == Token::LParen)
+    return parseParens();
+
+  return error("Expected formula");
 }
 
 }

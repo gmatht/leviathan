@@ -39,14 +39,18 @@ class Parser
   FormulaPtr parseFormula();
 
 private:
+  optional<Token> peek();
+  optional<Token> consume();
   optional<Token> peek(Token::Type, std::string const&err);
   optional<Token> consume(Token::Type, std::string const&err);
   FormulaPtr error(std::string const&s);
 
 
   FormulaPtr parseAtom();
+  FormulaPtr parseUnary();
   FormulaPtr parseParens();
   FormulaPtr parsePrimary();
+
 
 private:
   Lexer _lex;

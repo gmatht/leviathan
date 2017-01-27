@@ -66,14 +66,20 @@ void PrettyPrinter::visit(const Atom *atom)
 
 UNARY_VISIT(Negation, u8"\u00AC")
 UNARY_VISIT(Tomorrow, u8"\u25CB")
+UNARY_VISIT(Yesterday, u8"Y")
 UNARY_VISIT(Always, u8"\u25A1")
 UNARY_VISIT(Eventually, u8"\u25C7")
+UNARY_VISIT(Past, u8"P")
+UNARY_VISIT(Historically, u8"H")
 
 BINARY_VISIT(Conjunction, u8"\u2227")
 BINARY_VISIT(Disjunction, u8"\u2228")
 BINARY_VISIT(Then, u8"\u2192")
 BINARY_VISIT(Iff, u8"\u2194")
 BINARY_VISIT(Until, u8"\u222a")
+BINARY_VISIT(Release, u8"R")
+BINARY_VISIT(Since, u8"S")
+BINARY_VISIT(Triggered, u8"T")
 
 #undef UNARY_VISIT
 #undef BINARY_VISIT

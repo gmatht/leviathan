@@ -40,6 +40,7 @@ protected:
   virtual void visit(const Atom *atom) override;
   virtual void visit(const Negation *negation) override;
   virtual void visit(const Tomorrow *tomorrow) override;
+  virtual void visit(const Yesterday *yesterdat) override;
   virtual void visit(const Always *always) override;
   virtual void visit(const Eventually *eventually) override;
   virtual void visit(const Conjunction *conjunction) override;
@@ -47,6 +48,11 @@ protected:
   virtual void visit(const Then *then) override;
   virtual void visit(const Iff *iff) override;
   virtual void visit(const Until *until) override;
+  virtual void visit(const Release *release) override;
+  virtual void visit(const Since *since) override;
+  virtual void visit(const Triggered *triggered) override;
+  virtual void visit(const Past *past) override;
+  virtual void visit(const Historically *historically) override;
 
 private:
   std::stringstream _stream;

@@ -116,12 +116,17 @@ private:
 		Bitset atom;
 		Bitset negation;
 		Bitset tomorrow;
+    Bitset yesterday;
 		Bitset always;
 		Bitset eventually;
 		Bitset conjunction;
 		Bitset disjunction;
 		Bitset until;
-		Bitset not_until;
+    Bitset release;
+    Bitset since;
+    Bitset triggered;
+    Bitset past;
+    Bitset historically;
 
 		/* This is used to do computations avoiding allocations */
 		Bitset temporary;
@@ -145,7 +150,7 @@ private:
 
 	bool _has_eventually;
 	bool _has_until;
-	bool _has_not_until;
+  bool _has_release;
 
 	void _initialize();
 	void _add_formula_for_position(const FormulaPtr& formula, FormulaID position, FormulaID lhs, FormulaID rhs);
@@ -156,7 +161,7 @@ private:
 	inline bool _apply_disjunction_rule();
 	inline bool _apply_eventually_rule();
 	inline bool _apply_until_rule();
-	inline bool _apply_not_until_rule();
+  inline bool _apply_release_rule();
 
 	inline void _rollback_to_latest_choice();
 	inline void _update_eventualities_satisfaction();

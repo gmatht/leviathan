@@ -34,13 +34,19 @@ public:
     Atom,
     Negation,
     Tomorrow,
+    Yesterday,
     Always,
     Eventually,
+    Past,
+    Historically,
     Conjunction,
     Disjunction,
     Then,
     Iff,
-    Until
+    Until,
+    Release,
+    Since,
+    Triggered
   };
 
   Formula() = delete;
@@ -146,14 +152,20 @@ AtomPtr make_atom(const std::string &name);
 
 DECLARE_UNARY(Negation, negation)
 DECLARE_UNARY(Tomorrow, tomorrow)
+DECLARE_UNARY(Yesterday, yesterday)
 DECLARE_UNARY(Always, always)
 DECLARE_UNARY(Eventually, eventually)
+DECLARE_UNARY(Past, past)
+DECLARE_UNARY(Historically, historically)
 
 DECLARE_BINARY(Conjunction, conjunction)
 DECLARE_BINARY(Disjunction, disjunction)
 DECLARE_BINARY(Then, then)
 DECLARE_BINARY(Iff, iff)
 DECLARE_BINARY(Until, until)
+DECLARE_BINARY(Release, release)
+DECLARE_BINARY(Since, since)
+DECLARE_BINARY(Triggered, triggered)
 
 #undef DECLARE_UNARY
 #undef DECLARE_BINARY

@@ -33,28 +33,41 @@ using std::experimental::nullopt;
 
 struct Token {
   enum Type {
-    Atom,
+    // Punctuation and atoms
+    Atom = 0,
     LParen,
     RParen,
-    Not,
+
+    // Binary operators and connectives
     And,
     Or,
     Implies,
     Iff,
-    Tomorrow,
     Until,
     Release,
+    Since,
+    Triggered,
+
+    // Unary operators and connectives
+    Not,
+    Tomorrow,
     Always,
     Eventually,
     Yesterday,
-    Since,
-    Triggered,
     Past,
-    Historically
+    Historically,
   };
+
+  static const int NumberOfTokenTypes = Historically + 1;
+  static const int FirstBinaryOp = And;
+  static const int LastBinaryOp = Triggered;
+  static const int FirstUnaryOp = Not;
+  static const int LastUnaryOp = Historically;
+
 
   Token(Type t) : type(t) {}
   Token(std::string a) : type(Type::Atom), atom(std::move(a)) {}
+
   Type type;
   optional<std::string> atom = nullopt;
 };

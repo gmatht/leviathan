@@ -73,6 +73,12 @@ void Generator::visit(const Tomorrow *t)
   t->formula()->accept(*this);
 }
 
+void Generator::visit(const Yesterday *)
+{
+  assert(false && "Unimplemented");
+}
+
+
 void Generator::visit(const Always *t)
 {
   _formulas.push_back(t->formula());
@@ -121,5 +127,31 @@ void Generator::visit(const Until *t)
   t->left()->accept(*this);
   t->right()->accept(*this);
 }
+
+void Generator::visit(const Release *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Generator::visit(const Since *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Generator::visit(const Triggered *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Generator::visit(const Past *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Generator::visit(const Historically *)
+{
+  assert(false && "Unimplemented");
+}
+
 }
 }

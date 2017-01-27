@@ -41,6 +41,7 @@ Visitor::~Visitor() = default;
 
 #define ACCEPT_VISITOR(_Type) \
   void _Type::accept(Visitor &v) const { v.visit(this); }
+
 TruePtr make_true()
 {
   return std::make_shared<True>();
@@ -58,20 +59,27 @@ AtomPtr make_atom(const std::string &name)
 
 MAKE_UNARY(Negation, negation)
 MAKE_UNARY(Tomorrow, tomorrow)
+MAKE_UNARY(Yesterday, yesterday)
 MAKE_UNARY(Always, always)
 MAKE_UNARY(Eventually, eventually)
+MAKE_UNARY(Past, past)
+MAKE_UNARY(Historically, historically)
 
 MAKE_BINARY(Conjunction, conjunction)
 MAKE_BINARY(Disjunction, disjunction)
 MAKE_BINARY(Then, then)
 MAKE_BINARY(Iff, iff)
 MAKE_BINARY(Until, until)
+MAKE_BINARY(Release, release)
+MAKE_BINARY(Since, since)
+MAKE_BINARY(Triggered, triggered)
 
 ACCEPT_VISITOR(True)
 ACCEPT_VISITOR(False)
 ACCEPT_VISITOR(Atom)
 ACCEPT_VISITOR(Negation)
 ACCEPT_VISITOR(Tomorrow)
+ACCEPT_VISITOR(Yesterday)
 ACCEPT_VISITOR(Always)
 ACCEPT_VISITOR(Eventually)
 ACCEPT_VISITOR(Conjunction)
@@ -79,6 +87,11 @@ ACCEPT_VISITOR(Disjunction)
 ACCEPT_VISITOR(Then)
 ACCEPT_VISITOR(Iff)
 ACCEPT_VISITOR(Until)
+ACCEPT_VISITOR(Release)
+ACCEPT_VISITOR(Since)
+ACCEPT_VISITOR(Triggered)
+ACCEPT_VISITOR(Past)
+ACCEPT_VISITOR(Historically)
 
 #undef MAKE_UNARY
 #undef MAKE_BINARY

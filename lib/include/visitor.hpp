@@ -28,6 +28,7 @@ class Visitor {
   friend class Atom;
   friend class Negation;
   friend class Tomorrow;
+  friend class Yesterday;
   friend class Always;
   friend class Eventually;
   friend class Conjunction;
@@ -35,20 +36,31 @@ class Visitor {
   friend class Then;
   friend class Iff;
   friend class Until;
+  friend class Release;
+  friend class Since;
+  friend class Triggered;
+  friend class Past;
+  friend class Historically;
 
 protected:
-  virtual void visit(const True *t) = 0;
-  virtual void visit(const False *f) = 0;
-  virtual void visit(const Atom *atom) = 0;
-  virtual void visit(const Negation *negation) = 0;
-  virtual void visit(const Tomorrow *tomorrow) = 0;
-  virtual void visit(const Always *always) = 0;
-  virtual void visit(const Eventually *eventually) = 0;
-  virtual void visit(const Conjunction *conjunction) = 0;
-  virtual void visit(const Disjunction *disjunction) = 0;
-  virtual void visit(const Then *then) = 0;
-  virtual void visit(const Iff *iff) = 0;
-  virtual void visit(const Until *until) = 0;
+  virtual void visit(const True         *) = 0;
+  virtual void visit(const False        *) = 0;
+  virtual void visit(const Atom         *) = 0;
+  virtual void visit(const Negation     *) = 0;
+  virtual void visit(const Tomorrow     *) = 0;
+  virtual void visit(const Yesterday    *) = 0;
+  virtual void visit(const Always       *) = 0;
+  virtual void visit(const Eventually   *) = 0;
+  virtual void visit(const Conjunction  *) = 0;
+  virtual void visit(const Disjunction  *) = 0;
+  virtual void visit(const Then         *) = 0;
+  virtual void visit(const Iff          *) = 0;
+  virtual void visit(const Until        *) = 0;
+  virtual void visit(const Release      *) = 0;
+  virtual void visit(const Since        *) = 0;
+  virtual void visit(const Triggered    *) = 0;
+  virtual void visit(const Past         *) = 0;
+  virtual void visit(const Historically *) = 0;
 
 public:
   virtual ~Visitor();

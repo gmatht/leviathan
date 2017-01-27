@@ -16,6 +16,8 @@
 
 #include "simplifier.hpp"
 
+#include <cassert>
+
 namespace LTL {
 namespace detail {
 
@@ -162,6 +164,11 @@ void Simplifier::visit(const Tomorrow *t)
   }
   else
     result = make_tomorrow(result);
+}
+
+void Simplifier::visit(const Yesterday *)
+{
+  assert(false && "Unimplemented");
 }
 
 void Simplifier::visit(const Always *a)
@@ -425,5 +432,32 @@ void Simplifier::visit(const Until *u)
   else
     result = make_until(left, right);
 }
+
+void Simplifier::visit(const Release *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Simplifier::visit(const Since *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Simplifier::visit(const Triggered *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Simplifier::visit(const Past *)
+{
+  assert(false && "Unimplemented");
+}
+
+void Simplifier::visit(const Historically *)
+{
+  assert(false && "Unimplemented");
+}
+
+
 }
 }
