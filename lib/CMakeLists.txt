@@ -26,11 +26,8 @@ set (
   src/ast/simplifier.cpp
   src/ast/pretty_printer.cpp
   src/solver.cpp
-  src/parser/lex.cc
-  src/parser/parse.cc
+  src/parser/lex.cpp
   src/parser/parser.cpp
-  src/new_parser/lex.cpp
-  src/new_parser/parser.cpp
   src/format.cpp
 )
 

@@ -28,13 +28,13 @@ Formula::~Formula() = default;
 Visitor::~Visitor() = default;
 
 #define MAKE_UNARY(_Type, _type)               \
-  _Type##Ptr make_##_type(const FormulaPtr &f) \
+  FormulaPtr make_##_type(const FormulaPtr &f) \
   {                                            \
     return std::make_shared<_Type>(f);         \
   }
 
 #define MAKE_BINARY(_Type, _type)                                     \
-  _Type##Ptr make_##_type(const FormulaPtr &f1, const FormulaPtr &f2) \
+  FormulaPtr make_##_type(const FormulaPtr &f1, const FormulaPtr &f2) \
   {                                                                   \
     return std::make_shared<_Type>(f1, f2);                           \
   }

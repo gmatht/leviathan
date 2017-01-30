@@ -68,6 +68,34 @@ struct Token {
   Token(Type t) : type(t) {}
   Token(std::string a) : type(Type::Atom), atom(std::move(a)) {}
 
+  bool isAtom() const { return type == Atom; }
+
+  bool isLParen() const { return type == LParen; }
+
+  bool isRParen() const { return type == RParen; }
+
+  bool isBinOp() const { return type >= FirstBinaryOp && type <= LastBinaryOp; }
+
+  bool isUnaryOp() const { return type >= FirstUnaryOp && type <= LastUnaryOp; }
+
+  int binOpPrecedence() const {
+    // Attention: this must remain in sync with Token::Type
+    constexpr int binops[] = {
+      -1, -1, -1, // Atom, LParen, RParen
+      30, // And
+      20, // Or
+      40, // Implies
+      40, // Iff
+      50, // Until
+      50, // Release
+      50, // Since
+      50, // Triggered
+      -1, -1, -1, -1, -1, -1, -1 // All other unary ops
+    };
+
+    return binops[type];
+  }
+
   Type type;
   optional<std::string> atom = nullopt;
 };

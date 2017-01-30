@@ -44,9 +44,6 @@
 
 #pragma GCC diagnostic pop
 
-#include <sstream>
-#include "lex.h"
-
 /*
  Rework the driver program.
  - Command-line interface and console issues:
@@ -102,9 +99,10 @@ static TCLAP::ValueArg<std::string> ltl(
   "The LTL formula to solve, provided directly on the command line", false, "",
   "LTL formula");
 
-static TCLAP::ValueArg<std::string> parser(
-  "n", "new-parser",
-  "Test the new parser", false, "", "LTL formula");
+static TCLAP::ValueArg<std::string> parse(
+  "n", "parse",
+  "Compare result of parsing formulas between the two LTL parsers",
+  false, "", "LTL formula");
 
 static TCLAP::SwitchArg model(
   "m", "model",
@@ -139,15 +137,19 @@ static TCLAP::ValueArg<uint64_t> depth(
 }
 
 void solve(std::string const &, optional<size_t> current = nullopt);
-void print_progress_status(std::string, size_t);
+void print_progress_status(LTL::FormulaPtr const&, size_t);
 void batch(std::string const &);
+void parse(std::string const&formula);
 
 // We suppose 80 columns is a good width
-void print_progress_status(std::string formula, size_t current)
+void print_progress_status(LTL::FormulaPtr const& f, size_t current)
 {
   if (Args::parsable.isSet())
     return;
 
+  LTL::PrettyPrinter p;
+
+  std::string formula = p.to_string(f);
   std::string msg = format::format("Solving formula n° {}: ", current);
 
   /*
@@ -166,18 +168,19 @@ void print_progress_status(std::string formula, size_t current)
 
 void solve(const std::string &input, optional<size_t> current)
 {
-  if (current)
-    print_progress_status(input, *current);
+  std::stringstream stream(input);
+  LTL::Parser parser(stream, [&](std::string err) {
+    format::error("Syntax error in formula{}: {}. Skipping...",
+                  current ? format::format(" n° {}", *current) : "",
+                  err);
+  });
 
-  optional<LTL::FormulaPtr> parsed = LTL::parse(input);
-
-  if (!parsed) {
-    format::error("Syntax error in formula{}. Skipping...",
-                  current ? format::format(" n° {}", *current) : "");
+  LTL::FormulaPtr formula = parser.parseFormula();
+  if (!formula)
     return;
-  }
 
-  LTL::FormulaPtr formula = *parsed;
+  if (current)
+    print_progress_status(formula, *current);
 
   LTL::Solver solver(formula, LTL::FrameID(Args::depth.getValue()));
 
@@ -237,7 +240,7 @@ int main(int argc, char *argv[])
   cmd.add(parsable);
   cmd.add(model);
   cmd.add(ltl);
-  cmd.add(parser);
+  cmd.add(Args::parse);
   cmd.add(filename);
 
   cmd.parse(argc, argv);
@@ -248,19 +251,8 @@ int main(int argc, char *argv[])
   // format::verbose("Verbose message. I told you this would be very verbose.");
 
   // Begin to process inputs
-  if (ltl.isSet()) {
+  if (ltl.isSet())
     solve(ltl.getValue(), 1);
-  } else if(parser.isSet())
-  {
-    std::stringstream s(parser.getValue());
-
-    LTL::Lexer l{s};
-
-    optional<LTL::Token> t;
-    while((t = l.get())) {
-      std::cout << *t << "\n";
-    }
-  }
   else
     batch(filename.getValue());
 

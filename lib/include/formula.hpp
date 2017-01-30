@@ -126,7 +126,7 @@ AtomPtr make_atom(const std::string &name);
     FormulaPtr _f;                                              \
   };                                                            \
   using _Type##Ptr = std::shared_ptr<_Type>;                    \
-  _Type##Ptr make_##_make(const FormulaPtr &f);
+  FormulaPtr make_##_make(const FormulaPtr &f);
 
 #define DECLARE_BINARY(_Type, _make)                  \
   class _Type : public Formula {                      \
@@ -148,7 +148,7 @@ AtomPtr make_atom(const std::string &name);
     FormulaPtr _f2;                                   \
   };                                                  \
   using _Type##Ptr = std::shared_ptr<_Type>;          \
-  _Type##Ptr make_##_make(const FormulaPtr &f1, const FormulaPtr &f2);
+  FormulaPtr make_##_make(const FormulaPtr &f1, const FormulaPtr &f2);
 
 DECLARE_UNARY(Negation, negation)
 DECLARE_UNARY(Tomorrow, tomorrow)

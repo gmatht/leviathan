@@ -15,7 +15,7 @@
  */
 
 #include <map>
-#include "lex.h"
+#include "lex.hpp"
 
 #include <iostream>
 
@@ -63,6 +63,7 @@ optional<Token> symbol(std::istream &s)
 
     // '=' or '=>'
     case '=':
+      s.get();
       if (s.peek() == '>') {
         s.get();
         return Token{Token::Implies};

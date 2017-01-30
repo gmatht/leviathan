@@ -27,7 +27,7 @@
 
 namespace LTL {
 
-using detail::parse;
+using detail::Parser;
 
 using detail::Solver;
 using detail::Model;

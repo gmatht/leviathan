@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014, Matteo Bertello
+ Copyright (c) 2014, Nicola Gigante
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -14,29 +14,161 @@
  permission.
  */
 
-#include <sstream>
-#include "Parser.h"
 #include "parser.hpp"
-
-#include "format.hpp"
+#include "lex.hpp"
 
 namespace LTL {
-
 namespace detail {
 
-optional<LTL::FormulaPtr> parse(const std::string &formula)
-{
-  format::debug("Parsing...");
-  std::stringstream ss;
-  ss << formula;
-
-  Parser p(ss);
-  p.parse();
-
-  if (p.error())
-    return {};
-
-  return p.result();
+optional<Token> Parser::peek() {
+  return _lex.peek();
 }
+
+optional<Token> Parser::peek(Token::Type t, std::string const&err) {
+  auto tok = peek();
+  if(!tok || tok->type == t) {
+    _error("Expected " + err);
+    return nullopt;
+  }
+
+  return tok;
 }
+
+optional<Token> Parser::consume() {
+  auto tok = peek();
+  if(tok)
+    _lex.get();
+  return tok;
 }
+
+optional<Token> Parser::consume(Token::Type t, std::string const&err) {
+  auto tok = peek(t, err);
+  if(tok)
+    _lex.get();
+  return tok;
+}
+
+FormulaPtr Parser::error(std::string const&s) {
+  _error(s);
+  return nullptr;
+}
+
+FormulaPtr Parser::parseFormula() {
+  FormulaPtr lhs = parsePrimary();
+  if(!lhs)
+    return nullptr;
+
+  return parseBinaryRHS(0, std::move(lhs));
+}
+
+FormulaPtr Parser::parseBinaryRHS(int precedence, FormulaPtr lhs) {
+  while(1) {
+    if(!peek() || peek()->binOpPrecedence() < precedence)
+       return lhs;
+
+    Token op = *consume();
+
+    FormulaPtr rhs = parsePrimary();
+    if(!rhs)
+      return nullptr;
+
+    if(!peek() || op.binOpPrecedence() < peek()->binOpPrecedence()) {
+      rhs = parseBinaryRHS(precedence + 1, std::move(rhs));
+      if(!rhs)
+        return nullptr;
+    }
+
+    lhs = makeBinary(op, std::move(lhs), std::move(rhs));
+  }
+}
+
+FormulaPtr Parser::makeBinary(Token op, FormulaPtr lhs, FormulaPtr rhs) {
+  assert(op.isBinOp());
+
+  using FormulaMaker = FormulaPtr (*)(FormulaPtr const&, FormulaPtr const&);
+  constexpr FormulaMaker makers[] = {
+    0, 0, 0, // Atom, LParen, RParen
+    make_conjunction, // And
+    make_disjunction, // Or
+    make_then, // Implies
+    make_iff, // Iff
+    make_until, // Until
+    make_release, // Release
+    make_since, // Since
+    make_triggered, // Triggered
+    0, 0, 0, 0, 0, 0, 0 // All other unary ops
+  };
+
+  assert(makers[op.type]);
+  return makers[op.type](lhs, rhs);
+}
+
+FormulaPtr Parser::parseAtom() {
+  assert(peek() && peek()->type == Token::Atom);
+
+  auto tok = consume(); // Assume we are at an atom
+
+  assert(tok && tok->isAtom());
+
+  return make_atom(*tok->atom);
+}
+
+FormulaPtr Parser::parseUnary() {
+  assert(peek() && peek()->isUnaryOp());
+
+  auto tok = consume(); // consume unary op
+
+  FormulaPtr formula = parsePrimary();
+  switch(tok->type) {
+    case Token::Not:
+      return make_negation(formula);
+    case Token::Tomorrow:
+      return make_tomorrow(formula);
+    case Token::Yesterday:
+      return make_yesterday(formula);
+    case Token::Always:
+      return make_always(formula);
+    case Token::Eventually:
+      return make_eventually(formula);
+    case Token::Past:
+      return make_past(formula);
+    case Token::Historically:
+      return make_historically(formula);
+    default:
+      break;
+  }
+
+  assert(false && "Unknown unary operator!");
+}
+
+FormulaPtr Parser::parseParens() {
+  assert(peek() && peek()->type == Token::LParen);
+
+  consume(); // Consume LParen ')'
+
+  FormulaPtr formula = parseFormula();
+  if(!formula)
+    return nullptr;
+
+  if(!consume(Token::LParen, "')'"))
+    return nullptr;
+
+  return formula;
+}
+
+FormulaPtr Parser::parsePrimary() {
+  if(!peek())
+    return nullptr;
+
+  if(peek()->isAtom())
+    return parseAtom();
+  if(peek()->isUnaryOp())
+    return parseUnary();
+  if(peek()->isLParen())
+    return parseParens();
+
+  return error("Expected formula");
+}
+
+} // namespace detail
+} // namespace LTL
