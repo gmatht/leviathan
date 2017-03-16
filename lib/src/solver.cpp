@@ -396,9 +396,48 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
+unsigned int job_no;
+unsigned int num_of_job;
+unsigned int split_depth;
+if (sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
+    std::cout << "\nABORTING!\n";
+    std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
+    std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
+    std::cout << "\nAn example of when this doen't work well (only 2x speed up)" << std::endl;
+    std::cout << "make && for i in `seq 1 1 7`; do JOB_NO=$i/17@7 timeout 30 time bin/checker -v 4  -l '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X X X X X X X X X ~a'; done  2>&1 | tee out.txt" << std::endl;
+    exit(1);
+}
+
 loop:
   while (!_stack.empty()) {
     Frame &frame = _stack.top();
+    //std::cout << "D" << _stack.size() << "," << frame.id <<"\n";
+    if (_stack.size() == split_depth) {
+      uint64_t hash = 0;
+      Frame *ptr = &frame;
+      while (ptr != NULL) {
+        hash += frame.choosen_formula;
+        hash*=4;
+        for (unsigned int i=0; i < frame.formulas.size(); i++) {
+          if (ptr->formulas.test(i))
+            hash++;
+          hash*=2;
+          if (ptr->to_process.test(i))
+            hash++;
+          hash*=2;
+          hash%=1103515245;
+        }
+      ptr=frame.prev;
+      }
+
+      if ( (hash%num_of_job) != (job_no-1) ) {
+         _rollback_to_latest_choice();
+         std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
+         goto loop;
+      } else {
+         std::cout << "X" << hash << "," << job_no << "/" << num_of_job << std::endl;
+      }
+    }
 
     rules_applied = true;
     while (rules_applied) {
