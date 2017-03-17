@@ -414,20 +414,22 @@ loop:
     //std::cout << "D" << _stack.size() << "," << frame.id <<"\n";
     if (_stack.size() == split_depth) {
       uint64_t hash = 0;
-      Frame *ptr = &frame;
-      while (ptr != NULL) {
-        hash += frame.choosen_formula;
-        hash*=4;
-        for (unsigned int i=0; i < frame.formulas.size(); i++) {
-          if (ptr->formulas.test(i))
-            hash++;
-          hash*=2;
-          if (ptr->to_process.test(i))
-            hash++;
-          hash*=2;
-          hash%=1103515245;
+      for (const auto &frame_ : Container(_stack)) {
+        const Frame *ptr = &frame_;
+        while (ptr != NULL) {
+          hash += frame.choosen_formula;
+          hash*=4;
+          for (unsigned int i=0; i < frame.formulas.size(); i++) {
+            if (ptr->formulas.test(i))
+              hash++;
+            hash*=2;
+            if (ptr->to_process.test(i))
+              hash++;
+            hash*=2;
+            hash%=1103515245;
+          }
+          ptr=frame.prev;
         }
-      ptr=frame.prev;
       }
 
       if ( (hash%num_of_job) != (job_no-1) ) {
