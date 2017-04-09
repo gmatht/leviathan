@@ -396,9 +396,11 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
+bool not_reach_end=true;
 unsigned int job_no;
 unsigned int num_of_job;
 unsigned int split_depth;
+//unsigned int last_depth=0;
 if (sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
     std::cout << "\nABORTING!\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
@@ -411,8 +413,12 @@ if (sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
 loop:
   while (!_stack.empty()) {
     Frame &frame = _stack.top();
-    //std::cout << "D" << _stack.size() << "," << frame.id <<"\n";
-    if (_stack.size() == split_depth) {
+    //std::cout << "D" << _stack.size() << "," << frame.id << "," << not_reach_end << rules_applied <<"\n";
+    not_reach_end=not_reach_end;
+
+    assert(_stack.size() <= split_depth || job_no > 0);
+    if (_stack.size() == split_depth && (! rules_applied) ) {
+    //if (_stack.size() == split_depth) {
       uint64_t hash = 0;
       for (const auto &frame_ : Container(_stack)) {
         const Frame *ptr = &frame_;
@@ -434,12 +440,17 @@ loop:
 
       if ( (hash%num_of_job) != (job_no-1) ) {
          _rollback_to_latest_choice();
-         std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
+         rules_applied = false;
+         //last_depth=_stack.size();
+         //std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
          goto loop;
       } else {
          std::cout << "X" << hash << "," << job_no << "/" << num_of_job << std::endl;
       }
     }
+    not_reach_end=true;
+
+    //last_depth=_stack.size();
 
     rules_applied = true;
     while (rules_applied) {
@@ -530,6 +541,7 @@ loop:
         goto loop;
       }
 
+      not_reach_end=false;
       if (rules_applied)
         goto loop;
     }
