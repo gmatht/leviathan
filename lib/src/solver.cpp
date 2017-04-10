@@ -400,7 +400,8 @@ bool not_reach_end=true;
 unsigned int job_no;
 unsigned int num_of_job;
 unsigned int split_depth;
-//unsigned int last_depth=0;
+unsigned int last_depth=0;
+unsigned int width[1000]={0};
 if (sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
     std::cout << "\nABORTING!\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
@@ -417,7 +418,9 @@ loop:
     not_reach_end=not_reach_end;
 
     assert(_stack.size() <= split_depth || job_no > 0);
-    if (_stack.size() == split_depth && (! rules_applied) ) {
+    if (_stack.size() > last_depth && _stack.size() < 1000)
+      width[_stack.size()]++;
+    if (_stack.size() == split_depth && last_depth < split_depth) {
     //if (_stack.size() == split_depth) {
       uint64_t hash = 0;
       for (const auto &frame_ : Container(_stack)) {
@@ -439,9 +442,10 @@ loop:
       }
 
       if ( (hash%num_of_job) != (job_no-1) ) {
-         _rollback_to_latest_choice();
+         while (_stack.size() >= split_depth) 
+         	_rollback_to_latest_choice();
          rules_applied = false;
-         //last_depth=_stack.size();
+         last_depth=_stack.size();
          //std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
          goto loop;
       } else {
@@ -449,6 +453,7 @@ loop:
       }
     }
     not_reach_end=true;
+    last_depth=_stack.size();
 
     //last_depth=_stack.size();
 
@@ -604,6 +609,13 @@ loop:
     _result = Result::UNSATISFIABLE;
 
   _print_stats();
+  std::cout << "WIDTH: ";
+  for(int i=1;i<1000&&width[i];++i) {
+    std::cout << width[i] << " ";
+  }
+  std::cout << std::endl;
+  
+  
 
   return _result;
 }
