@@ -3,6 +3,12 @@ set -e
 make
 set +e
 
+mkdir -p out
+[ -e benchmark.txt ] || 
+(
+  f tests/ pltl | while read f ; do timeout 1000 time -p bin/checker_orig -v 4 $f | egrep '(WIDTH|Total|depth|The formula is)'; echo $f; echo ---- ; done 2>&1 | tee benchmark.txt
+)
+
 mkdir tests/john 2> /dev/null || true
 [ -e tests/john/XX4.pltl ] || echo '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X  X X  X X  X X  ~a' > tests/john/XX4.pltl
 
@@ -17,8 +23,8 @@ rm out?.txt
 min4N=`(echo 4; echo $N) | sort -n | head -n1`
 echo min4N $min4N
 time -p (
-for i in `seq 1 $min4N`; do JOB_NO=$i/$N@$depth time -p timeout 32 bin/checker -v 4 $test 2> out$i.time > out$i.txt & done 
-for i in `seq 5 $N` 0; do JOB_NO=$i/$N@$depth time -p timeout 32 bin/checker -v 4 $test 2> out$i.time > out$i.txt & wait -n; done
+for i in `seq 1 $min4N`; do JOB_NO=$i/$N@$depth time -p timeout 1000 bin/checker -v 4 $test 2> out$i.time > out$i.txt & done 
+for i in `seq 5 $N` 0; do JOB_NO=$i/$N@$depth time -p timeout 1000 bin/checker -v 4 $test 2> out$i.time > out$i.txt & wait -n; done
 wait
 ) 2> out.time > out.txt
 #time -p (for i in `seq 1 $N`; do JOB_NO=$i/$N@$depth timeout 11 bin/checker -v 4 -l '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X X X X X X X  ~a' & done; wait) 2> out.time > out.txt
@@ -50,10 +56,6 @@ do_set 9 $d tests/rozier/pattern/Uformula/Uformula300.pltl
 done | tee test.txt
 
 exit
-[ -e benchmark.txt ] || 
-(
-  f tests/ pltl | while read f ; do timeout 1 time -p bin/checker_orig -v 4 $f | egrep '(Total|depth|The formula is)'; echo $f; echo ---- ; done 2>&1 | tee benchmark.txt
-)
 
 if false
 then

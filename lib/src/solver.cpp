@@ -609,9 +609,9 @@ loop:
     _result = Result::UNSATISFIABLE;
 
   _print_stats();
-  std::cout << "WIDTH: ";
+  std::cout << "WIDTH ";
   for(int i=1;i<1000&&width[i];++i) {
-    std::cout << width[i] << " ";
+    std::cout << i << ":" << width[i] << " ";
   }
   std::cout << std::endl;
   
