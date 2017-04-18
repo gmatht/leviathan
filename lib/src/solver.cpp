@@ -385,6 +385,8 @@ APPLY_RULE(release)
 
 #undef APPLY_RULE
 
+unsigned int width[1000]={0};
+
 Solver::Result Solver::solution()
 {
   if (_state == State::RUNNING || _state == State::DONE)
@@ -401,8 +403,7 @@ unsigned int job_no;
 unsigned int num_of_job;
 unsigned int split_depth;
 unsigned int last_depth=0;
-unsigned int width[1000]={0};
-if (sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
+if (! getenv("JOB_NO") || sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
     std::cout << "\nABORTING!\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
     std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
@@ -609,11 +610,6 @@ loop:
     _result = Result::UNSATISFIABLE;
 
   _print_stats();
-  std::cout << "WIDTH ";
-  for(int i=1;i<1000&&width[i];++i) {
-    std::cout << i << ":" << width[i] << " ";
-  }
-  std::cout << std::endl;
   
   
 
@@ -826,6 +822,13 @@ void Solver::_print_stats() const
 	format::debug("Cross by contradiction: {}",
 				  _stats.cross_by_contradiction);
 	format::debug("Cross by prune: {}", _stats.cross_by_prune);
+	if (getenv("JOB_NO")){
+		std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
+	}
+	for(int i=1;i<1000&&width[i];++i) {
+		std::cout << i << ":" << width[i] << " ";
+	}
+	std::cout << std::endl;
 }
 
 void Solver::__dump_current_formulas() const
