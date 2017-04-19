@@ -398,6 +398,7 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
+bool not_reach_end=true;
 unsigned int job_no;
 unsigned int num_of_job;
 unsigned int split_depth;
@@ -415,19 +416,44 @@ loop:
   while (!_stack.empty()) {
     Frame &frame = _stack.top();
     //std::cout << "D" << _stack.size() << "," << frame.id << "," << not_reach_end << rules_applied <<"\n";
+    not_reach_end=not_reach_end;
+
     assert(_stack.size() <= split_depth || job_no > 0);
     if (_stack.size() > last_depth && _stack.size() < 1000)
       width[_stack.size()]++;
     if (_stack.size() == split_depth && last_depth < split_depth) {
-      if ( ((width[_stack.size()]-1)%num_of_job) != (job_no-1) ) {
+    //if (_stack.size() == split_depth) {
+      uint64_t hash = 0;
+      for (const auto &frame_ : Container(_stack)) {
+        const Frame *ptr = &frame_;
+        while (ptr != NULL) {
+          hash += frame.choosen_formula;
+          hash*=4;
+          for (unsigned int i=0; i < frame.formulas.size(); i++) {
+            if (ptr->formulas.test(i))
+              hash++;
+            hash*=2;
+            if (ptr->to_process.test(i))
+              hash++;
+            hash*=2;
+            hash%=1103515245;
+          }
+          ptr=frame.prev;
+        }
+      }
+
+      if ( (hash%num_of_job) != (job_no-1) ) {
          while (_stack.size() >= split_depth) 
          	_rollback_to_latest_choice();
          rules_applied = false;
          last_depth=_stack.size();
          //std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
          goto loop;
+      } else {
+         std::cout << "X" << hash << "," << job_no << "/" << num_of_job << std::endl;
       }
     }
+    not_reach_end=true;
     last_depth=_stack.size();
 
     //last_depth=_stack.size();
@@ -521,6 +547,7 @@ loop:
         goto loop;
       }
 
+      not_reach_end=false;
       if (rules_applied)
         goto loop;
     }
