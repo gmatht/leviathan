@@ -7,26 +7,29 @@ nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB
 rm ~/out/result.$NAME.txt 2> /dev/null || true 2> /dev/null
 j=1; ( for n in $NODES master
 do
-        < /dev/null ssh -q -t -t $n "ulimit -Sv 850000; for i in `seq $j $((j+nCPU-1))`; do JOB_NO=\$i/$nJOB@9 checker -l '$FORMULA' > log.$NAME.\$i.txt; done; sleep 1" &
+        < /dev/null ssh -q -t -t $n "ulimit -Sv 640000; for i in `seq $j $((j+nCPU-1))`; do JOB_NO=\$i/$nJOB@9 checker -l '$FORMULA' > log.$NAME.\$i.txt; done; sleep 1" &
         echo $! >> pids
         j=$((j+$nCPU))
 done ; wait ) 2>&1 | while read L
 do
+#echo "READ $L"
 case "$L" in
-IsSat*)
-	echo VOTE: formula is satisfiable $L
+*IsSat*)
+	echo "VOTE: formula is satisfiable $L"
+	kill `cat pids`
 	break
 	;;
-Unsat*)
+*Unsat*)
 	unsat=$((unsat+1))
+	#echo "$L -> $unsat"
 	if [ $unsat -ge $nJOB ]
 	then
-		echo VOTE: formula is unsatisfiable $L
+		echo VOTE: formula is unsatisfiable
 		break
-	fi`
+	fi
 	;;
 *)
-	echo UNKNOWN WARNING: $:
+	echo "UNKNOWN WARNING: $L"
 
 esac
 done
