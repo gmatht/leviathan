@@ -61,6 +61,7 @@ void Solver::_initialize()
     }
     else if (isa<False>(_subformulas[0])) {
       _result = Result::UNSATISFIABLE;
+      std::cerr << "Unsat!"  << std::endl; 
       _state = State::DONE;
       return;
     }
@@ -398,17 +399,17 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
-unsigned int job_no;
-unsigned int num_of_job;
-unsigned int split_depth;
+unsigned int job_no=1;
+unsigned int num_of_job=1;
+unsigned int split_depth=1;
 unsigned int last_depth=0;
 if (! getenv("JOB_NO") || sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
-    std::cout << "\nABORTING!\n";
+    std::cout << "\nTo use in parallel\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
     std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
     std::cout << "\nAn example of when this doen't work well (only 2x speed up)" << std::endl;
     std::cout << "make && for i in `seq 1 1 7`; do JOB_NO=$i/17@7 timeout 30 time bin/checker -v 4  -l '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X X X X X X X X X ~a'; done  2>&1 | tee out.txt" << std::endl;
-    exit(1);
+    //exit(1);
 }
 
 loop:
@@ -795,12 +796,24 @@ void Solver::_print_stats() const
 	format::debug("Cross by contradiction: {}",
 				  _stats.cross_by_contradiction);
 	format::debug("Cross by prune: {}", _stats.cross_by_prune);
-	if (getenv("JOB_NO")){
+	if (getenv("JOB_NO"))
 		std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
-	}
+	std::cout << "WIDTH ";
 	for(int i=1;i<1000&&width[i];++i) {
 		std::cout << i << ":" << width[i] << " ";
+	} 
+	if (_result == Result::SATISFIABLE) {
+		if (getenv("JOB_NO"))
+			std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
+		std::cerr << " IsSat! " << std::endl; 
 	}
+	if (_result == Result::UNSATISFIABLE) {
+		if (getenv("JOB_NO"))
+			std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
+		std::cerr << " Unsat! "  << std::endl;
+	}
+	
+    
 	std::cout << std::endl;
 }
 
