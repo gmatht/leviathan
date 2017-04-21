@@ -20,6 +20,7 @@ cat ~/out/result.$NAME.txt) | gzip -9
 j=1; for n in $NODES master
 do
 	cat tmp.$NAME.$j.gz
+	rm tmp.$NAME.$j.gz
         j=$((j+$nCPU))
 done ; wait 
 ) > ~/store/bench.$NAME.gz
