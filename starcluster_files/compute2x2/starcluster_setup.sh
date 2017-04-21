@@ -3,6 +3,8 @@ set -x
 set -e
 CLUSTER=$(basename $PWD)
 echo $CLUSTER 
+(cd ../..
+make -j4)
 # SETUP CLIENT
 starcluster -h 2> /dev/null > /dev/null || (
 	sudo apt-get install build-essential libssl-dev libffi-dev python-dev
@@ -34,7 +36,7 @@ _ssh() {
 
 # SETUP SERVER
 #"echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
-starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
+starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
 (cd ../tar && 
 	mkdir -p usr/bin; mkdir -p root/.ssh/; mkdir -p usr/lib/x86_64-linux-gnu/
 	cp ~/.gitconfig root/
@@ -43,26 +45,25 @@ starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/id_rsa.pub); echo $(cat 
 	chmod 700 . root root/.ssh usr usr/bin usr/lib usr/lib/x86_64-linux-gnu
 	chmod 600 root/.ssh/*
 	tar -zcf ../tar.gz . --owner=0 --group=0
-	rsync ../tar.gz root@$IP:tar.gz
+	rsync -a --progress ../tar.gz root@$IP:tar.gz
 	#scp ../tar.gz root@$IP: 
 )
 i=1
 _ssh "cat /etc/hosts" > hosts
-for n in `grep -o node??? hosts`
-do
-starcluster sshnode $CLUSTER $n "echo $(cat remote.pub) >> ~/.ssh/authorized_keys" &
-done
+for n in `grep -o node... hosts`; do starcluster sshnode $CLUSTER $n "echo $(cat ../tar/root/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" & done
 wait
 _ssh '
 mkdir -p store
+mkdir -p out
 cd /; tar -zxf ~/tar.gz; chown root /root/.ssh /root/.ssh/* /root; chgrp root /root /root/.ssh /root/.ssh/*; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root
 cd
-for n in `grep -o nodes??? /etc/hosts`; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0; done
+#for n in `grep -o node... /etc/hosts`; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0; done
 apt-get install mosh -y
 ssh-add ~/.ssh/id_rsa
 set -x; NODES="$(grep -o node... /etc/hosts)"; set | grep ^NODES | tee nodes.sh
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
 for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
+for n in $NODES; do ssh $n mkdir ~/out; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
 #while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
 apt-get install -y git-core	
