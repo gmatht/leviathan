@@ -55,3 +55,5 @@ for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh
 #while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
 sudo apt-get install -y git-core	
 git clone https://github.com/gmatht/leviathan.git
+'
+#nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB=$((nCPU*nNODE)); for j in `seq 1 $nCPU $nJOB`; do read SSH; echo $j $SSH; $SSH "JOB_NO=$j/$nJOB@9 checker -l 'X p'"  ;done < ssh.txt 

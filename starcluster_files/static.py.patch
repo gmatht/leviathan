@@ -1,5 +1,5 @@
 --- static.py.bak	2017-04-21 13:03:34.839550544 +0800
-+++ static.py	2017-04-21 12:37:51.639536544 +0800
++++ static.py	2017-04-21 13:25:37.477900544 +0800
 @@ -145,2 +145,7 @@
      'c3.8xlarge': ['x86_64'],
 +    'c4.large': ['x86_64'],
@@ -8,3 +8,10 @@
 +    'c4.4xlarge': ['x86_64'],
 +    'c4.8xlarge': ['x86_64'],
      'i2.xlarge': ['x86_64'],
+@@ -170,4 +175,4 @@
+ 
+-M3_COMPUTE_TYPES = ['c3.large', 'c3.xlarge', 'c3.2xlarge', 'c3.4xlarge',
+-                    'c3.8xlarge']
++M3_COMPUTE_TYPES = ['c3.large', 'c3.xlarge', 'c3.2xlarge', 'c3.4xlarge', 'c3.8xlarge',
++	            'c4.large', 'c4.xlarge', 'c4.2xlarge', 'c4.4xlarge', 'c4.8xlarge']
+ 

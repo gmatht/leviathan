@@ -1,9 +1,19 @@
+#!/bin/bash
 set -x
-CLUSTER=$(dirname $PWD)
+set -e
+CLUSTER=$(basename $PWD)
+echo $CLUSTER 
 # SETUP CLIENT
 starcluster -h 2> /dev/null > /dev/null || (
 	sudo apt-get install build-essential libssl-dev libffi-dev python-dev
 	sudo easy_install starcluster
+
+	cd /usr/local/lib/python2.7/dist-packages/StarCluster-0.95.6-py2.7.egg/starcluster && (
+		mv static.pyc static.pyc.bak
+		cp static.py  static.py.bak
+		patch -p0 < ../static.py.patch
+  		pycompile static.py 
+	)
 )
 [ -e ../tar/root/.ssh/id_rsa.pub ] || (
 	cd ../tar/root/.ssh/ &&
@@ -12,7 +22,7 @@ starcluster -h 2> /dev/null > /dev/null || (
 )
 
 date > starttime.txt
-starcluster start $CLUSTER 
+starcluster start $CLUSTER -c $CLUSTER || true
 starcluster lc $CLUSTER > starcluster_lc.txt
 grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
 IP=`cat ip.txt`
@@ -23,26 +33,30 @@ _ssh() {
 }
 
 # SETUP SERVER
-_ssh "echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
-_ssh "(echo $(cat remote.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
+#"echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
+starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
 (cd ../tar && 
 	mkdir -p usr/bin; mkdir -p root/.ssh/; mkdir -p usr/lib/x86_64-linux-gnu/
 	cp ~/.gitconfig root/
-	cp ../bin/checker usr/bin
+	cp ../../bin/checker usr/bin
 	cp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 usr/lib/x86_64-linux-gnu/
-	chmod 700 root root/.ssh; chmod 600 root/.ssh/*
+	chmod 700 . root root/.ssh usr usr/bin usr/lib usr/lib/x86_64-linux-gnu
+	chmod 600 root/.ssh/*
 	tar -zcf ../tar.gz . --owner=0 --group=0
-	scp ../tar.gz root@$IP: 
+	rsync ../tar.gz root@$IP:tar.gz
+	#scp ../tar.gz root@$IP: 
 )
 i=1
 _ssh "cat /etc/hosts" > hosts
-for n in `grep -o nodes??? hosts`
+for n in `grep -o node??? hosts`
 do
 starcluster sshnode $CLUSTER $n "echo $(cat remote.pub) >> ~/.ssh/authorized_keys" &
 done
 wait
 _ssh '
+mkdir -p store
 cd /; tar -zxf ~/tar.gz; chown root /root/.ssh /root/.ssh/* /root; chgrp root /root /root/.ssh /root/.ssh/*; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root
+cd
 for n in `grep -o nodes??? /etc/hosts`; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0; done
 apt-get install mosh -y
 ssh-add ~/.ssh/id_rsa
@@ -51,10 +65,17 @@ for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/
 for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
 #while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
-sudo apt-get install -y git-core	
-git clone https://github.com/gmatht/leviathan.git
+apt-get install -y git-core	
+if [ -e leviathan ] 
+then
+ cd leviathan
+ git pull
+else
+ git clone https://github.com/gmatht/leviathan.git
+fi
 '
 
+(ssh root@`cat ip.txt` "cd store && sleep 10 && tail -f ready.txt | while read f; do cat $f; done" > ../store/$CLUSTER.txt) &
 _ssh '
 cd leviathan/starcluster_files
 bash benchmark.sh
