@@ -29,18 +29,29 @@ starcluster sshmaster small "cat /etc/hosts" > hosts
 _ssh() {
   starcluster sshmaster small "$@"
 }
+starcluster lc small > starcluster_lc.txt
+grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
+IP=`cat ip.txt`
+set | grep IP
+exit
 #gzip -9 < ../bin/checker > checker.gz
 #starcluster put small checker.gz .
 mkdir -p tar/usr/bin; mkdir -p tar/root/.ssh/
-#(cd tar; tar -zc .) | _ssh "cd / && tar -zx; chown root /root/.ssh/ /root/.ssh/* /root; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root:"
+cp ~/.gitconfig tar/root/
+cp ../bin/checker tar/usr/bin
+
+(cd tar;
+ chmod 700 root root/.ssh; chmod 600 root/.ssh/*
+ tar -zcf ../tar.gz . --owner=0 --group=0)
+starcluster put small tar.gz .
+#(cd tar; tar -zc .) | bash ssh.sh "cd / && tee tar.gz | 
+_ssh "cd /; tar -zxf ~/tar.gz; chown root /root/.ssh /root/.ssh/* /root; chgrp root /root /root/.ssh /root/.ssh/*; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root"
 #starcluster put small config ~/.ssh/config
 _ssh 'ssh-add ~/.ssh/id_rsa
-set -x; NODES="$(grep -o node... /etc/hosts)";
-echo NODES="'$NODES'" > ~/nodes.sh
+set -x; NODES="$(grep -o node... /etc/hosts)"; set | grep ^NODES | tee nodes.sh
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
+for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
-while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
+#while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
 sudo apt-get install -y git-core	
 git clone https://github.com/gmatht/leviathan.git
-'
-#nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB=$((nCPU*nNODE)); for j in `seq 1 $nCPU $nJOB`; do read SSH; echo $j $SSH; $SSH "JOB_NO=$j/$nJOB@9 checker -l 'X p'"  ;done < ssh.txt 
