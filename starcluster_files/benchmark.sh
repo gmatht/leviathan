@@ -5,7 +5,7 @@ cat ../tests/lists/$L | cut -f2 | while read f
  do echo --- $f
  i=$((i+1))
  time timeout 1000 bash parallel.sh "`cat ../tests/$f`" $L$i
- bash makelog.sh "`cat $f`" $L$i "$f"
+ bash makelog.sh "`cat ../tests/$f`" $L$i "$f"
  done 
 done 2>&1 | tee simplebench.txt
 
