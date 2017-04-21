@@ -76,9 +76,16 @@ fi
 '
 
 (ssh root@`cat ip.txt` "cd store && sleep 10 && tail -f ready.txt | while read f; do cat $f; done" > ../store/$CLUSTER.txt) &
-_ssh '
+
+if [ "$CLUSTER" = compute_serial ]
+then SERIAL=Y
+else SERIAL=N
+fi
+
+_ssh "
+export SERIAL=$SERIAL
 cd leviathan/starcluster_files
 bash benchmark.sh
-' | tee sc_bench.txt
+" | tee sc_bench.txt
 
 #nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB=$((nCPU*nNODE)); for j in `seq 1 $nCPU $nJOB`; do read SSH; echo $j $SSH; $SSH "JOB_NO=$j/$nJOB@9 checker -l 'X p'"  ;done < ssh.txt 
