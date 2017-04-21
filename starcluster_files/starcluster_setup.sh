@@ -35,7 +35,8 @@ mkdir -p tar/usr/bin; mkdir -p tar/root/.ssh/
 #(cd tar; tar -zc .) | _ssh "cd / && tar -zx; chown root /root/.ssh/ /root/.ssh/* /root; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root:"
 #starcluster put small config ~/.ssh/config
 _ssh 'ssh-add ~/.ssh/id_rsa
-set -x; NODES="$(grep -o node... /etc/hosts)"; set | grep ^NODES | tee nodes.sh
+set -x; NODES="$(grep -o node... /etc/hosts)";
+echo NODES="'$NODES'" > ~/nodes.sh
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
 while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
