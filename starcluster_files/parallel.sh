@@ -13,7 +13,7 @@ nJOB=$((nCPU*nNODE))
 rm ~/out/result.$NAME.txt 2> /dev/null || true 2> /dev/null
 j=1; ( for n in $NODES localhost
 do
-	X="ulimit -Sv 640000; for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do (date; JOB_NO=\$i/$nJOB@14 /usr/bin/time -o ~/out/time.$NAME.\$i.txt checker -l '$FORMULA') > ~/out/log.$NAME.\$i.txt &done; wait"
+	X="ulimit -Sv 1679360; for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do (date; JOB_NO=\$i/$nJOB@14 /usr/bin/time -o ~/out/time.$NAME.\$i.txt checker -l '$FORMULA') > ~/out/log.$NAME.\$i.txt &done; wait"
 	#echo "$X"
         < /dev/null ssh -q -t -t $n "$X" &
         echo $! >> pids
