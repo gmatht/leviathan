@@ -24,3 +24,4 @@ do
         j=$((j+$nCPU))
 done ; wait 
 ) > ~/store/bench.$NAME.gz
+echo bench.$NAME.gz >> ~/store/ready.txt
