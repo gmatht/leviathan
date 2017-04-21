@@ -399,6 +399,10 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
+unsigned int clock_depth=0;
+if (getenv("CLOCK_DEPTH"))
+     sscanf(getenv("CLOCK_DEPTH"),"%u",&clock_depth);
+
 unsigned int job_no=1;
 unsigned int num_of_job=1;
 unsigned int split_depth=1;
@@ -417,8 +421,11 @@ loop:
     Frame &frame = _stack.top();
     //std::cout << "D" << _stack.size() << "," << frame.id << "," << not_reach_end << rules_applied <<"\n";
     assert(_stack.size() <= split_depth || job_no > 0);
-    if (_stack.size() > last_depth && _stack.size() < 1000)
+    if (_stack.size() > last_depth && _stack.size() < 1000) {
       width[_stack.size()]++;
+      if (_stack.size() <= clock_depth)
+        std::cout << "@" << width[_stack.size()] << ":" << clock() << "\n";
+    }
     if (_stack.size() == split_depth && last_depth < split_depth) {
       if ( ((width[_stack.size()]-1)%num_of_job) != (job_no-1) ) {
          while (_stack.size() >= split_depth) 
@@ -800,17 +807,19 @@ void Solver::_print_stats() const
 		std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
 	std::cout << "WIDTH ";
 	for(int i=1;i<1000&&width[i];++i) {
-		std::cout << i << ":" << width[i] << " ";
+		std::cout << i << ":" << width[i] << "\n";
 	} 
 	if (_result == Result::SATISFIABLE) {
+		std::cerr << "IsSat! "; 
 		if (getenv("JOB_NO"))
-			std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
-		std::cerr << " IsSat! " << std::endl; 
+			std::cerr << "JOB_NO="<<getenv("JOB_NO")<<" ";
+		std::cerr << " SEC=" << (double)clock()/1000000 << "\n"; 
 	}
 	if (_result == Result::UNSATISFIABLE) {
+		std::cerr << "Unsat! ";
 		if (getenv("JOB_NO"))
-			std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
-		std::cerr << " Unsat! "  << std::endl;
+			std::cerr << "JOB_NO="<<getenv("JOB_NO")<<" ";
+		std::cerr << " SEC=" << (double)clock()/1000000 << "\n"; 
 	}
 	
     
