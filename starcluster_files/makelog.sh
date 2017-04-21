@@ -7,7 +7,7 @@ mkdir -p ~/store
 nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`; nJOB=$((nCPU*nNODE))
 j=1; for n in $NODES master
 do
-        < /dev/null ssh -q $n "for i in `seq $j $((j+nCPU-1))`; do echo; echo @.$NAME.\$i; cat ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; echo rm ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; done | gzip -9" > tmp.$NAME.$j.gz &
+        < /dev/null ssh -q $n "for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do echo; echo @.$NAME.\$i; cat ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; echo rm ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; done | gzip -9" > tmp.$NAME.$j.gz &
         j=$((j+$nCPU))
 done ; wait 
 ((
@@ -24,4 +24,5 @@ do
         j=$((j+$nCPU))
 done ; wait 
 ) > ~/store/bench.$NAME.gz
+echo `zgrep -o ^.*user < ~/store/bench.$NAME.gz`
 echo bench.$NAME.gz >> ~/store/ready.txt

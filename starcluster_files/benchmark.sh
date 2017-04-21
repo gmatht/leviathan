@@ -1,10 +1,10 @@
 for L in U S H
 do
-cat ../tests/lists/$L | cut -f2 | while read f
+cat ../tests/lists/$L | while read t f
 #f in `find ~/leviathan/tests/rozier/ | grep pltl\$`
- do echo --- $f
+ do echo --- $t $f
  i=$((i+1))
- time timeout 1000 bash parallel.sh "`cat ../tests/$f`" $L$i
+ time -p timeout 1000 bash parallel.sh "`cat ../tests/$f`" $L$i
  bash makelog.sh "`cat ../tests/$f`" $L$i "$f"
  done 
 done 2>&1 | tee simplebench.txt
