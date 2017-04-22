@@ -424,7 +424,7 @@ loop:
     if (_stack.size() > last_depth && _stack.size() < 1000) {
       width[_stack.size()]++;
       if (_stack.size() <= clock_depth)
-        std::cout << "@" << width[_stack.size()] << ":" << clock() << "\n";
+        std::cout << "^" << _stack.size() << ":" << clock() << "\n";
     }
     if (_stack.size() == split_depth && last_depth < split_depth) {
       if ( ((width[_stack.size()]-1)%num_of_job) != (job_no-1) ) {
@@ -807,21 +807,20 @@ void Solver::_print_stats() const
 		std::cout << "JOB_NO="<<getenv("JOB_NO")<<" ";
 	std::cout << "WIDTH ";
 	for(int i=1;i<1000&&width[i];++i) {
-		std::cout << i << ":" << width[i] << "\n";
+		std::cout << i << ":" << width[i] << " ";
 	} 
+	const char* job_no="";
+	if (getenv("JOB_NO")) job_no=getenv("JOB_NO");
+	std::stringstream stream;
 	if (_result == Result::SATISFIABLE) {
-		std::cerr << "IsSat! "; 
-		if (getenv("JOB_NO"))
-			std::cerr << "JOB_NO="<<getenv("JOB_NO")<<" ";
-		std::cerr << " SEC=" << (double)clock()/1000000 << "\n"; 
+		stream << "IsSat!" 
+			<< " JOB="<<job_no<< " SEC=" << (double)clock()/1000000 << std::endl; 
 	}
 	if (_result == Result::UNSATISFIABLE) {
-		std::cerr << "Unsat! ";
-		if (getenv("JOB_NO"))
-			std::cerr << "JOB_NO="<<getenv("JOB_NO")<<" ";
-		std::cerr << " SEC=" << (double)clock()/1000000 << "\n"; 
+		stream << "Unsat!"
+			<< " JOB="<<job_no<< " SEC=" << (double)clock()/1000000 << std::endl; 
 	}
-	
+	std::cerr << stream.str();
     
 	std::cout << std::endl;
 }

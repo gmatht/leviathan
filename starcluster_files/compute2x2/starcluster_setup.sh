@@ -79,12 +79,14 @@ fi
 (ssh root@`cat ip.txt` "cd store && sleep 10 && tail -f ready.txt | while read f; do cat $f; done" > ../store/$CLUSTER.txt) &
 
 if [ "$CLUSTER" = compute_serial ]
-then SERIAL=Y
-else SERIAL=N
+then SERIAL=Y; CLOCK_DEPTH=20
+else SERIAL=N; CLOCK_DEPTH=20
 fi
 
 _ssh "
 export SERIAL=$SERIAL
+export CLOCK_DEPTH=$CLOCK_DEPTH
+
 cd leviathan/starcluster_files
 bash benchmark.sh
 " | tee sc_bench.txt
