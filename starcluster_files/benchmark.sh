@@ -1,3 +1,4 @@
+mkdir -p ~/store
 for L in U S H
 do
 cat ../tests/lists/$L | while read t f
