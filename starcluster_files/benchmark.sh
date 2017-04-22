@@ -1,4 +1,5 @@
 git diff .. > ~/store/diff.txt
+mkdir -p ~/store
 for L in U0 U1 U2 U3 S0 S1 S2 S3 S4 H
 do
 cat ../tests/lists/$L | while read t f
