@@ -5,7 +5,7 @@ echo $NAME `echo $FORMULA |
 grep -o ^..................................................................`
 . ~/nodes.sh
 echo > pids
-if [ SERIAL = 'Y' ]
+if [ $SERIAL = 'Y' ]
 then nCPU=1; nNODE=1
 else nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
 fi
