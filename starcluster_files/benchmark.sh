@@ -1,3 +1,4 @@
+git diff .. > ~/store/diff.txt
 for L in U S H
 do
 cat ../tests/lists/$L | while read t f
@@ -7,5 +8,5 @@ cat ../tests/lists/$L | while read t f
  time -p timeout 1000 bash parallel.sh "`cat ../tests/$f`" $L$i
  bash makelog.sh "`cat ../tests/$f`" $L$i "$f"
  done 
-done 2>&1 | tee simplebench.txt
+done 2>&1 | tee ~/store/summary.txt
 
