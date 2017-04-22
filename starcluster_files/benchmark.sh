@@ -8,5 +8,5 @@ cat ../tests/lists/$L | while read t f
  NAME="$L"_`printf %4d  $1 | tr \  0`
  time -p timeout 1000 bash parallel.sh "`cat ../tests/$f`" $L$i
  bash makelog.sh "`cat ../tests/$f`" $L$i "$f"
- done 2>&1 | tee ~/store/summary_$L.txt
-done 
+ done 
+done 2>&1 | tee ~/store/summary.txt
