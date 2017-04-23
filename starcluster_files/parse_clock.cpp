@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int use_float=getenv("PC_FLOAT")>0; 
+
+void inline print_time (unsigned long long t) {
+	if (use_float)
+		printf("%lf\n",(double)t/(1000*1000));
+	else
+		printf("%lld\n",t);
+}
+
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
 		printf("USAGE: zcat bench.U0_0001.gz | %s [split_depth]:[num_jobs]\n",argv[0]);
@@ -15,6 +24,7 @@ int main(int argc, char *argv[]) {
 	sscanf(argv[1],"%u:%u",&split_depth,&num_jobs);
 	unsigned int depth=0, l_depth=0;
 	unsigned long long time=0, l_time=0;
+	
 	int n_read;
 
 	job_clock=(unsigned long long*)calloc(num_jobs,sizeof(unsigned long long));
@@ -34,7 +44,7 @@ int main(int argc, char *argv[]) {
 					job_clock[job++]+=d_time;
 					job %= num_jobs;
 				} else {
-					printf("%lld\n",d_time);
+					print_time(d_time);
 				}
 			}
 			l_depth=depth;
@@ -44,6 +54,9 @@ int main(int argc, char *argv[]) {
 
 	if (num_jobs)
 		for (unsigned int i=0;i<num_jobs;i++) 
-			printf("%lld\n",job_clock[i]);
+			print_time(job_clock[i]);
+
+	free(job_clock);
+
 	return 0;
 }
