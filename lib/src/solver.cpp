@@ -55,12 +55,15 @@ void Solver::_initialize()
   /* The simplification might just have produces a True or False */
   if (_subformulas.size() == 1) {
     if (isa<True>(_subformulas[0])) {
+      std::cout << "^0:" << clock() << std::endl;
+      std::cerr << "Issat!"  << std::endl; 
       _result = Result::SATISFIABLE;
       _state = State::DONE;
       return;
     }
     else if (isa<False>(_subformulas[0])) {
       _result = Result::UNSATISFIABLE;
+      std::cout << "^0:" << clock() << std::endl;
       std::cerr << "Unsat!"  << std::endl; 
       _state = State::DONE;
       return;
@@ -809,6 +812,8 @@ void Solver::_print_stats() const
 	for(int i=1;i<1000&&width[i];++i) {
 		std::cout << i << ":" << width[i] << " ";
 	} 
+        std::cout << "\n^0:" << clock() << std::endl;
+
 	const char* job_no="";
 	if (getenv("JOB_NO")) job_no=getenv("JOB_NO");
 	std::stringstream stream;
@@ -822,7 +827,6 @@ void Solver::_print_stats() const
 	}
 	std::cerr << stream.str();
     
-	std::cout << std::endl;
 }
 
 void Solver::__dump_current_formulas() const

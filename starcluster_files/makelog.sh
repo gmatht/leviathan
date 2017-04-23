@@ -27,6 +27,6 @@ do
 	rm tmp.$NAME.$j.gz
         j=$((j+$nCPU))
 done ; wait 
-) > ~/store/bench.$NAME.gz
-echo `zgrep -o ^.*user < ~/store/bench.$NAME.gz`
-echo bench.$NAME.gz >> ~/store/ready.txt
+) > ~/store/$NAME.gz
+echo `zgrep -o ^.*user < ~/store/$NAME.gz`
+echo $NAME.gz >> ~/store/ready.txt
