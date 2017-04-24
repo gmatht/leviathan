@@ -389,14 +389,13 @@ APPLY_RULE(release)
 
 #undef APPLY_RULE
 
-unsigned int width[1000]={0};
+uint32_t width[1000]={0};
 
-unsigned int num_of_job=1;
+uint32_t num_jobs=1;
 
-static int inline to_job (int i) {
-	int num_jobs = num_of_job;
-        int m = (i % num_jobs);
-        int r = (i / num_jobs);
+static uint32_t inline to_job (uint32_t i) {
+        uint32_t m = (i % num_jobs);
+        uint32_t r = (i / num_jobs);
         if (r) {
                 srand(r); /*set random seed*/
                 return((rand()+m)%num_jobs);
@@ -417,14 +416,14 @@ Solver::Result Solver::solution()
   _state = State::RUNNING;
   bool rules_applied;
 
-unsigned int clock_depth=0;
+uint32_t clock_depth=0;
 if (getenv("CLOCK_DEPTH"))
      sscanf(getenv("CLOCK_DEPTH"),"%u",&clock_depth);
 
-unsigned int job_no=1;
-unsigned int split_depth=1;
-unsigned int last_depth=0;
-if (! getenv("JOB_NO") || sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
+uint32_t job_no=1;
+uint32_t split_depth=1;
+uint32_t last_depth=0;
+if (! getenv("JOB_NO") || sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_jobs,&split_depth)<3) {
     //std::cout << "\nTo use in parallel\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
     //std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
@@ -444,7 +443,7 @@ loop:
         std::cout << "^" << _stack.size() << ":" << clock() << "\n";
     }
     if (_stack.size() == split_depth && last_depth < split_depth) {
-      if ( ((width[_stack.size()]-1)%num_of_job) != (job_no-1) ) {
+      if ( to_job(width[_stack.size()]-1) != (job_no-1) )   {
          while (_stack.size() >= split_depth) 
          	_rollback_to_latest_choice();
          rules_applied = false;
