@@ -5,7 +5,7 @@ echo $NAME `echo $FORMULA |
 grep -o ^..................................................................`
 . ~/nodes.sh
 echo > pids
-if [ $SERIAL = 'Y' ]
+if [ "$SERIAL" = 'Y' ]
 then nCPU=1; nNODE=1
 else nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
 fi
@@ -14,7 +14,8 @@ nJOB=$((nCPU*nNODE))
 rm ~/out/result.$NAME.txt 2> /dev/null || true 2> /dev/null
 j=1; ( for n in $NODES localhost
 do
-	X="ulimit -Sv 1679360; for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do (date; CLOCK_DEPTH=$CLOCK_DEPTH JOB_NO=\$i/$nJOB@17 /usr/bin/time -o ~/out/time.$NAME.\$i.txt checker -l '$FORMULA') > ~/out/log.$NAME.\$i.txt &done; wait"
+	echo $j $((j+nCPU-1))
+	X="ulimit -Sv 1679360; for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do (date || true; CLOCK_DEPTH=$CLOCK_DEPTH JOB_NO=\$i/$nJOB@17 /usr/bin/time -o ~/out/time.$NAME.\$i.txt checker -l '$FORMULA') > ~/out/log.$NAME.\$i.txt &done; wait"
 	#echo "$X"
         < /dev/null ssh -q -t -t $n "$X" &
         echo $! >> pids
@@ -34,7 +35,6 @@ case "$L" in
 	if [ $unsat -ge $nJOB ]
 	then
 		echo "VOTE: formula is unsatisfiable $L"
-		break
 	fi
 	;;
 *)
