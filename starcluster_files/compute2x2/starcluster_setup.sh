@@ -91,4 +91,21 @@ cd leviathan/starcluster_files
 bash benchmark.sh
 " | tee sc_bench.txt
 
+if bash ../backup.sh
+then
+
+echo PREPARING TO DESTROY CLUSTER
+for i in `seq 99 -1 0`; do echo -ne "$i \r"; sleep 1; done
+echo ABOUT TO DESTROY CLUSTER
+sleep 5
+echo REALLY DESTROYING CLUSTER
+
+starcluster -c -f "$CLUSTER"
+
+else
+	echo BACKUP FAILED! manually terminate cluster
+
+fi
+
+
 #nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB=$((nCPU*nNODE)); for j in `seq 1 $nCPU $nJOB`; do read SSH; echo $j $SSH; $SSH "JOB_NO=$j/$nJOB@9 checker -l 'X p'"  ;done < ssh.txt 

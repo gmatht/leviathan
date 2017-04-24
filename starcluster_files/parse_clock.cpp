@@ -2,6 +2,21 @@
 #include <stdlib.h>
 
 int use_float=getenv("PC_FLOAT")>0; 
+int round_robin=getenv("PC_RR")>0; 
+
+unsigned int num_jobs=0;
+
+int inline to_job (int i) {
+	int m = (i % num_jobs);
+	int r = (i / num_jobs);
+	if (r) {
+		srand(r); /*set random seed*/
+		return((rand()+m)%num_jobs);
+	}
+	else {
+		return m;
+	}
+}
 
 void inline print_time (unsigned long long t) {
 	if (use_float)
@@ -16,7 +31,6 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	unsigned int split_depth=20;
-	unsigned int num_jobs=0;
 
 	unsigned int job=0;
 	unsigned long long *job_clock;
@@ -41,8 +55,12 @@ int main(int argc, char *argv[]) {
 			if (l_depth == split_depth) {
 				long long d_time = (time-l_time);
 				if (num_jobs) {
-					job_clock[job++]+=d_time;
-					job %= num_jobs;
+					if (round_robin) {
+						job_clock[job++]+=d_time;
+						job %= num_jobs;
+					} else {
+						job_clock[to_job(job++)]+=d_time;
+					}
 				} else {
 					print_time(d_time);
 				}

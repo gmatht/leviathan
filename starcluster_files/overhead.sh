@@ -15,3 +15,6 @@ do
 		echo
 	done
 done | tee ~/store/overhead.txt
+
+#echo -ne "DEPTH\t"; echo 1 | average.sh > /dev/null ; for c in `seq 3 22`; do echo -ne "$((c-2))\t"; cut -f $c ../store/compute_serial/overhead.txt | average.sh 2> /dev/null ; done
+

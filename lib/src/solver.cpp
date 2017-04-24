@@ -391,6 +391,21 @@ APPLY_RULE(release)
 
 unsigned int width[1000]={0};
 
+unsigned int num_of_job=1;
+
+static int inline to_job (int i) {
+	int num_jobs = num_of_job;
+        int m = (i % num_jobs);
+        int r = (i / num_jobs);
+        if (r) {
+                srand(r); /*set random seed*/
+                return((rand()+m)%num_jobs);
+        }
+        else {  
+                return m;
+        }
+}
+
 Solver::Result Solver::solution()
 {
   if (_state == State::RUNNING || _state == State::DONE)
@@ -407,15 +422,14 @@ if (getenv("CLOCK_DEPTH"))
      sscanf(getenv("CLOCK_DEPTH"),"%u",&clock_depth);
 
 unsigned int job_no=1;
-unsigned int num_of_job=1;
 unsigned int split_depth=1;
 unsigned int last_depth=0;
 if (! getenv("JOB_NO") || sscanf(getenv("JOB_NO"),"%u/%u@%u",&job_no,&num_of_job,&split_depth)<3) {
-    std::cout << "\nTo use in parallel\n";
+    //std::cout << "\nTo use in parallel\n";
     std::cout << "USAGE: JOB_NO=[job_no]/[number_of_jobs]@[split_depth] checker ...\n";
-    std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
-    std::cout << "\nAn example of when this doen't work well (only 2x speed up)" << std::endl;
-    std::cout << "make && for i in `seq 1 1 7`; do JOB_NO=$i/17@7 timeout 30 time bin/checker -v 4  -l '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X X X X X X X X X ~a'; done  2>&1 | tee out.txt" << std::endl;
+    //std::cout << "e.g.: for i in 1 2 3; do JOB_NO=$i/3@7 checker ... ; done" << std::endl;
+    //std::cout << "\nAn example of when this doen't work well (only 2x speed up)" << std::endl;
+    //std::cout << "make && for i in `seq 1 1 7`; do JOB_NO=$i/17@7 timeout 30 time bin/checker -v 4  -l '(G (a => X (b|c))) & (G (b => X a)) & (G (c => X a)) & a & X X X X X X X X X X ~a'; done  2>&1 | tee out.txt" << std::endl;
     //exit(1);
 }
 
