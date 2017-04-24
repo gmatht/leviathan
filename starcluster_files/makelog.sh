@@ -11,7 +11,7 @@ fi
 nJOB=$((nCPU*nNODE))
 j=1; for n in $NODES localhost
 do
-	echo $j $((j+nCPU-1))
+	#echo $j $((j+nCPU-1))
         < /dev/null ssh -q $n "for i in `seq $j $((j+nCPU-1))| tr '\n' ' '`; do echo; echo @.$NAME.\$i; cat ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; echo rm ~/out/time.$NAME.\$i.txt ~/out/log.$NAME.\$i.txt ; done | gzip -9" > tmp.$NAME.$j.gz &
         j=$((j+$nCPU))
 done ; wait 
