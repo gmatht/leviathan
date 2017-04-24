@@ -3,9 +3,8 @@ git diff .. > ~/store/diff.txt
 for n in $NODES localhost; do ssh $n 'killall    checker'; done
 for n in $NODES localhost; do ssh $n 'killall -9 checker'; done
 
-if [ "$SERIAL" = 'Y' ]
-then nCPU=1; nNODE=1
-else nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
+if [ -z "$nCPU"  ]
+then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
 fi
 nJOB=$((nCPU*nNODE))
 

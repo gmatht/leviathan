@@ -24,7 +24,7 @@ starcluster -h 2> /dev/null > /dev/null || (
 )
 
 date > starttime.txt
-starcluster start $CLUSTER -c $CLUSTER || true
+starcluster start -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
 starcluster lc $CLUSTER > starcluster_lc.txt
 grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
 IP=`cat ip.txt`
@@ -56,6 +56,8 @@ _ssh '
 mkdir -p store
 mkdir -p out
 cd /; tar -zxf ~/tar.gz; chown root /root/.ssh /root/.ssh/* /root; chgrp root /root /root/.ssh /root/.ssh/*; chmod 600 ~/.ssh/*; chmod 700 ~/.ssh /root
+'
+_ssh '
 cd
 #for n in `grep -o node... /etc/hosts`; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0; done
 apt-get install mosh -y
@@ -88,7 +90,7 @@ export SERIAL=$SERIAL
 export CLOCK_DEPTH=$CLOCK_DEPTH
 
 cd leviathan/starcluster_files
-bash benchmark.sh
+$* bash benchmark.sh
 " | tee sc_bench.txt
 
 if bash ../backup.sh
@@ -100,7 +102,7 @@ echo ABOUT TO DESTROY CLUSTER
 sleep 5
 echo REALLY DESTROYING CLUSTER
 
-starcluster -c -f "$CLUSTER"
+starcluster -c -f terminate "$CLUSTER"
 
 else
 	echo BACKUP FAILED! manually terminate cluster
