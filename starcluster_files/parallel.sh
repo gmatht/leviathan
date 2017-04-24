@@ -5,11 +5,6 @@ echo $NAME `echo $FORMULA |
 grep -o ^..................................................................`
 . ~/nodes.sh
 echo > pids
-if [ "$SERIAL" = 'Y' ]
-then nCPU=1; nNODE=1
-else nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
-fi
-nJOB=$((nCPU*nNODE))
 #set | grep ^n 2>&1  
 rm ~/out/result.$NAME.txt 2> /dev/null || true 2> /dev/null
 j=1; ( for n in $NODES localhost

@@ -4,11 +4,6 @@ NAME=$2
 FILE=$3
 mkdir -p ~/store
 . ~/nodes.sh
-if [ "$SERIAL" = 'Y' ]
-then nCPU=1; nNODE=1
-else nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
-fi
-nJOB=$((nCPU*nNODE))
 j=1; for n in $NODES localhost
 do
 	#echo $j $((j+nCPU-1))
