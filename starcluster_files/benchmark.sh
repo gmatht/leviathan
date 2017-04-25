@@ -15,7 +15,8 @@ export nJOB
 renice -10 $$
 
 mkdir -p ~/store
-for L in U0 U1 U2 U3 S0 S1 S2 S3 S4 H
+(
+for L in U0 U1 U2 U3 S0 S1 S2 S3 S4
 do
 cat ../tests/lists/$L | while read t f
 #f in `find ~/leviathan/tests/rozier/ | grep pltl\$`
@@ -25,4 +26,17 @@ cat ../tests/lists/$L | while read t f
  time -p timeout 1000 bash parallel.sh "`cat ../tests/$f`" $NAME
  bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
  done 
-done 2>&1 | tee ~/store/summary.txt
+done
+L=H
+cat ../tests/lists/$L | while read t f
+do
+	echo
+	i=$((i+1))
+	echo $i $f
+done | shuf | while read i f
+do echo --- $i $f
+	NAME="$L"_`printf %3d  $i | tr \  0`
+	time -p timeout 20 bash parallel.sh "`cat ../tests/$f`" $NAME
+	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
+done
+) 2>&1 | tee ~/store/summary.txt
