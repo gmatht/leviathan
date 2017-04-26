@@ -28,11 +28,10 @@ cat ../tests/lists/$L | while read t f
  done 
 done
 L=H
-cat ../tests/lists/$L | while read t f
+cat ../tests/lists/H | while read t f
 do
-	echo
 	i=$((i+1))
-	echo $i $f
+	echo -e "$i\t$f"
 done | shuf | while read i f
 do echo --- $i $f
 	NAME="$L"_`printf %3d  $i | tr \  0`
