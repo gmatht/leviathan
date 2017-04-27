@@ -24,7 +24,7 @@ starcluster -h 2> /dev/null > /dev/null || (
 )
 
 date > starttime.txt
-starcluster start -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
+starcluster start --force-spot-master -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
 starcluster lc $CLUSTER > starcluster_lc.txt
 grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
 IP=`cat ip.txt`
@@ -88,9 +88,16 @@ fi
 #export SERIAL=$SERIAL
 #export CLOCK_DEPTH=$CLOCK_DEPTH
 
+TASK="bash benchmark.sh"
+
+if [ ! -z "$1" ]
+then
+TASK="$*"
+fi
+
 _ssh "
 cd leviathan/starcluster_files
-$* bash benchmark.sh
+$TASK
 " | tee sc_bench.txt
 
 if bash ../backup.sh
