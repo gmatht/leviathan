@@ -80,10 +80,10 @@ fi
 
 (ssh root@`cat ip.txt` "cd store && sleep 10 && tail -f ready.txt | while read f; do cat $f; done" > ../store/$CLUSTER.txt) &
 
-if [ "$CLUSTER" = compute_serial ]
-then SERIAL=Y; CLOCK_DEPTH=20
-else SERIAL=N; CLOCK_DEPTH=20
-fi
+#if [ "$CLUSTER" = compute_serial ]
+#then SERIAL=Y; CLOCK_DEPTH=20
+#else SERIAL=N; CLOCK_DEPTH=20
+#fi
 
 _ssh "
 export SERIAL=$SERIAL
@@ -102,7 +102,8 @@ echo ABOUT TO DESTROY CLUSTER
 sleep 5
 echo REALLY DESTROYING CLUSTER
 
-starcluster -c -f terminate "$CLUSTER"
+#starcluster -c -f terminate "$CLUSTER"
+starcluster -c terminate "$CLUSTER"
 
 else
 	echo BACKUP FAILED! manually terminate cluster
