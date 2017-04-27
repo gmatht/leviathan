@@ -16,6 +16,7 @@ fi
 export nCPU
 export nNODE
 export nJOB
+export DEPTH
 
 renice -10 $$
 
