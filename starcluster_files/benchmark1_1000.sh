@@ -4,8 +4,9 @@ for n in $NODES localhost; do ssh $n 'killall    checker'; done
 for n in $NODES localhost; do ssh $n 'killall -9 checker'; done
 
 if [ -z "$nCPU"  ]
-then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
+then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`
 fi
+nNODE=`wc -l < ~/ssh.txt`
 nJOB=$((nCPU*nNODE))
 
 
