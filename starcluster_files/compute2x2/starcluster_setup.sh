@@ -85,10 +85,10 @@ fi
 #else SERIAL=N; CLOCK_DEPTH=20
 #fi
 
-_ssh "
-export SERIAL=$SERIAL
-export CLOCK_DEPTH=$CLOCK_DEPTH
+#export SERIAL=$SERIAL
+#export CLOCK_DEPTH=$CLOCK_DEPTH
 
+_ssh "
 cd leviathan/starcluster_files
 $* bash benchmark.sh
 " | tee sc_bench.txt
@@ -103,12 +103,10 @@ sleep 5
 echo REALLY DESTROYING CLUSTER
 
 #starcluster -c -f terminate "$CLUSTER"
-starcluster -c terminate "$CLUSTER"
+starcluster -cf terminate "$CLUSTER"
 
 else
 	echo BACKUP FAILED! manually terminate cluster
 
 fi
-
-
 #nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ssh.txt`; nJOB=$((nCPU*nNODE)); for j in `seq 1 $nCPU $nJOB`; do read SSH; echo $j $SSH; $SSH "JOB_NO=$j/$nJOB@9 checker -l 'X p'"  ;done < ssh.txt 
