@@ -446,7 +446,7 @@ loop:
       if ( to_job(width[_stack.size()]-1) != (job_no-1) )   {
          while (_stack.size() >= split_depth) 
          	_rollback_to_latest_choice();
-         rules_applied = false;
+         //rules_applied = false;
          last_depth=_stack.size();
          //std::cout << "H" << hash << "," << job_no << "/" << num_of_job << std::endl;
          goto loop;
