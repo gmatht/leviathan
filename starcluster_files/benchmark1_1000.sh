@@ -8,6 +8,11 @@ then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt
 fi
 nJOB=$((nCPU*nNODE))
 
+
+if [ -z "$DEPTH"  ]
+then DEPTH=18
+fi
+
 export nCPU
 export nNODE
 export nJOB
@@ -23,10 +28,13 @@ cat ../tests/lists/$L | while read t f
  do echo --- $t $f
  i=$((i+1))
  NAME="$L"_`printf %3d  $i | tr \  0`
- time -p timeout 1000 bash parallel.sh "`cat ../tests/$f`" $NAME
+ time -p timeout 3000 bash parallel.sh "`cat ../tests/$f`" $NAME
  bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
  done 
 done
+exit ###########
+
+
 L=H
 cat ../tests/lists/H | while read t f
 do
