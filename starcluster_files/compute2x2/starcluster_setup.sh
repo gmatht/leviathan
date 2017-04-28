@@ -110,7 +110,9 @@ sleep 5
 echo REALLY DESTROYING CLUSTER
 
 #starcluster -c -f terminate "$CLUSTER"
-starcluster -cf terminate "$CLUSTER"
+starcluster terminate -c -f "$CLUSTER"
+
+#starcluster -cf terminate "$CLUSTER"
 
 else
 	echo BACKUP FAILED! manually terminate cluster
