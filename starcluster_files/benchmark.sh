@@ -65,7 +65,7 @@ do echo --- $i $f
 	for DEPTH in 2 4 8 16 32 64 128 256 512
 	do
 		export DEPTH
-		time -p timeout 1 bash parallel.sh "`cat ../tests/$f`" $NAME
+		time -p timeout 2 bash parallel.sh "`cat ../tests/$f`" $NAME
 	done
 	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
 done
