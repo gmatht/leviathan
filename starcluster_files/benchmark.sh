@@ -1,6 +1,15 @@
-#mkdir -p ~/store/bak; (cd ~/store; mv * bak || true)
+#mkdir -p ~/store/bak; (cd ~/store; mv * bak || true); (cd ~/store/; mkdir -p sav; for f in `cat bak/ready.txt`; do mv bak/$f sav/$f; done)
 #(cd ~/store/; mkdir -p sav; for f in `cat bak/ready.txt`; do mv bak/$f sav/$f; done)
-#(cd ~/store/; mkdir -p sav; for f in `cat bak/ready.txt`; do mv bak/$f sav/$f; done)
+
+SETS="${B_SETS:-U0 U1 U2 U3 H S0 S1 S2 S3}"
+DEPTHS="${B_DEPTHS:-16 18 19 24 40 48 56 64 72 80}"
+
+ls ~/store/summary*txt && (
+	OLD=~/store/old.`date -Ins`
+	mkdir -p "$OLD"
+	mv ~/store/*txt $OLD/
+)
+
 git diff .. > ~/store/diff.txt
 mkdir -p ~/out
 . ~/nodes.sh
@@ -20,14 +29,16 @@ renice -10 $$
 
 mkdir -p ~/store
 (
-for L in U0 U1 U2 U3 H S0 S1 S2 S3 S4
+for L in $SETS 
 do
 	cat ../tests/lists/$L | while read t f
 	do
 		#f in `find ~/leviathan/tests/rozier/ | grep pltl\$`
 		i=$((i+1))
 	 	#for DEPTH in 2 4 8 16 17 18 32 64 128 256 512
-	 	for DEPTH in 4 8 16 17 18 19 32 64 128 
+	 	#for DEPTH in 4 8 16 17 18 19 32 64 128 
+	 	for DEPTH in $DEPTHS
+#4 8 16 17 18 19 32 64 128 
 	 	do
 	 		NAME="$L"_`printf %3d  $i | tr \  0`_$nJOB"@"$DEPTH
 			if [ -e ~/store/sav/$NAME.gz ]

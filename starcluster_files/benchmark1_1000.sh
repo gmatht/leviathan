@@ -30,6 +30,11 @@ cat ../tests/lists/$L | while read t f
  do echo --- $t $f
  i=$((i+1))
  NAME="$L"_`printf %3d  $i | tr \  0`
+ #NAME="$L"_`printf %3d  $i | tr \  0`_$nJOB"@"$DEPTH
+ if [ -e ~/store/sav/$NAME.gz ]
+ then continue
+ fi
+
  time -p timeout 3000 bash parallel.sh "`cat ../tests/$f`" $NAME
  bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
  done 

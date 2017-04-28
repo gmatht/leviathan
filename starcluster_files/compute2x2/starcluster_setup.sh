@@ -1,4 +1,5 @@
 #!/bin/bash
+IP=`cat ip.txt`
 set -x
 set -e
 CLUSTER=$(basename $PWD)
@@ -23,6 +24,14 @@ starcluster -h 2> /dev/null > /dev/null || (
 	ssh-keygen -y -f id_rsa > id_rsa.pub
 )
 
+_ssh() {
+  ssh root@$IP "$@"
+}
+
+# SETUP SERVER
+if ! [ -e ip.txt ] && timeout 1 ../ssh.sh command -v git
+then
+
 date > starttime.txt
 starcluster start --force-spot-master -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
 starcluster lc $CLUSTER > starcluster_lc.txt
@@ -30,11 +39,6 @@ grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - 
 IP=`cat ip.txt`
 set | grep IP
 
-_ssh() {
-  ssh root@$IP "$@"
-}
-
-# SETUP SERVER
 #"echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
 starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
 (cd ../tar && 
@@ -45,7 +49,7 @@ starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $
 	chmod 700 . root root/.ssh usr usr/bin usr/lib usr/lib/x86_64-linux-gnu
 	chmod 600 root/.ssh/*
 	tar -zcf ../tar.gz . --owner=0 --group=0
-	rsync -a --progress ../tar.gz root@$IP:tar.gz
+	rsync -a --progress --size-only ../tar.gz root@$IP:tar.gz
 	#scp ../tar.gz root@$IP: 
 )
 i=1
@@ -68,7 +72,11 @@ for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
 for n in $NODES; do ssh $n mkdir ~/out; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
 #while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
-apt-get install -y git-core	
+apt-get install -y git-core'
+
+fi 
+#END SETUP
+_ssh '
 if [ -e leviathan ] 
 then
  cd leviathan
@@ -88,17 +96,24 @@ fi
 #export SERIAL=$SERIAL
 #export CLOCK_DEPTH=$CLOCK_DEPTH
 
-TASK="bash benchmark.sh"
-
-if [ ! -z "$1" ]
+if [ -e task.sh ]
 then
-TASK="$*"
-fi
+	bash task.sh
+else
+	echo DEBUG
+	exit 
+	TASK="bash benchmark.sh"
 
-_ssh "
+	if [ ! -z "$1" ]
+	then
+	TASK="$*"
+	fi
+
+	_ssh "
 cd leviathan/starcluster_files
 $TASK
 " | tee sc_bench.txt
+fi
 
 if bash ../backup.sh
 then
