@@ -1,4 +1,6 @@
 #!/bin/bash
+git commit ..
+git push
 IP=`cat ip.txt`
 set -x
 set -e
