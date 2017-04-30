@@ -3,6 +3,7 @@
 
 SETS="${B_SETS:-U0 U1 U2 U3 H S0 S1 S2 S3}"
 DEPTHS="${B_DEPTHS:-16 18 19 24 40 48 56 64 72 80}"
+TIMEOUT="${B_TIMEOUT:-1}"
 
 ls ~/store/summary*txt && (
 	OLD=~/store/old.`date -Ins`
@@ -17,56 +18,52 @@ for n in $NODES localhost; do ssh $n 'killall    checker'; done
 for n in $NODES localhost; do ssh $n 'killall -9 checker'; done
 
 if [ -z "$nCPU"  ]
-then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`; nNODE=`wc -l < ~/ssh.txt`
+then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`
 fi
-nJOB=$((nCPU*nNODE))
 
+nNODE=$(wc -w < ~/nodes.sh)
+set | grep nNODE
+nNODE=$((nNODE+1)) #include master/localhost
+nJOB=$((nCPU*nNODE))
 export nCPU
 export nNODE
 export nJOB
+export NODES
 
 renice -10 $$
 
 mkdir -p ~/store
 (
+echo "nCPU=$nCPU nNODE=$nNODE nJOB=$nJOB B_TIMEOUT=$TIMEOUT SOLVER=$SOLVER B_DEPTHS='$DEPTHS' B_SETS='$SETS'"
+cat /proc/cpuinfo  | grep model.name | tail -n1
+echo `lsb_release -d` `arch`
+
+echo SOLVER=$SOLVER
 for L in $SETS 
 do
+	echo SET $L
 	cat ../tests/lists/$L | while read t f
 	do
 		#f in `find ~/leviathan/tests/rozier/ | grep pltl\$`
 		i=$((i+1))
+		if [ -z "$f" ]; then f=$t; t="?"; fi
 	 	#for DEPTH in 2 4 8 16 17 18 32 64 128 256 512
 	 	#for DEPTH in 4 8 16 17 18 19 32 64 128 
 	 	for DEPTH in $DEPTHS
 #4 8 16 17 18 19 32 64 128 
 	 	do
-	 		NAME="$L"_`printf %3d  $i | tr \  0`_$nJOB"@"$DEPTH
+	 		NAME="$SOLVER$L"_`printf %4d  $i | tr \  0`_$nJOB"@"$DEPTH
 			if [ -e ~/store/sav/$NAME.gz ]
 			then continue
 			fi
 			echo --- $t $f 
 			export DEPTH
-			time -p timeout 1 bash parallel.sh "`cat ../tests/$f`" $NAME
+			time -p timeout $TIMEOUT bash "$SOLVER"parallel.sh "`cat ../tests/$f`" $NAME
+
 	        	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
 			date -Ins
  		done
 	done 
 done
-exit
------------------------------------
-L=H
-cat ../tests/lists/H | while read t f
-do
-	i=$((i+1))
-	echo -e "$i\t$f"
-done | shuf | while read i f
-do echo --- $i $f
-	NAME="$L"_`printf %3d  $i | tr \  0`
-	for DEPTH in 2 4 8 16 32 64 128 256 512
-	do
-		export DEPTH
-		time -p timeout 2 bash parallel.sh "`cat ../tests/$f`" $NAME
-	done
-	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
-done
 ) 2>&1 | tee ~/store/summary.txt
+

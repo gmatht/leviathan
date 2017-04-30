@@ -3,7 +3,6 @@ FORMULA=$1
 NAME=$2
 echo $NAME `echo $FORMULA | 
 grep -o ^..................................................................`
-. ~/nodes.sh
 echo > pids
 #set | grep ^n 2>&1  
 rm ~/out/result.$NAME.txt 2> /dev/null || true 2> /dev/null
