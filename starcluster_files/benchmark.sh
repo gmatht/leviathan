@@ -21,7 +21,7 @@ if [ -z "$nCPU"  ]
 then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`
 fi
 
-nNODE=$(wc -w < ~/nodes.sh)
+nNODE=$(echo $NODES | wc -w)
 set | grep nNODE
 nNODE=$((nNODE+1)) #include master/localhost
 nJOB=$((nCPU*nNODE))
