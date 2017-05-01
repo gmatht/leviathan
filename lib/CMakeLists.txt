@@ -82,14 +82,14 @@ target_compile_options(
 
 # Warnings
 set(
-  CLANG_WARNINGS -Weverything -pedantic -Werror
+  CLANG_WARNINGS -Weverything -pedantic 
   -Wno-c++98-compat -Wno-c++98-compat-pedantic
   -Wno-padded -Wno-weak-vtables -Wno-unknown-pragmas
   -Wno-exit-time-destructors -Wno-switch-enum
 )
 
 set(
-  GNU_WARNINGS -Wall -Wextra -pedantic -Werror 
+  GNU_WARNINGS -Wall -Wextra -pedantic 
   -Wno-pragmas -Wno-unknown-pragmas
 )
 
