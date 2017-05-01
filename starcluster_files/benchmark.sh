@@ -58,12 +58,17 @@ do
 			fi
 			echo --- $t $f 
 			export DEPTH
-			if [ "$t" = Fmla ]
-			then fmla=$f; t="?"
+			#echo "[[$t]]"
+			#if echo "$t" | grep Fmla > /dev/null
+			if [ "$L" = R ]
+			then fmla="$f"; t="?"
 			else fmla="`cat ../tests/$f`"
-			time -p timeout $TIMEOUT bash "$SOLVER"parallel.sh "$fmla" $NAME
+			#else fmla="NA"
+			fi
 
-	        	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
+			time -p timeout $TIMEOUT bash "$SOLVER"parallel.sh "$fmla" $NAME
+			bash makelog.sh "$fmla" $NAME "$f"
+
 			date -Ins
  		done
 	done 
