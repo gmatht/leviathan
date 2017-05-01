@@ -420,6 +420,7 @@ uint32_t clock_depth=0;
 if (getenv("CLOCK_DEPTH"))
      sscanf(getenv("CLOCK_DEPTH"),"%u",&clock_depth);
 
+bool     dump_depth=(getenv("DUMP_DEPTH")>NULL);
 uint32_t job_no=1;
 uint32_t split_depth=1;
 uint32_t last_depth=0;
@@ -438,6 +439,7 @@ loop:
     //std::cout << "D" << _stack.size() << "," << frame.id << "," << not_reach_end << rules_applied <<"\n";
     assert(_stack.size() <= split_depth || job_no > 0);
     if (_stack.size() > last_depth && _stack.size() < 1000) {
+      if(dump_depth) printf ("%lu\n", _stack.size()); 
       width[_stack.size()]++;
       if (_stack.size() <= clock_depth)
         std::cout << "^" << _stack.size() << ":" << clock() << "\n";
