@@ -1,5 +1,9 @@
 #!/bin/bash
-git commit ..
+if ! git commit ..
+then 
+	echo press CTRL-C to stop
+	sleep 2
+fi
 git push
 IP=`cat ip.txt`
 set -x
@@ -31,7 +35,7 @@ _ssh() {
 }
 
 # SETUP SERVER
-if ! [ -e ip.txt ] && timeout 1 ../ssh.sh command -v git
+if ! ( [ -z "$REDO" ] &&  [ -e ip.txt ] && timeout 1 ../ssh.sh command -v git )
 then
 
 date > starttime.txt
@@ -68,7 +72,9 @@ cd
 #for n in `grep -o node... /etc/hosts`; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0; done
 apt-get install mosh -y
 ssh-add ~/.ssh/id_rsa
-set -x; NODES="$(grep -o node... /etc/hosts)"; set | grep ^NODES | tee nodes.sh
+set -x
+#NODES="$(grep -o node... /etc/hosts | tr \"\n\" \  )"; set | grep ^NODES | tee nodes.sh
+NODES=`cat /etc/hosts | grep -o node...|tr "\n" " "|sed s/\ $//`; set |grep NODES > nodes.sh
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
 for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
 for n in $NODES; do ssh $n mkdir ~/out; done
@@ -103,13 +109,13 @@ then
 	bash task.sh
 else
 	echo DEBUG
-	exit 
 	TASK="bash benchmark.sh"
 
 	if [ ! -z "$1" ]
 	then
 	TASK="$*"
 	fi
+	echo "$TASK" > task.log
 
 	_ssh "
 cd leviathan/starcluster_files

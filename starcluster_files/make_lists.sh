@@ -10,5 +10,6 @@ do
 	< $t grep '^[1-9].[.]' > "$t"2
 	< $t grep '^[1-9]..[.]' > "$t"3
 done
+paste non_trivial2_f_0.1.txt non_trivial2_n_0.1.txt | sed 's/^/Fmla\t/' > ../tests/lists/R
 	
 #grep -v satisfiable  benchmark_oneline.txt | grep .. | sed 's/^ .*tests./?\t/' | shuf > tests/lists/H

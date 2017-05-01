@@ -1,0 +1,21 @@
+i=1
+TIMEOUT=$1
+NAME=`echo "$*"|tr ' ' -`
+
+min=`tail -n 1 non_trivial2_n_$TIMEOUT.txt`
+
+while read i
+do
+if [ $i -gt "$min" ]
+then    
+   f="`./make_random_ltl_formulas.ml 50 2 $i $i`"
+
+			if JOB_NO=1/1@0 timeout $TIMEOUT ../bin/checker -l "$f"
+			then echo LV: "$f"
+			else 
+				echo -e "$i\t$f" 1>&2
+				echo $i >> non_trivial2_n_$TIMEOUT.txt
+				echo $f >> non_trivial2_f_$TIMEOUT.txt
+			fi
+fi
+done 2>&1 | gzip > filter_formulas2b_$TIMEOUT.log.gz

@@ -1,0 +1,581 @@
+Fmla	( X F X G X a & ( X X G ( ( F X ( G F F b U a ) | X F G ~ ( b & b ) ) & ~ ( ( b U a ) & ( F b U G G G G a ) ) ) & G F F G X ( F b | a ) ) )	1248
+Fmla	G F ( ( ( a U ~ a ) & a ) & F ~ ( ( X ( G a & a ) & ( F a U X F b ) ) & G G ~ X X ( G ( G b | b ) U X X X ( ( F b | a ) U ~ ( ( a | G b ) | a ) ) ) ) )	4163
+Fmla	~ ( X X ~ a U F G ( X ( ( ( b & b ) U ( b & ~ a ) ) U G ( b U ~ F G a ) ) | ( ( F F ( G a & a ) U F ( F F b & ( G a U G ( X G F b U b ) ) ) ) | b ) ) )	6960
+Fmla	G F X ~ X X X ( ( b U ~ F X ( a | a ) ) | G ~ X ( ( ~ G ( X ~ F G G b | F ( ~ ~ a | a ) ) | a ) & ( G X ( ~ F a | F ~ X a ) U G b ) ) )	10575
+Fmla	~ G ( G G ( ( F b & ~ a ) & F b ) U ( ( G G ( X ~ F ~ ~ X ( b & b ) | G ( ( a & a ) U ( a | G F F a ) ) ) U F G a ) & ( ~ b U X ( X a & G b ) ) ) )	12093
+Fmla	G ( ( G ( F ( b U ~ b ) U ( ( b & a ) U b ) ) U F F ( ( ~ G a U X X G a ) & ~ a ) ) U X G ( ( a U ( b U ~ X ~ ( F a U b ) ) ) U ( b & F ~ F ( b & a ) ) ) )	14659
+Fmla	~ ( ( G X a U G F b ) | ( F G X ( ( X b | X a ) U X X X G G ( ( b U ( G a U ~ a ) ) | G b ) ) U ( G X ( F ( F a U a ) | ( a & b ) ) U ( ~ a & b ) ) ) )	19763
+Fmla	F G F ( ( ( ~ b | X X F ( b U b ) ) U ( X ( X ( F ( a U G F ( a U F b ) ) | G ~ a ) U ( a & b ) ) | ( X a & ( X b U b ) ) ) ) & F F X ~ X X ( b | b ) )	24089
+Fmla	( ( F ( b & a ) U G b ) U G X X F ( X ~ ( ( ( X F a U b ) | a ) & G X X X G ( ( G ( b | a ) & X ( a U G a ) ) | b ) ) & ( F a | ( F X ~ G b & a ) ) ) )	28120
+Fmla	G ~ ( ( F G ~ F ~ b | X ~ X ( F X X X a | a ) ) U ( ( ( ~ X b & ~ ( F ( G F ~ F G ( ~ X b & b ) & b ) U X ( a U b ) ) ) | ~ F a ) & G a ) )	34981
+Fmla	G F ( ~ ( X b U ( ( ( X X F ~ a U X X X ( G a U b ) ) U ~ ( F b | F a ) ) U ( ~ ~ b & ~ X b ) ) ) & ~ G G X X ( ( F ~ ( a U a ) U b ) & ~ a ) )	35136
+Fmla	~ X F ~ ~ ( G ( G ( b | ~ ( F a U G a ) ) U ( a & ~ a ) ) U ( G X X G G ( b U X G ~ b ) | X G G G ~ ( ( ~ ~ G X b U X a ) & F ~ b ) ) )	36436
+Fmla	G ( F G ( a U F G ( X a | G b ) ) U ( X ~ G ( G a | ( G ( X F G F ( ~ b U F G b ) U X X a ) U ~ ~ ~ ( a U a ) ) ) & ( G ~ a U ( b U F b ) ) ) )	36627
+Fmla	~ ( X ~ F F ( a & a ) U F G ( F G ( b & a ) U ( ( a U G ~ ( F ( F G a U b ) | a ) ) U ( ~ F G G ~ ~ F a & ( ~ b U F F ( b U ( X b & a ) ) ) ) ) ) )	43075
+Fmla	F G ( ( ( X b U ( X ~ ( G ( b U ~ b ) U ( b & b ) ) | ( X a & ~ a ) ) ) & a ) | X ( F F ( F F a U X ~ X G G X X F G F G G b ) | ( X a | a ) ) )	43606
+Fmla	G X ( F ( F ( b & ( X X ~ b | F a ) ) & a ) U ( X X ~ X X ( ( b & G ( b U X ( F X X a | b ) ) ) | ( G X ( X ~ a U a ) & G b ) ) & F ( G a U a ) ) )	44710
+Fmla	X G F F ~ ( X ( b & G b ) U G ( ( ( ( ~ ~ X ~ F X G a | ( b U b ) ) | b ) & G G a ) | ( b U ( ( a | ( b & G F X a ) ) & ~ ( X a U ( F b U a ) ) ) ) ) )	46764
+Fmla	~ ~ ~ ( F F ( ( G X b & X a ) & a ) U ( ( ~ F F X ( a U F b ) | a ) | G X ( F b & G ~ G ( ( X G F G a | G a ) | ( F ( G b U b ) | F a ) ) ) ) )	54187
+Fmla	G G F ~ ( ( G F ~ F b U ~ b ) U X G G ( X ( G ~ ( ( ( ~ a U b ) U ~ b ) U a ) U ( b U ~ F F ( X F X a U G ( X F ~ a | X b ) ) ) ) & ~ a ) )	56239
+Fmla	X ( b U ( ( F X ( b & b ) | F ( ( F a | a ) U ( ( a U a ) U b ) ) ) & ~ F G X ( X X ~ ( G a U G b ) | G ~ X F F ~ ( X b & ( ~ F X b | G b ) ) ) ) )	57799
+Fmla	X G G ( F ~ ( ( b & G F X b ) U ~ b ) | X ( ( X ~ a | X X X ( X X F ( F F b & a ) | b ) ) U ( a U ( G ~ ( a & a ) & ~ G X G ( ~ b U b ) ) ) ) )	65199
+Fmla	G ( ( ~ X b U F X ( ( a U a ) U G X X F b ) ) U ( ( ~ a U ~ b ) & ~ ( X X ~ F F F G G F F F a U G ( F ( ( G a U ( b & F a ) ) U b ) | b ) ) ) )	66338
+Fmla	G ( G ( b U a ) U ( F ~ ( ( G b | X a ) U ( b U a ) ) & F ( ( X F F ( X b U X b ) | F F X ~ a ) & ( F X ( a & F X b ) | ( a U ( F b U G X b ) ) ) ) ) )	70090
+Fmla	G G ( ( F ( F F G b U ( b U b ) ) & F F ~ ( ( ( b | X b ) U ~ ( X a | a ) ) | ( X ( b & G ~ ( a U b ) ) & ( ( G a & G F ~ a ) | X ( b & a ) ) ) ) ) | F a )	70759
+Fmla	G ~ G X X ( G ( G X G F F ~ X b & ( ~ G a U b ) ) U ( G ( F ( a | ( G G b | X a ) ) U b ) & G X ~ ( ( ( a U a ) U ( F ~ ( b | a ) U a ) ) U b ) ) )	72150
+Fmla	~ G ( X ( G b U ( ( ( ( a | b ) U F ( b U b ) ) & X a ) | a ) ) U G X G ( G a U X X X ( G ( ~ b U ( X a U a ) ) | ~ X X ( F ( X F a & F b ) U b ) ) ) )	74371
+Fmla	G F ( X ~ G ( ( a | ~ b ) U ( G F F b U ( X X ( b | b ) U ( F b U ~ F ~ X G a ) ) ) ) & ( F ( b | F F G ( ~ a U ( ~ b U b ) ) ) & ( G ~ a U a ) ) )	79109
+Fmla	~ F G G G G G ( ~ X F F ( ( ( F F b U a ) | ( b & ~ b ) ) U ( b U G b ) ) U X G X X ( ( ~ F ( a U b ) & ( b & b ) ) U ( b & ( ( G b | b ) | F a ) ) ) )	79473
+Fmla	G ( X ~ X ( ~ F ( ( F X X ( ~ a | F a ) U ( F G ( a U F a ) | X b ) ) | a ) | ( ( ( b & a ) | a ) | F F G ( ( a & b ) & X G X X X a ) ) ) | F X b )	88330
+Fmla	G ( X ( b U ( X a U X a ) ) U X ~ ( ~ b | ( F ~ F F ( ( X b | F a ) U G ~ G a ) U ( ( ~ F G b U G G ( G b | ( a & b ) ) ) | ( G G b U ~ b ) ) ) ) )	90596
+Fmla	~ F G G ( ~ ( ( F a | F b ) U ~ F ~ ( ( ~ G F b U b ) & ( X X a U F ~ ( ~ ~ a U ~ G b ) ) ) ) U X X X X G G ( F F ( F b | a ) & X b ) )	96808
+Fmla	~ X G ( X ~ F b U ( G G X X G ( ( X G G G F ( a U b ) | G ( G b U a ) ) | a ) | ( ( F G X ~ F ( G a | F G b ) & G b ) | ( G F a U b ) ) ) )	102400
+Fmla	G G ( F ( ( ( ~ b U G b ) | F G ( X b U X ~ b ) ) & ( ( a & b ) U ( X F b U ~ b ) ) ) | ( ( b U ( ~ F a | b ) ) & F X F F X ( X G ~ G b | F a ) ) )	107405
+Fmla	( ( ( ( b & b ) | b ) & X b ) & G F X X ( G ( F X G a & ( ( a U b ) U F ( X ~ b U G b ) ) ) & F ( ( ( ( b U X a ) U a ) U b ) & F ~ ~ ~ G ( G a U b ) ) ) )	109646
+Fmla	G ( X ( ( F b & G G ( b U b ) ) U F F ( ( a U F G a ) & ( ~ G X a | a ) ) ) | ( ( F F a & ( ( F b U ( X a & G b ) ) & X ( b U a ) ) ) | ( X F b U X b ) ) )	114711
+Fmla	~ ( ( F ( b U a ) | a ) U ( X b U G ( F X F ( X G F b & ( G a U ~ ( b U F ( b & F F b ) ) ) ) U G ( F G ~ F X ( b U X b ) | G ( b U ( b & a ) ) ) ) ) )	116546
+Fmla	G ~ G F X ( X X ( ~ F F ( b | b ) | G b ) U ( ~ F X X ( ( G F F ( ~ a & ~ b ) & ~ b ) U F F ( ( G F X F b U G X X b ) U b ) ) | F a ) )	120715
+Fmla	( X a & F ( F X a U ( ( ( ( ( b U b ) U a ) U G X ( X G b & b ) ) & ( X ~ ( G X a U ( G b U ~ F a ) ) U a ) ) & ~ X G ( G G X F a | G G X b ) ) ) )	120802
+Fmla	~ ( G ( ~ b U ~ a ) U X G ( ( ( ( F a U X a ) & X G X G X G X ( X ( ( b | G F b ) U a ) | G X a ) ) | b ) U F F ~ ( a | X ( ( b U a ) & F b ) ) ) )	123090
+Fmla	~ ~ G F F ( ( G ( ~ b | X ( ( a | F G b ) U F X ~ a ) ) & ( b U X b ) ) U X ( ~ G ( X ( G ( F b U b ) | G a ) U ( G X G X ~ b & ~ a ) ) | a ) )	123875
+Fmla	F X G ( ( X ( ( b | b ) & ( G a U X F a ) ) U b ) U F ( F ( F ( G X b & b ) U X F F b ) & X F ( b & ~ G ( b & G ( G ( ( F b & b ) | G b ) | a ) ) ) ) )	129000
+Fmla	( G ( F X F F ( X a | b ) U X X X G G F F F F ( ( X F G F G b | a ) & X ( F ( ( X a & b ) | b ) & F ~ F ( ( ( a | a ) U a ) U b ) ) ) ) & F b )	134897
+Fmla	G ~ G G G ~ ~ ~ ( X ( G ( b | F a ) | ( a U ~ F ( G a & ( G ( X X b & b ) U G G b ) ) ) ) & ~ ( G G ( a U b ) U G ( ( F a U F F a ) | ~ b ) ) )	136184
+Fmla	( ~ F X G F ( b & ( G ~ F G X F X ( a U F ~ b ) U X G X ( X ( X ~ a & X b ) | ( a | G G F ( a | b ) ) ) ) ) & X ( F b & G G F F X b ) )	136242
+Fmla	G F X ( ( G F F X ( ( b & X a ) | ( a U a ) ) U ~ G ( b U F ( X X ~ F ( ( a & ( a U ( a U b ) ) ) & b ) & ( b | b ) ) ) ) & G F F ~ ( F F a & G G a ) )	141763
+Fmla	~ ~ ( G X G G ( ( F b U a ) U ( ( ~ G ( a U ~ b ) & F b ) U F ( ( F G ~ b U b ) & ( F b U ~ b ) ) ) ) & F F F ~ ( b U ( ( G b & a ) U G X ~ a ) ) )	142389
+Fmla	( ( F G F ~ ( ~ ( F F a & b ) U a ) U F ( X X X X X ( a | G b ) | b ) ) & X G F ( ( G a U ( a U ~ b ) ) & F F F ( X F G F X F b | ~ a ) ) )	144014
+Fmla	G F X ( G ( ( b & G ~ G ( b | a ) ) U ~ F a ) & F ( F F ( X ~ G G ( ~ ( b U G b ) & ( a & b ) ) | ~ b ) & X F ( ( F F G F b U ( b & b ) ) & a ) ) )	146591
+Fmla	( ~ G X F ~ ( X F ( ~ a U ~ ( a | b ) ) | G b ) & F G F X ( ( ( ( ( ( G G a U a ) | ( a U ( F X a U b ) ) ) U a ) U b ) | X ( ~ b U F b ) ) | F X b ) )	152118
+Fmla	F G ( ( ( b U ( b U X b ) ) U b ) U X ( ~ F X F ~ ( ( G ~ X b U ( ( G F G b U b ) & ~ a ) ) | F F X F ( ~ a U X F b ) ) & F F ~ ( F b U a ) ) )	153199
+Fmla	F G F X ( ( ( b U ~ G X X X G G X a ) U ( F b U F ( F ( F a | ~ b ) U b ) ) ) U ( X F X a U ( ( X G G ~ a & ( b U a ) ) | F ( F a U X a ) ) ) )	157253
+Fmla	G ~ ( ( ( b U G F b ) | G G G X X G F G a ) U ~ ( X F F ~ ( ~ b U ( a & ( a | a ) ) ) U F ( X ( ( b & b ) & ~ b ) | X ( X ~ ~ b | F G a ) ) ) )	164039
+Fmla	G X F ( ~ ( ~ F ~ X ( X G ~ X ( ( b U b ) | a ) U G ( a | F b ) ) | ( ~ ( X a & ~ G b ) U ( ( b & G b ) & G ( G a | b ) ) ) ) & X ( ( a & a ) U X b ) )	164482
+Fmla	~ F X ( X X ( ( X F X F X ( b & G ( F b & b ) ) & G X b ) | X G ( G ( ~ F G a U X X b ) U F X ( b U ~ F ( a U b ) ) ) ) & X X ( b & G a ) )	164669
+Fmla	~ F ( ~ G ~ F G ( X X G F ( X b U ( a U ~ F ( b & a ) ) ) U ( a & F ( a U F b ) ) ) | ~ F G F X F F F ( X F F b & ( ( b & a ) | ( b U a ) ) ) )	164691
+Fmla	F F G ( ( F ( F b | a ) U ~ ( F ~ ( b | b ) & X a ) ) & ( F ~ ( X ( a U G ( b | X X b ) ) U G b ) | F X X X ( ( X ~ G a | a ) U ~ ( F b & a ) ) ) )	170059
+Fmla	G X ~ ( ( G ( ( G G G ( ( G ( b & F a ) U ~ F ~ G a ) | ~ a ) | a ) & X X ( F b U a ) ) & b ) & G ~ ( G ( ( ~ b & b ) | G X ~ G b ) & X F b ) )	171466
+Fmla	F G F ( ( F b U F a ) & ( F ( G b | G G ( G G b & b ) ) U X X ~ ( ( ( X a & a ) U G X ( X G F a & ~ ( X a U ( b U X ~ b ) ) ) ) & ( ~ a & b ) ) ) )	172669
+Fmla	G F ( F F ( b U X X G X X ( G G ( G a | a ) U G a ) ) U ( G ( F ( ( a U a ) U X F ( ( b & b ) | a ) ) & F G F F X X ( ~ G F b & G b ) ) & b ) )	174655
+Fmla	G ( ~ ~ F ~ ( ( F F b U b ) U a ) U X ( ( ( G G ( a | a ) U ~ X ~ X X X ( X ~ b & F F F a ) ) | ( b | a ) ) & ( ( F b U ~ a ) U G ( b & ~ a ) ) ) )	175094
+Fmla	F G F F ( ~ F F F ( X ( G ( a U b ) & F b ) & G X ~ ( ( F ( ( a & b ) | F ( b U a ) ) U ( ( X a U X b ) | ( b U b ) ) ) | F a ) ) & X F ( G b | X a ) )	183362
+Fmla	X G ( ( F G G G X b & ( F b | ( a & b ) ) ) U ( ( F b & F X ( a U a ) ) U ~ G ( G a U G ( ( ( G F ( b & a ) & b ) & ( b & a ) ) | ( G ( a & a ) | ~ a ) ) ) ) )	187883
+Fmla	~ G F ( F ~ ( F F ( a & ( a & X b ) ) U ( G ( ( a | X ( b | b ) ) | a ) U X ( a U G a ) ) ) | G ( X G G a & ~ X ( X F a U ( G ( a | X a ) U ~ b ) ) ) )	191234
+Fmla	G F F ( X F G F ( ( ( ( b U ( F a & b ) ) U ( b U ~ b ) ) | a ) & X F b ) & ( ~ X F X a U G F F ( X F F G a | ( ( F a | ( b U a ) ) U ( b | a ) ) ) ) )	198328
+Fmla	~ ( ( F G ~ ( F a & G X a ) | ( ( ~ b U b ) & a ) ) U G F X ( G ( F ~ F a & b ) U F F G X ( G a U X ~ X ( X ( X ( X a U a ) & F b ) | b ) ) ) )	198958
+Fmla	F G F X ( ( ( ( b U ( X b & G F F b ) ) U ( G a | ( ~ G a | b ) ) ) | F X X ( ( a | F a ) U b ) ) U ( ( F ~ X ~ X X F b & ~ ( a U b ) ) & ( a & a ) ) )	201401
+Fmla	G X ( F X X G ( ~ G X G ( ( F G b & ~ F b ) U F ( G b & ( ( b | b ) & G G X F a ) ) ) U X F G a ) & F ( F ~ F b & ~ ( ( G a U b ) U b ) ) )	201660
+Fmla	G G ( F ( ~ b U a ) & F X ( ( F ( F a U b ) & a ) U F X ~ G ( ~ G ( ~ X b | ~ b ) | G ( ~ F ( ( F F ~ a U b ) & F b ) U X G ~ ( a | b ) ) ) ) )	204172
+Fmla	~ G ( ( G X X X ~ ( F ( F ( b U ~ F ~ ( F F b & a ) ) U X b ) U F G F F ( F F ( a & F X ( F X X b U X ~ b ) ) & a ) ) | F G X a ) U b )	204406
+Fmla	G ( ( ( b | ( F G X b & ~ b ) ) U F ( F ( b & ( a U a ) ) & b ) ) U F X ~ ( ( ( G ~ a U ( X G b U ( a & F a ) ) ) | G G ( ~ a | b ) ) | X ~ F F X b ) )	208110
+Fmla	~ F F ~ X ( ( ( F X X ( X b U ( b U G G b ) ) & ( ( a U a ) U ~ G ( F a & b ) ) ) | F F ( X G b U ( ~ b U a ) ) ) | F ( b U ( ( a & ~ a ) | F F a ) ) )	208685
+Fmla	G X ( ( F G F ~ a U ( ( X X ( G a | ( F a | X G b ) ) U b ) U ~ ~ b ) ) & G X F X ( ~ ( b & ~ X a ) & X F ~ X ( G G G G X a | G a ) ) )	209131
+Fmla	~ G G ( G ( ( F F a U b ) & ~ ( a U ( ( a U ( ~ a | ( a & X b ) ) ) & F G G a ) ) ) U ~ X X X F ( F ( F ~ a & X a ) U X ( F b U ( b U X X a ) ) ) )	210540
+Fmla	~ G G F F ( ( ~ ~ X G ( F a | a ) U ~ a ) & ( G G ( ( ( ( X b U G ~ G b ) & a ) U G a ) U ( F a U G G X b ) ) | G ( X G ( b & F b ) | G a ) ) )	213922
+Fmla	G ( ( G ( F ~ ( ~ ( b U b ) | ( b & G ~ b ) ) & G F ( G a U X ( X ( b | a ) & F a ) ) ) & F X ~ ( G a & a ) ) | ~ G G ( G ~ ~ ( a & X a ) | G b ) )	215212
+Fmla	~ ( ( G ( ( ( b | a ) U G F a ) U G F G F ~ G ~ G F F ( ( a | b ) U F b ) ) & X X a ) U G ( ( b & b ) U ( X a U G X X ~ F F X ( F b & a ) ) ) )	216137
+Fmla	G ( ( a | ~ ( a & a ) ) U ( F F G G G ( G ( a U a ) U a ) U ( ( F ( F X b | ( F a U F a ) ) U ( a | X b ) ) U ( F ~ b & ( F F F b U X G ( b | b ) ) ) ) ) )	217224
+Fmla	G F ( G ( X b | ( X X F ~ G a | F F b ) ) & F ( G G ( ~ F ( ~ b & ( ~ a U b ) ) | ( b U ( a U F a ) ) ) & F X F X ( b U ~ ( b | ( b & ~ b ) ) ) ) )	222314
+Fmla	G F F X F F ( ( G ~ ~ ( ( a | a ) | ( ( ~ ~ b U a ) U ( b U a ) ) ) U X ( G F a & a ) ) & ( a U X ( F ~ X X ( a | a ) | F ( a & F ~ G ( b | a ) ) ) ) )	226257
+Fmla	G ( G ( X a U ~ ( ~ X X G ( ( ( a & G G a ) U ( b & a ) ) | F X X F G X b ) U F ( X F ( F b | b ) & G ~ G F a ) ) ) & ( F X a | G ( a & a ) ) )	226829
+Fmla	G F ( ( ( G b U X b ) & F ~ F ( b U a ) ) & ( ( ( ( G b | F ( F F b U ~ b ) ) U ~ ~ X ~ G ~ ( F F a U X a ) ) | F G b ) | ( ~ ~ a U F G b ) ) )	231213
+Fmla	G ( b U X ( G X F X F X ( X ( X X X a & ( ( b U ~ a ) | F F a ) ) & ( b & b ) ) U ( ( X ( X X b U G ( a U X ~ a ) ) | a ) & ( X b U ( a | X a ) ) ) ) )	234669
+Fmla	~ F ~ ( ( ( F F F b & X G ( G a | a ) ) | F X F ~ F G a ) | X X ~ G X G X ~ ( ( X ~ X b U ( F ( F X b | b ) | b ) ) U G ( a U ~ a ) ) )	236337
+Fmla	G ~ G G X ( ( ( X ~ X ( ~ F a U b ) & ( X G ( G G ~ a & X ~ a ) U ( ( ~ X b | G b ) & G b ) ) ) | X ( a & a ) ) U ( ( G G F b U ( b | b ) ) U a ) )	241183
+Fmla	G G ~ X ( ( ( X X X ~ ~ X ( G a & F b ) & ( a & ( a U b ) ) ) U X X X X ( ~ ( G ( a U ( b U b ) ) U b ) U b ) ) U G G X X ( a U ( b | ~ F G a ) ) )	244919
+Fmla	G F ( ( ( b U ( ( G X F b U b ) U ( F F b & ( b U a ) ) ) ) | G b ) & ( ~ ( a & G F a ) | ( ~ b & F X ( G ( b | a ) U ~ ( X G G F b | ( b & G a ) ) ) ) ) )	253624
+Fmla	G ( ( X F G ( b U b ) | X ( b | ( X a U b ) ) ) & F X ( G ( b | ( F X ( F G ( G b | a ) | ( ~ b | b ) ) U F X a ) ) U ~ ( F ~ ~ b & ( X b | X b ) ) ) )	263230
+Fmla	( G ( X F ( X X ( ~ G ( b & X G X b ) U G F G b ) & a ) U F ( b & ( a & X b ) ) ) & ( ( G ( ~ a | a ) U G a ) U ~ ( ( b | ~ F a ) U G ( b & F a ) ) ) )	264349
+Fmla	F G G ~ G ( F a U ~ ( ( F X G a U ( X X ( ( a U X X F F a ) | F ~ G ( a | b ) ) | ~ a ) ) | F F ( ~ ( ~ b & a ) & X G ( a U ( X b & a ) ) ) ) )	281200
+Fmla	G ( ( F ( F ( b U a ) U G ( b U G a ) ) U ( F a & ~ G b ) ) & G ( X ( X X F ~ ( ( F b U X b ) U ~ b ) | a ) | ( ( X F b & ( a U ( b U a ) ) ) | ( b & a ) ) ) )	285583
+Fmla	( ( ~ ( ~ F F a U b ) & X b ) & ~ F X G ( X X ( G b | X X ~ ~ X X G F ( a U ( a U F b ) ) ) U X ~ F X X ( G a U G ( F ~ a U X b ) ) ) )	290348
+Fmla	G F X X X F ( F X ~ F ( ~ a U ( G ( a U a ) & X ( F G ( ~ ( b & b ) U a ) & F a ) ) ) U ( ( F b U ~ b ) & ( F ~ X G ( G ~ a & G X b ) & b ) ) )	291646
+Fmla	X F G F X ( F ~ X ~ ( ( ~ G ( ( b U ( b | a ) ) | F G X a ) | ( b U ( F a U a ) ) ) & ( ( X X ~ X X G ( a U b ) U ~ b ) U b ) ) | ( ( b U G a ) U a ) )	294696
+Fmla	( G ( ( ( ( b | a ) U X a ) U F X ( F b | a ) ) U X G ~ X X G F ( b U G F a ) ) & F G F ( X X ~ G ~ X ( F X ~ a U b ) & ~ G ~ X X a ) )	296942
+Fmla	X G F ~ ( ~ F ( G F F X ( ( X X b U ( ( ( a & a ) U F ( a U X ( X b U b ) ) ) U ( ( a | X X X a ) & G b ) ) ) | a ) & F ( F ( F a & b ) U ~ b ) ) U a )	300337
+Fmla	F ~ F ( G F a U ~ ~ ~ ( ( F ( ~ b U ( F ( F b U G a ) U b ) ) U ( ~ X X ( X ( b & G ( G ~ a | a ) ) | ( b U ~ ( a | b ) ) ) | a ) ) | ( X b & F a ) ) )	301772
+Fmla	~ ( ( a | ( ( ~ a & X G G b ) U b ) ) U ( G X G ( G G ~ X F ( ( b | ( G F F X b U b ) ) & ( ~ F G ~ ( b | a ) U G b ) ) U ( F G b & a ) ) & ~ b ) )	303454
+Fmla	~ ( ( ( F ( a U b ) & b ) | ~ a ) U G G X ~ ( ( X ~ X ( b | a ) U X ( X G X G ( X a U F b ) | G ( G G F b U F a ) ) ) | F ( F ( b | a ) & ~ a ) ) )	304768
+Fmla	G F ~ X G F ( ( ~ b U ( a & a ) ) U G ( ( b U a ) U ( X ~ ( ( G X ( b | ( X b | ~ b ) ) | ( b U F a ) ) U a ) U ( ( b & X b ) U ( ( a | F a ) & G X a ) ) ) ) )	307814
+Fmla	G X F ~ G ( X X ( ~ ~ ( a U F G a ) | b ) | G G ~ X F G ( ( a | F a ) | X ( ~ ~ ( X G X ( a U F b ) U X F ~ ~ b ) | X F ~ F b ) ) )	314080
+Fmla	F G G ~ ( G F ( F F a U ( a U G ~ b ) ) U ( X ( ( ( b | a ) U b ) & ( G X ~ F a U ( X b | ( b | G a ) ) ) ) & X G X ~ X ( ~ ( a U a ) U ( a U a ) ) ) )	316616
+Fmla	( G ( ( X ( a U G X G ~ a ) | ~ ( b U G G a ) ) U G ~ a ) & ( ( F ( ~ b & F b ) U F ( X X b & G b ) ) & F ( ~ G b U ( F X G F G a U X a ) ) ) )	317263
+Fmla	G ( ~ G ( G b U ( ~ X F a | ( ~ ( ( a | X b ) U a ) U G X ( X a U ~ ~ ( a & b ) ) ) ) ) U X ( F X ( ~ G a | G G ( a U a ) ) & F G F ( ~ a U a ) ) )	319378
+Fmla	~ ( F ( F ~ X G a & ( G G ~ ( b | F F ( X X G b & b ) ) | ( X b U ~ ( F a | ( X X b U ~ a ) ) ) ) ) | ( ( ~ X b U G G X a ) U F F G G b ) )	319732
+Fmla	G ( ( ( G b U ~ a ) & F ( ( b | F X F b ) U F ~ ~ X ( F G F ( X a U G F a ) | X ~ ( b & ~ ( b U F ~ b ) ) ) ) ) & ( ( b U F X b ) | F ( b U a ) ) )	320538
+Fmla	~ ( X F X G ~ ( b U a ) | F F F G ( ( ( ~ b & X F a ) U X F b ) & X G ( G a U ( X G X ( X b & F F G ~ X F a ) U X X ( G b | b ) ) ) ) )	322979
+Fmla	~ ( G ~ X F ( ( F G G b | ( b & a ) ) & F b ) U ( ( ( a | ( b U a ) ) U F G b ) & F F G G G ( ~ F ( a U F X F G ( b U F a ) ) | G ( b | G b ) ) ) )	329276
+Fmla	G F F G F ( ( F ( G a U ~ ~ ~ a ) & X ( ( F ~ F a U X b ) U ( ~ G b U ( b & X F F a ) ) ) ) & ( X X ( X ( G a | ( F b | a ) ) U b ) U X F a ) )	329315
+Fmla	G ~ G ( F G X X ( ( ( G F a U a ) | b ) & ( ~ b & G ( X G a & ( ( X G a U G X a ) & ( ( X b | a ) U G ~ ( b & G b ) ) ) ) ) ) | ( G ~ X a | X a ) )	332740
+Fmla	G ~ G X ( X X ( ( G F X G ( G G a & ( X a U ~ X ( b & ~ b ) ) ) U a ) U G ( b U ~ ( ( X ( ( a U b ) & a ) U F a ) | b ) ) ) & G ( G ( F b U b ) & a ) )	334612
+Fmla	X ( ( X ( b U F G a ) U ( a U ( X b | ( G G a & G a ) ) ) ) & G ( X ( b U X a ) U X ( ~ ( F a & G ~ b ) U F ( F ~ ( ~ F F ~ b | a ) & ( b & b ) ) ) ) )	346598
+Fmla	X G F F F X X G G ~ ( F ( X X X ( ~ F ( X ( a U b ) U G F a ) | b ) U a ) U ( ( ( G ~ G a U G a ) U a ) U ( a U ( X a & X G G ( b U a ) ) ) ) )	347681
+Fmla	G ~ ( F a U ~ ( X X ( ( ( F b U b ) U X G X a ) U ( a U a ) ) | X F X ( F X ( X F b & ( b | F b ) ) U X ( G F ~ b U ( ( X b & b ) U ~ G a ) ) ) ) )	349217
+Fmla	( G G ( ( ( ( a U ( ~ a | b ) ) U a ) & X X F ~ G b ) | ( ( F G X a U ( ( F b U X a ) | b ) ) U ( a & b ) ) ) & ( X G F ( X b & b ) | ( a & F ~ F G a ) ) )	354058
+Fmla	( X X ( ( a U a ) & F F ( F X ( b & b ) & G ( b U G F F X F ( b & a ) ) ) ) & G F X ( X ( ( F a U ( b U G a ) ) & X F ~ ( X G F b & a ) ) & F a ) )	354348
+Fmla	X F ( ( b | b ) & F G F ~ G G X G X ( ~ F ( ~ a & b ) | G ~ F ( F ( F ( b U X a ) & F X ~ F a ) & ( F G ~ b | ( G X X G b U a ) ) ) ) )	356039
+Fmla	G F F X ( F ( ( F ~ b & G ( a U b ) ) & ( ( X G F G G ( b & a ) | F F ( a U X F a ) ) U X ( b U F X b ) ) ) & ( ( b & b ) U ( ( ( a & a ) | ~ b ) | b ) ) )	358102
+Fmla	F ~ F X ( X X ~ X X ~ ~ F X G F ( F a U F b ) U ~ ~ ( F ( F ( a & b ) U X X ~ a ) U ( b U G ~ ( ( ~ b | X b ) U F ~ ( b U G b ) ) ) ) )	358599
+Fmla	G ( ~ ( ~ ( ~ a & F b ) & ( G a U b ) ) & ( ( G F G ( ~ b | a ) U ( X F ~ b | G X F a ) ) U F ( X X F F a U X F ( F G ~ F b | ~ F b ) ) ) )	359908
+Fmla	~ ( X F ( G F ( F a U b ) | ( ( X X X ( ( a & F F a ) & G ( G ( b U F b ) | G a ) ) U ~ ( G a | b ) ) & G X ( X ( b & F b ) U b ) ) ) U G ( b U ~ a ) )	365415
+Fmla	X ~ F ( F ( X ( G ( a | X ( X G b & G F X a ) ) & G a ) U ( ~ F ~ ~ b & X ( b U ( ( X b U ( G a U a ) ) & a ) ) ) ) | G F ~ ( F G a U ( b U a ) ) )	369382
+Fmla	F F F G F X X ( X ( ~ G G X ~ F ( G ( b U ( a U X X b ) ) & X F b ) & ( X ~ a | ~ ( b | ( a & a ) ) ) ) & F X F G ( ~ b | G ~ ( b | b ) ) )	371704
+Fmla	( ( X F b U ( b & a ) ) & F G ( ( X G ( G F a | ( b | G a ) ) U F X ( F ~ a & X X F ( F X F a U ( X ~ b & b ) ) ) ) & ~ ( a & G ( a U X G a ) ) ) )	372281
+Fmla	F ( ( F X ~ ( G b | ( b | b ) ) U ~ ~ F ( G ( a & X a ) & ~ b ) ) U G G F F X ~ X G X X X ( X ( ~ a U X a ) U ~ X ( G b U ( F a | a ) ) ) )	374494
+Fmla	( G F X ( G a U ( F F a U F X b ) ) U G X ( ~ G G ( X ( a & X a ) & G F G ( a & ( b U a ) ) ) U F ~ ( G X ( F ( G a U b ) | X ~ a ) | ~ b ) ) )	384683
+Fmla	G ( X ~ ( ( ~ ( G X F a | ( X ( b U b ) | G X b ) ) U ( G G X G b & ( ( a | b ) & F ( ~ X X b U X G a ) ) ) ) | G X ( a | a ) ) | G G ~ ~ F b )	386901
+Fmla	G F G F F X ~ X ( F G ~ a U ( ( ( ( F G a | a ) | X b ) & F ( X G ( ~ b U a ) & ( G X a U G a ) ) ) | X G X F ~ X ( X ~ ~ a & F b ) ) )	394804
+Fmla	G ( ( ( ( F X b | ~ b ) | X ( F ( b U a ) U F ( ( b | a ) U X b ) ) ) U ( F F ~ ( b U a ) U G G F ( F X G b U ( ~ a & F ~ ~ F ( F b & a ) ) ) ) ) | b )	400061
+Fmla	X G ( ( ( ( X b U X a ) & G X F F X X G F a ) U ( F ~ ~ X X ~ X ( F b & G ( G ~ G ~ b & b ) ) & ( ~ G b U b ) ) ) & ( ( X a U a ) U X b ) )	403489
+Fmla	G F X X ( F F X ( G X b U ( ( X X X ( b U b ) | X ( G a | ( X a U b ) ) ) & ( a & G ( X a U a ) ) ) ) & ( X ( F a & ( ( a & ~ b ) & F a ) ) | ~ G b ) )	409341
+Fmla	G ( ( X ( ( a U ~ ~ ( ( b | b ) U X a ) ) | G ( a U a ) ) & F ( ~ ( a & a ) & ( F b U a ) ) ) | ( ~ ~ G F X F G F b U ( G F X X ( a U b ) U ~ X a ) ) )	411392
+Fmla	( ( a U b ) U F G ( ( ( G F X b & F ( a & ( G b U a ) ) ) U F X ( F ( a | b ) U ~ a ) ) & G F X ( X X X G X ( a & b ) | F ( a & ~ ( ~ a | ~ a ) ) ) ) )	412170
+Fmla	G ( ( ( ( b | ( F b | ( G b U b ) ) ) U F X F G ( X G X F ~ a | G ( X b | b ) ) ) U X X F X G X ( b | G X b ) ) & G ( X ~ b | ( F a U ~ b ) ) )	415635
+Fmla	G G G F ~ G X ( ( ( X G a U a ) & X ( G a | a ) ) | G G ~ ( ( F G ( ~ b U X a ) U F ( X ~ X ( X b & a ) & ( F ( F a U a ) & F a ) ) ) | F b ) )	418255
+Fmla	( G G X X F ( ( a | ~ a ) & F ( F F X b U G G F ( a U ( a | a ) ) ) ) & G ( F F ( a U b ) U X ~ G ( ( F X b & b ) | F G G ( b | X G X a ) ) ) )	418706
+Fmla	G ( X ( ( ( F ( ( G F a | X G b ) & ~ a ) U F ( X G a & b ) ) U ~ G G X ( G ~ b U b ) ) & ( X ~ X G F ( b & X a ) | X F X X a ) ) | X F a )	419455
+Fmla	G F ( ~ X ( ( b U X ( F a & X a ) ) U X ( G b & X G a ) ) & F ( ~ G ( ~ F F a U ~ G ( b | a ) ) U ~ X G ~ ( ( G X a | ( a | a ) ) U ( b U b ) ) ) )	422491
+Fmla	G ( ( ( a U X F b ) | X ( a U G ( ~ a | F G b ) ) ) & ( ( ( ( b U X F X F b ) U F X ~ ~ X X ( b | ( b U a ) ) ) & ( G a U F F F b ) ) & F X ~ b ) )	425961
+Fmla	( F ( G b | ~ ( a & b ) ) & ( F X G ( F a U X G a ) & G F ( X ( F X ~ b & F b ) | X X ( F ~ X b | X ( ( F F X F F b & a ) U ( a | a ) ) ) ) ) )	426315
+Fmla	F G F ~ ( G X ~ ~ ( ( G b U X ~ F F F b ) | G F G X ( ( b U G b ) | ( ( ( a & b ) U X ~ b ) U X G ~ a ) ) ) U X ~ ( G a | ( ~ b | G a ) ) )	430039
+Fmla	G ( ( ( F a U b ) | X G a ) U X ( X ( ( ( a & b ) U X ( a & a ) ) & G ~ ( G ( F F b | G X a ) & G a ) ) & F ( b | F X ( X X ( F a U ( a U b ) ) U a ) ) ) )	433923
+Fmla	F G X X ~ F G ( ( X a U a ) | F ( ( ( ~ G a & ~ b ) & X ~ X F F G ( ( a | a ) | F b ) ) U X ( F ( X X ( a U b ) & G b ) | G ( F a U X b ) ) ) )	437021
+Fmla	G ( b U ( F F X F X X ( X b & ( a U G a ) ) & X ( ( a U ( ( G b U ( b U ~ a ) ) | F F ~ ( a U G F F a ) ) ) | ( a U ~ X ( b & F ( ( b U a ) U a ) ) ) ) ) )	441913
+Fmla	~ ( ( a & F a ) U F G ( ( ( b & X a ) U X X X ( G G ~ F X b U G b ) ) | G ( ( F G ~ G a | F ~ b ) & ( X ( X b U ~ G a ) U G F X ~ a ) ) ) )	447708
+Fmla	G F ( ~ ( ( ( G ~ ( b | ( ~ a U b ) ) & ( G F b U b ) ) | ~ ( X b U ( ( F a U X b ) | ( a | b ) ) ) ) | X b ) | X ( ( F ( b | G a ) & F a ) U F X X F b ) )	448549
+Fmla	~ F X ( ( ( F G a | G ~ a ) | X a ) & G X X X ( X G X ( X ( F ~ F b & ~ ( X a U F F a ) ) | a ) U G G ( X G ~ G X a | ( G a | b ) ) ) )	453555
+Fmla	( G ( X F ( F a U a ) | ( ( X ( b & b ) | X G X X a ) U b ) ) U G G F ( X F ~ X ( G b & a ) & X F G ( ( ~ X X X X X b & ~ G ~ b ) U b ) ) )	455773
+Fmla	G ( ( X ( X X ( a & b ) & ( X a U ( b U ( b | G a ) ) ) ) | ( ( b U F ( G b | b ) ) | X ( a & ~ ( G G b & a ) ) ) ) & ( F ~ ( X X a | X a ) | F X X X a ) )	455929
+Fmla	G F ( F b & X X X ~ ( ( G ( ( b & G a ) | a ) | ( X F b U G G G F a ) ) | G X ( ( ( G b | a ) | ( a & b ) ) & ( ( X b & X a ) | G G ( b U X a ) ) ) ) )	456572
+Fmla	( G F ( F X X b & X ( F X ( X ( b | F ~ ~ X X G a ) | F G ( b & b ) ) U F b ) ) U X G X G ( X X F G ( G b | G ( G b & a ) ) & F ~ b ) )	462478
+Fmla	F G F ( X ( X b U ~ ( G ( G b U ( ( ( G ~ X a | G ( ( b U X a ) | a ) ) U X ( a | X a ) ) U G F ( ~ ( a & a ) U a ) ) ) U ~ a ) ) | ( G F F a | X b ) )	462638
+Fmla	F ~ ( F ( a & b ) U F G ( X X ( ( F a | ( a & G b ) ) & ( ( b & a ) | b ) ) | ( G a U ( F ( b U G X X G G b ) U ( X ~ ( ~ b U F a ) & ( G b U a ) ) ) ) ) )	467233
+Fmla	X ( b & F ( G ( G ( ( ( ~ b U b ) U a ) & ( X ( F b | a ) | ~ X ( a | X G G F b ) ) ) U ( X ( F X a U X b ) & ~ b ) ) & ~ ( G b U ( X X a & X b ) ) ) )	471030
+Fmla	G F F F X F ~ ( ( X G X ~ G G a U ( ( a & ( G F a & F a ) ) & F G ( F a & b ) ) ) | ( X X a U ~ ( ( X ~ ( b U ~ a ) & X ( b & a ) ) | F a ) ) )	471892
+Fmla	G ( a U G F ~ ~ ~ F G ( ~ ( a U a ) U ( a U ( ( a & ( b & b ) ) U ( b U ( X X X F b U G G ( X G F ~ b U G F X ~ F ( G ( a & a ) & a ) ) ) ) ) ) ) )	472092
+Fmla	X ( G ( ( ( F X F a U ~ a ) U ( ( X b U ~ a ) & ( G a | F ( b U b ) ) ) ) | ( ( b U X a ) U X X F ( X X b U b ) ) ) & ( ( ( G b U b ) | a ) U ~ ( G a U b ) ) )	477929
+Fmla	X G F ( F ( ( a | a ) U F ( X ( ( a U G b ) U F b ) | G a ) ) U ( ( ( a | a ) & ( F ~ ( b & a ) & b ) ) & ( ~ X G X a U F G G ( ( ~ b U F a ) | X b ) ) ) )	484440
+Fmla	G X ( F F F ( b U G ~ b ) U G G X X ( G ( a | F ( ~ ( F X b & ~ b ) U F a ) ) U X ( F ~ F b U F ~ ( G ( G b U a ) | G X ~ X G b ) ) ) )	486660
+Fmla	G ( ( F F ( a U X F G ( ( a | a ) U ~ X X F b ) ) U X X X F ( ( b | G a ) | ~ G G b ) ) U ( X ( ~ a U G ( ( F a & ~ G a ) & X X a ) ) | ~ a ) )	489495
+Fmla	~ F ~ F F F F X ( ~ ( G a U a ) & F X X F F ( F X ( b & ( ( F ( ( ~ a & a ) U ( G b U ( X X a U X ( b & a ) ) ) ) U F a ) U G ~ ~ a ) ) U a ) )	489796
+Fmla	( ( F F G a | ~ a ) U ~ ~ ~ X F ( X ( X ~ F ( F X ( b U a ) U X a ) U ( G G ~ ( a & b ) U G X X F b ) ) & ( F a & ( ~ ~ G a U ( b & b ) ) ) ) )	491325
+Fmla	G ~ ( X G F F F ( ( G X G ~ ~ ~ F X F b U ( X G a U a ) ) | G ( ( b U ~ X ~ b ) U G G G X ~ F X G ~ ( b | a ) ) ) | G G ( b & b ) )	494972
+Fmla	X F G F ( ( X a & a ) U ( F ( F F b U ( ~ G G a & a ) ) | ( F ( ( a & G F F ( ( ( a U X X b ) U F b ) U b ) ) U ( F F X F a & a ) ) & ( F a U a ) ) ) )	496888
+Fmla	F ( ( b U b ) & X ~ ( F a U G G X X ( G ( G ( ~ ~ ( ~ b U ~ b ) U a ) | ~ X a ) & F ( b U ( X X a U G ( F G ( a U ( G F b & a ) ) | ~ b ) ) ) ) ) )	498940
+Fmla	( F X ( ~ G X ~ X ( a | ( a U ( F ( ( b U G a ) | ~ b ) U ~ a ) ) ) U ( G ( X b | b ) U G a ) ) U G ( F ~ X G X ( b & X ( G ( b | b ) & b ) ) & X b ) )	500999
+Fmla	~ ( F G F F G ( X a U F b ) U G ( G ~ ( ( F G a | b ) & X ( ( X b & F b ) | a ) ) | ~ ( X ( F a | ( ( F X b & ~ G F b ) U F X ~ a ) ) U b ) ) )	503084
+Fmla	X G F F ~ ( ( G b | ( ~ F F ( X a | F b ) & b ) ) | G ( ( ~ F X ( G F ( b U X F X a ) U a ) U ~ X a ) U ~ ~ ( G a & F X ( b | X F a ) ) ) )	504305
+Fmla	~ F ( ( X X ( G G X X G ( X ( ~ F a U a ) & a ) & b ) | ( X ( G ~ ( X b & F b ) U b ) | G F ( G a | F b ) ) ) & X ( G F G a & F X ( b & a ) ) )	506190
+Fmla	G ( F X ( ~ ( G X a & b ) & ( F a U b ) ) & ( ( G ( ~ ~ G a | F ( a U X b ) ) & F ~ X ( a & ( X X a U ( b & a ) ) ) ) & ( ( X b U F X a ) U G F b ) ) )	508952
+Fmla	X ~ F F ( G G ( ~ ( b | a ) U ( ~ a U G F ~ b ) ) U ( F a U ( ( b & ( G X X G G X ( b U ~ a ) | G ( X b U ~ F ( G ~ G X b & b ) ) ) ) & a ) ) )	511759
+Fmla	X ~ F G ( ~ ( F b | X F ( b & ~ X ( ( ( b | a ) | G F F b ) U G X ~ ( b U X ~ b ) ) ) ) U ( F X ( ( b & a ) | ( b & G b ) ) U ( G ~ X a & G a ) ) )	517085
+Fmla	G F ( ( ( ( ~ a & F X a ) U F G X ( ( a & b ) U a ) ) | X ( ( F b U ( b U b ) ) U F a ) ) U ( ( ( a | X b ) U ( F ( ~ a U X b ) & F ( F a U a ) ) ) & F ~ a ) )	518921
+Fmla	G ( X ( ~ a U X ( X X ( b U X ( ( ( ( F F ~ b & b ) | a ) U X F b ) & F F ( a & ( G ~ ( F b & a ) | a ) ) ) ) | F F a ) ) | ( b U ~ ( ~ F ~ a U b ) ) )	523218
+Fmla	G G F ( ( F ( ( X ( a U b ) & F ~ b ) | ( G a U X a ) ) U X F ~ ( a U b ) ) & X X X ( G X ( ( a | a ) & ( a U ( ( b & a ) & b ) ) ) | G ( F b | X F b ) ) )	523675
+Fmla	( F G ( ~ a U G ( F ( b U ( G a U X F ( F F ( F a | ~ a ) U X F ( b | F b ) ) ) ) U F F ( ( F G a U ~ a ) & ( a | G b ) ) ) ) & F F X X ( a U b ) )	526300
+Fmla	~ F ( ( X ~ ( X F G F F G ( b & a ) | ( ( G ( ( a | a ) | G X a ) U G ( F a | ~ b ) ) U G b ) ) U F X ( a & G F G b ) ) U ( G X ~ a & G ~ b ) )	528126
+Fmla	X G ~ G ( ~ ( F ( G F b & ~ b ) | ( ( a | a ) | ( b | G b ) ) ) U ( ( ~ b | G G X ( b | b ) ) U ( ( X ~ a & ( G X b U X a ) ) & X G X ( b U G a ) ) ) )	529271
+Fmla	( ( F ( X F a U a ) & F b ) U X X X G F ( F X ( ( b | X a ) | G b ) U ~ ( ( F b U G a ) U ( X G G a U ( ~ F F b U X G G X ~ ( b U b ) ) ) ) ) )	530023
+Fmla	~ F G ( X ~ ( ( F b & ( F b U a ) ) | ( ( ~ F G a & ( b U F a ) ) | F ( X ( b | a ) | ~ ( G ( F b & F F a ) & G b ) ) ) ) & X ~ F X X ( b U X b ) )	530206
+Fmla	G F ( ( G X b & ( ( b & a ) | ( a U F ( a | ~ G b ) ) ) ) & F ( X F G X ~ X X F a & X ( ~ G G F ( ( b U a ) | a ) U F F X F ( b U F F a ) ) ) )	531217
+Fmla	~ F G ( G X ( F a & a ) U G ( ( ( ~ G a & G F ( a & ( b | b ) ) ) U X ( ~ F ( F ( F a U X a ) U G ~ a ) | ~ F ( X a | F X F b ) ) ) & X X b ) )	531978
+Fmla	X F ( F X X F ( b & a ) & G ( ~ a | ( ( ( b | ( b | a ) ) U G a ) & ( F ( b & G b ) U ~ G X ( G X X ( ( ~ a & a ) | G X a ) | G G X X G a ) ) ) ) )	536124
+Fmla	X ( F X X ( F X X ( a | a ) | F X X a ) U G ~ G G ( X G ~ ( ( a U X F F G F ~ a ) U ~ F X ( ( a & X a ) U ( a U G G b ) ) ) | G ~ b ) )	541181
+Fmla	G ( X ~ ~ X F G ( a | ( b U a ) ) U ~ ( ( X b U G ~ a ) U ( ( G X ( b & b ) & ( G F b U ~ a ) ) U X X ( F F ~ X a U ( X ~ F b & G G a ) ) ) ) )	542180
+Fmla	G ~ F G ( ~ ( F F ( a U ~ F G ( a U G G ( a & ~ ( b | a ) ) ) ) U ( G F F b U ( ( G a U a ) U ( ( ~ ~ b U X a ) U a ) ) ) ) U ( ( b U G F G a ) U a ) )	544590
+Fmla	G F ~ G ( X ( G ( a | ( a U ~ F b ) ) U X X ~ G ( b U b ) ) U G X X ( F ~ F ( ( a | a ) U ( ( b U b ) | G a ) ) | G G X ( ( a | G ( b | b ) ) U a ) ) )	550234
+Fmla	( ( ( a U F ( ~ a U ~ a ) ) U ~ X ( G ~ ( G ( X b U F b ) & ( a & a ) ) U X G ( X ~ ( ~ G a U ( F F a U X a ) ) | ( ~ ~ F b & G b ) ) ) ) & F G b )	557186
+Fmla	G ~ G X ( ( G X b & ( ( ( X a & F b ) | a ) | a ) ) | ( ~ ( F X F X ( a U G ( b U ( b | F ~ X ~ F b ) ) ) | X b ) | ( ( F X X b & G b ) | G a ) ) )	558188
+Fmla	G G F ( ( X ( F ~ G b U G b ) & X X X X a ) & ( b U G ( ( ( ~ F ( a | a ) & G ~ b ) | X F F ( ( G G G F a | F G b ) U ( b & a ) ) ) | F b ) ) )	563472
+Fmla	X G F F ( X F X ( G ( ( b | ~ X X b ) | G ( G X ~ b U X F a ) ) & ( ( ( X F ( ( a U a ) & F G a ) U X X F F b ) | G ~ b ) U ~ F b ) ) & b )	565468
+Fmla	F G F ( X F ( G F F G b U ( a U b ) ) U ( ( X ( ~ ( b U X F a ) | F b ) U G ~ ( ~ b & a ) ) U ( F ( G b U ( F b U F G b ) ) & ( G F b U ~ b ) ) ) )	565934
+Fmla	G ( ( X X F ( ( X ~ ( G F ( b | b ) & F a ) | b ) U F F ~ b ) U F ( a U b ) ) U X ~ ( ( X ( a & b ) U G ( G ~ ( ( ( a | b ) & ~ a ) | G a ) U a ) ) U b ) )	568408
+Fmla	~ X ( ( G F a | b ) U ( F G ~ ( X b | ( b & F b ) ) | ( X X X G ~ ~ ( X X ~ X a U ( F ~ ( F F F ( a | a ) | F G ( a | ~ a ) ) U b ) ) U a ) ) )	569884
+Fmla	X ~ F ( G ( ( X b & b ) U ( ~ F ( X F ( F ( G a | F X ~ b ) | ( b & ( a | b ) ) ) U ( X a & a ) ) U ( G a U ~ a ) ) ) & X X X ( G F G ( b | a ) U b ) )	570004
+Fmla	G ~ G ( X ( X ~ ( ( G a & ~ b ) | X a ) | ~ F F ( ( ( a & X G b ) & a ) U ~ X ( ( a | G a ) U F F G ( F b U b ) ) ) ) U G G X G G ( b U G a ) )	575366
+Fmla	G ( F X ( F ( X X a & ( b U b ) ) U G ~ ( X F ( G F a U ~ a ) & G X G X X ~ F b ) ) | ( a | ( ( X ~ b U F ( ~ a U a ) ) U G ( b & ( a | b ) ) ) ) )	576855
+Fmla	G ( ~ ( X G ~ X ( G G ( F b U G a ) | ( b | b ) ) U G X ( ( G ~ b | a ) U ( b U a ) ) ) | G ( F ( b | a ) & F F ~ ( X X ( G G ( b U b ) | a ) | a ) ) )	580036
+Fmla	G F X ( X F F X F X ( X ( b | X b ) & ( ( G F ( a & F ( a | a ) ) U ( b & X a ) ) U b ) ) U F ( ( G a & a ) U ( ~ b & F G X ( G ( b U b ) & F a ) ) ) )	582466
+Fmla	G G ( ( X ( ~ ( G a U b ) | ~ ( F b & b ) ) U b ) U ( ~ G X ( a | G a ) U X X ~ X ( X G G ( a | b ) U G G ~ X ( ( G a | b ) | F ( X a & a ) ) ) ) )	582768
+Fmla	~ F G X X ( ( X X b | G ~ ( G ( ( b U ( G b & a ) ) U b ) & a ) ) & ( ( ( G a & X b ) & ( G ( ( G X b & G b ) | ~ a ) | b ) ) U G X G ( b & F X b ) ) )	586136
+Fmla	G ( G X F X ( G F ~ G ( G ( ( ~ b | G ~ ( a U b ) ) | a ) | F ( X b U G F b ) ) | ( F F b & F ( b | b ) ) ) | F ( b & X F X X G ( a U F a ) ) )	586340
+Fmla	( X ( F G ( a & a ) | a ) & ~ F G X ( ( G ( ~ ( F b U F F a ) U G ( ( b U a ) | G b ) ) | b ) U ( F ( ( G b | a ) & ( F b U a ) ) U G ( b U G ( a U b ) ) ) ) )	587978
+Fmla	G ~ ( ( ( ( G ~ G a U b ) | ( X b | G b ) ) U ( X F F G G a U G G b ) ) & G X X X X ~ ( G a U ( F ( ( a & a ) | X ~ G ( a | ~ b ) ) U F a ) ) )	588387
+Fmla	( ( F G F ( ~ ( G ( G a | b ) & X ~ G F a ) & X ( F a U F X F X G ( ( F b U G a ) | ( b U a ) ) ) ) & F ( X X b U b ) ) & ( ~ b U ( a | ( a U a ) ) ) )	590152
+Fmla	( ~ G ( ( F ~ F G a U G G ( ( G F b & ~ a ) | G a ) ) U ~ F X ( ( X F G G b U ( ( a U a ) | X G b ) ) U ( a U ( a | b ) ) ) ) & ( b U F ( b U X a ) ) )	591335
+Fmla	G ( ( b U ( ( ~ G ( b & b ) | X ~ a ) U b ) ) U X ( ( F b | ( a U ~ a ) ) U ( ( ( ~ X ( X F b U X a ) U a ) | ( F a | X b ) ) U X F F F ( G ~ b & b ) ) ) )	592150
+Fmla	~ ( b U G ( G ( ( a U b ) U X ( ~ G ~ b & X b ) ) | X G X ( X ~ ( ( a & a ) U b ) & ~ ( F X X ( F b | ( F a & a ) ) & ( X X F a | G X F a ) ) ) ) )	592435
+Fmla	F X G ( G F F ~ X X G ~ ~ ( ~ a U ( ~ F b U G X X X ~ b ) ) & F ~ X ( G a | ( G G G F ( F b & a ) U ( ( F a U ( a U a ) ) & ~ a ) ) ) )	594159
+Fmla	G X ( X X X ( F ( ( ~ G b & ( b & ( a U b ) ) ) & F ( a & b ) ) | ( ( b U a ) U ~ F b ) ) | G F F ( X X X X G a U ( X b | F F ( a U ~ F ~ a ) ) ) )	595810
+Fmla	X G ~ G ( ( a | G ( G ( ~ ( a | F ( ( F b | b ) & F a ) ) & ( ( ( F X X a U G a ) | X G ~ X F F ( ~ a U a ) ) & F X X X b ) ) | ( b & b ) ) ) U a )	595850
+Fmla	G ~ ~ ( ( ( b U b ) U X F a ) U ( ( F G F X a U G G ( G F ~ G ( ~ F b U a ) U G ( b | ( ( b & b ) & a ) ) ) ) & F ~ ( ( F b | b ) & G X X X b ) ) )	600412
+Fmla	G ( F ( ( b | ~ a ) | F ( b & a ) ) U ( G F ( G b U ( ( ( a & a ) & a ) & a ) ) U ~ X ~ F X F ~ ( ( F a & b ) | ( X X X ~ ( X a U F F F a ) & b ) ) ) )	601347
+Fmla	~ ( X X ~ b U ( ~ G X F F F F ( a & ( G F X ( X a U ( b & b ) ) | ( b U G X X X G a ) ) ) U ( ( ( a | a ) | ~ F G b ) U G G ( ( b U a ) & b ) ) ) )	602694
+Fmla	~ ( ( G a U G a ) U X ( G ~ X X ( ~ F X a | ( X ( X X b & F a ) & F F X G a ) ) | ( ( F F ~ G G a & b ) & G G ( ~ ( a | X G b ) | b ) ) ) )	605748
+Fmla	G G ( F G ( ~ b | ( ~ G a | ( a | X a ) ) ) U X ( ~ ~ ( ( b U F a ) & ( F ( F F X a & F G a ) U ( F F X F a U ~ ( G F a U b ) ) ) ) | ( b | b ) ) )	606790
+Fmla	( G G ~ G ( a U G ~ ( X X a U G b ) ) & ~ F G ( X G X G ( a | F F G ( X X X a U G ( a U b ) ) ) & ( ~ F ( ~ a & b ) U ( ( b | F a ) U a ) ) ) )	609405
+Fmla	X G ( ( G a U F ~ G ( b & b ) ) & ( F ( X ( X X F G a | ( F F b | a ) ) & F F ~ a ) | F G ( ( X ( X b & F a ) U X ( X G a & a ) ) U F X b ) ) )	615134
+Fmla	G G G ~ ( G ~ ( ( F G F X b U F X G G ( ~ F b U F a ) ) & ~ ( ( a U a ) | b ) ) | X F F ~ ( F b | F X F X ( F ~ G ( b U G a ) U b ) ) )	615638
+Fmla	F G ( X F F ( X a & b ) U F X ( ( X b & ( b | a ) ) U ( F ~ ( ~ b | G X ( ( ~ b | b ) & ( F ( a U G ~ G a ) | b ) ) ) & X F ( ( a U F b ) U ~ a ) ) ) )	618834
+Fmla	( G ( ( X ( G a U F b ) U F ~ G G F F F b ) & ( ~ ~ X ( ( X X G b | ~ G G a ) U X X ( F a U b ) ) & F ( F b U X ~ ( ( a | b ) U b ) ) ) ) & b )	625139
+Fmla	G ( ( F b | ( ( a | F F b ) & ( X F ( G a | F a ) U ( a U X G b ) ) ) ) U ( X X ( F ( a U b ) & ( X F ~ b | ( a U a ) ) ) & X ~ ( F b U X G X G a ) ) )	627268
+Fmla	( ( b U a ) & ( ( ( G ( F a U b ) | F X ( X F b U ~ b ) ) U G F ( F a | X ( F ( ~ a | ~ ( a & G b ) ) | F ~ X G a ) ) ) & G F F X G X X ~ a ) )	630974
+Fmla	~ G F G F ( ( ( G b U ( F ( a U a ) U G G F b ) ) U ~ ( F F ( X a | b ) U F ( ~ a & F X b ) ) ) | G F ~ F ( F b | ( F ( F b & F G b ) U b ) ) )	631194
+Fmla	G ( F ( b U ( b U a ) ) & ( X X F F ( X F b U X X ~ ( X F ( a U a ) & G ( ~ a U F G F G a ) ) ) U ~ ( X ( b | a ) & X ( X b U ( ( b U a ) | b ) ) ) ) )	635687
+Fmla	X G ( F ( F ( b U ( a | a ) ) U ( F ~ X b U ( ( a & X a ) U a ) ) ) U ( X X X ( a & G ( ( b U a ) U G b ) ) & ( F F ( F G b U G ~ F ( a & F b ) ) | b ) ) )	640686
+Fmla	~ G ( ( ( X b | F G G ( X b | G ( ~ ~ a | G ( F ~ F a & b ) ) ) ) U G b ) | ( F X F ~ X ( ~ X a | ( F b U X a ) ) U G X X F G G F a ) )	641172
+Fmla	G F ( X F ( F F G X G G F X b U F ~ F F ( b & F a ) ) & ( ( ( X F G X b | ~ b ) U F X ( G a U b ) ) & F ( a | F ( a & F ( a U X b ) ) ) ) )	642152
+Fmla	F G F X ~ G ( ( X a | ( G b U G b ) ) | ( ( ~ a U G ( X ~ F G ( F F a | F b ) U G F ( G ( G a U ~ b ) & ( b U a ) ) ) ) | ~ F ( G b | ~ b ) ) )	643262
+Fmla	F G ( ( ( ( F ( b | a ) U a ) U F ~ G X ( G a U G ( ( F b & ( b & b ) ) & ~ G ( a U b ) ) ) ) U ~ ~ F X ~ b ) U ( F ( b & b ) & ~ X X G ( a U F b ) ) )	647900
+Fmla	~ F G X G ~ ~ ( ( ( X G ( X G G X b U ( F b U b ) ) & ~ a ) | G X X ( G ( ( b & G b ) | a ) | ( F F G ( b | b ) & a ) ) ) U ( ~ ( G a | b ) & b ) )	648935
+Fmla	( F ( G ( ( ~ ~ ( X a | b ) | X F ( b & a ) ) & F ( ( ( b U ~ b ) U F ( ( a & b ) & G G a ) ) U X F ~ ( b U ( G X a & a ) ) ) ) | F b ) & X F ( ~ a U a ) )	655542
+Fmla	( G F ( F X F F G ( F G ( ~ a U b ) | a ) & ( F X ( ~ X b U ( X ~ ( G b | G ( F ~ b U b ) ) | a ) ) | F ( b & ( F X ( a U b ) U G X b ) ) ) ) | a )	658485
+Fmla	F G ~ G ( X ~ ( X X b | X X ~ ( ( ( F X G b & ( X b U a ) ) | ~ F F ~ X b ) | F ( G F a U ( a & b ) ) ) ) U ( F G F G G ( b U G a ) U a ) )	663673
+Fmla	G X F ~ G ( F ~ F F F F ~ G ( G b | b ) | G ( X X G a | ( ~ F ~ ( b | G G G ( b U a ) ) | G G G F ~ ( ( G X a U b ) U ( a & a ) ) ) ) )	669439
+Fmla	G ( X X ~ ( ~ X ( ( a & ( a & X a ) ) | G ( G a | b ) ) & X X ( G X F G ( F F b | X ( b U a ) ) & G ( a U G b ) ) ) | F F ~ ( b & ( b U G F a ) ) )	672536
+Fmla	G X ( ( F ( F X X ( F b U F X G b ) | ( a & ( X a | a ) ) ) & ( b U X ( F F X ( ~ a U F ( X b & ~ G F a ) ) & ( a & F b ) ) ) ) | ( ( G a | a ) U a ) )	673927
+Fmla	G ~ ( ( G ( b U X X ~ b ) & X ( F X a U G F X X X ( b U G F ~ F b ) ) ) | ( F G G X X X X ( ( a & a ) | b ) U ~ X F ( b U F ( b | a ) ) ) )	681975
+Fmla	G G F ~ X ~ F ( ~ G ( F ( X F b & b ) | G X a ) & ( ( ( X a | F G ~ F G X G X G b ) U F X F G F X ( G F G b | F b ) ) | X a ) )	682558
+Fmla	G ( G G ~ X ( ( a U ~ G F b ) & ~ a ) U ( ( G ( G b U ( b | a ) ) U F F F F G a ) & F X ( F ( ~ ~ F a U b ) U X ~ ( X G b U ( a | ~ b ) ) ) ) )	683845
+Fmla	G ( ( ( X X F ~ a | b ) | ( ( ( ( F b | F a ) | a ) | b ) U ( b & b ) ) ) U X F ( X ( a | F ~ b ) & F F X ( F F ( ( b U a ) U ( ~ F a & a ) ) & ( b & b ) ) ) )	685259
+Fmla	( ( G ( ( F ( b | a ) U ( ( b U ~ a ) U a ) ) & G F X X ( F X F G b | X F ~ X X b ) ) | ( a & a ) ) U G G ( X F ( ( F a U ~ b ) & F G b ) | ~ b ) )	693051
+Fmla	~ X F ( X X ( F ~ F ~ ( ( b U F F X X X b ) & a ) | ~ ( G ~ ( b | b ) U X b ) ) U G ( X ( ( F a U ( a & a ) ) & X X G X b ) U ( G a & F b ) ) )	693597
+Fmla	X G ( ~ F ~ ( F a U G ( F a & ~ a ) ) | X ( X F F F F F F X ( b | G ( F X ( F a U b ) U ( b | a ) ) ) | F ( G F X ( b | b ) U ( X a | b ) ) ) )	694592
+Fmla	~ ( X F ( X ( X ( G F b & F ( a & b ) ) & a ) & ( G a | X b ) ) U ~ F ( ~ ( X G ( ~ b U F F X a ) U ( G ( F X ~ a U b ) U G b ) ) | ( b & G b ) ) )	705321
+Fmla	G ( ~ F ( G G ~ ~ G ( b | b ) & ( a | ~ G b ) ) U ( X X X ( ( b U a ) U G ( F b & F ( a | ( a & a ) ) ) ) & G ( a U G ~ ( G b & G X G ( b U a ) ) ) ) )	706815
+Fmla	F G G ( F ( ( ~ ~ F X ( F ( b U a ) U ( X F G F b U ( ~ X a | b ) ) ) & ~ ~ ~ ( b U a ) ) & ( F F ( ( ~ F a | G a ) U ( G b | b ) ) U F a ) ) | a )	712088
+Fmla	G ( ~ a U ( F a U ( X X ( ( X ( ( b | ~ b ) U a ) | ( ~ ( b U a ) U ( G X a U ~ b ) ) ) U X ( F X ( b | F b ) | a ) ) & ( ~ ( ( b & b ) U F b ) | F X b ) ) ) )	714216
+Fmla	F ~ F G ( X ( G X G ( X X X ( ~ a & G G a ) U F G ~ ( a U b ) ) U ( ( b & b ) U X b ) ) U X ( X G ~ ( ~ a & G ~ ( b | F a ) ) | G ( b | a ) ) )	715266
+Fmla	G F ( X ( ( F b U ~ X b ) U ( ~ a & F F G a ) ) | ( ( ( b & F F ~ a ) & ( ~ ~ b U ( ~ G F G ( G b U a ) & F F b ) ) ) | ~ X X ( X X a U b ) ) )	719375
+Fmla	( ~ ( ( F ~ ( X b | F a ) U G ( ( b U X G ~ G ( a | a ) ) U X X X G ~ ( F ( G b U X ~ b ) & F ~ ( X ~ X a | a ) ) ) ) & ( b U F a ) ) | ~ X b )	725125
+Fmla	( ( ( b U X ( ( a | b ) U a ) ) & ~ ( X G b U G ( G G X ~ ( b U ( ( G b U ( b U a ) ) U b ) ) & b ) ) ) U G ~ ( G ~ X X G F F ~ a U F ~ ( X b U a ) ) )	726674
+Fmla	~ F G ( G ( ( ~ X a & ~ F ~ ( ( b | a ) U F b ) ) | G ( a U X G b ) ) U X X ~ ( G G G ~ a U ( ( b | F ( ( a U G F X G a ) | ~ a ) ) U F b ) ) )	726755
+Fmla	( G X X ( ( X F F ~ ( ( a & a ) & G a ) U ( ( a U ~ b ) & F b ) ) U ( ( F F X F ( a U b ) & ( F a U a ) ) | ~ ( b & b ) ) ) & F X ( ~ F b & ( a U X a ) ) )	731312
+Fmla	F X G ( ( X a U ( G X a | F ~ b ) ) & F ( F F ( F F b & ( F X b & F a ) ) & ~ F G X ( G X ( F G ( a & ~ F b ) | a ) & F ( a U ( a U a ) ) ) ) )	731504
+Fmla	~ ( F ( G F ( X ( X X G G G F ( b U F a ) & ~ b ) U ~ F G F X F a ) | ( ( ~ ( X ~ a | b ) & X ~ X ( G ( a & G b ) | b ) ) & a ) ) U ( b U a ) )	736630
+Fmla	( a & G ( ~ X ~ X ( X F X X ( ( X ( X F X b | b ) & ~ a ) U X ( a U X b ) ) & ( F G ( ( b | a ) & G ~ a ) | ( G b U F b ) ) ) U ~ ( G G b U a ) ) )	749202
+Fmla	( G G F X X ( ( ~ X ~ ( ( b | ( b & ( a & ( b U G b ) ) ) ) | a ) & ( F ( F b U a ) U F X F ( ~ X ( b & a ) U ~ X b ) ) ) | ~ b ) U ( X b U ~ ( b & b ) ) )	750097
+Fmla	F G ( F ( F ~ X ( ~ F X ~ X ( b | a ) & ~ a ) | X X ( a U F G b ) ) & F X X ( ( a U G b ) U ~ G X ~ ( ~ G X a U ( ( a | F b ) U G b ) ) ) )	752446
+Fmla	G ( ( ( ~ a U a ) & F F X F ~ ( ( F F G X X F a U a ) & X ~ a ) ) | ( X X b & ( ( ( ( G G ~ F G a & b ) | ~ b ) U ( X F G b U b ) ) & F a ) ) )	753546
+Fmla	~ ( b U X X X ( G X ~ ( ( X ( F b | a ) | ( b U a ) ) | X b ) | ( ( G G G X ( G F b | a ) & ~ b ) U G ( ( b U ~ ( X a U b ) ) U ( F F a & X a ) ) ) ) )	753754
+Fmla	G F ~ ( G ~ ( X X X ( ( F a | F a ) U X X b ) | ( b & G X G a ) ) U ( ~ X ( F F X ( ( a | b ) | ~ G G ( ( ~ b | b ) & b ) ) & a ) | ( a U G a ) ) )	753873
+Fmla	~ F G ~ ( ( ( b & F ~ a ) & ( ( a U F ~ ( b & X ( F ~ ~ ~ a U ( a U ~ b ) ) ) ) | F X F F ( F X F X X F ~ b & X X ( X b & b ) ) ) ) | ~ a )	755060
+Fmla	( ( X ( F a U a ) | F b ) U G ( F ( ~ ( ~ a U ( G X a U G b ) ) U ( a & ( a | X ( a | b ) ) ) ) & ( ~ G G X ( ( X F a U G b ) & G X ~ X b ) | X b ) ) )	756841
+Fmla	( ( ~ ( X ~ F X X ~ ( ( a & F G G a ) | X b ) | ( G a & b ) ) | F ( F ( ( a | G b ) & b ) U ( F X a U F a ) ) ) U G ( G ( ( a & a ) U a ) | ( b U ~ a ) ) )	756932
+Fmla	G ~ ( G ( ( ( ( a | b ) | a ) | b ) & ( ( X a U b ) U a ) ) | ( ( ( F b U ~ F a ) U G F ~ F ( F X X F b U F X b ) ) & ( a & G ( X b | F X G G b ) ) ) )	757566
+Fmla	G ~ F ( G ( X b U F X ~ ( b & F G b ) ) U ~ ( X G ( b | X X G b ) U ( X X X X X X F X G ( b U X ( X b U ~ ( b | a ) ) ) | ( X b U a ) ) ) )	758302
+Fmla	~ X F G X G G G ( G X X ( G ~ G X ( ( G ( ( a U a ) & b ) & a ) | b ) | ( ( G G a | X F a ) & X a ) ) | F G G ( G b U G ( b U X ~ G b ) ) )	760732
+Fmla	F G G G ( F ~ G ( G ~ ( b & F G a ) | b ) & X ( ( ( ( a U F b ) U ~ F ~ F X b ) U ( ~ ( G G X ( b | a ) & ~ ~ b ) U ~ b ) ) & F X ~ X a ) )	764599
+Fmla	G F F X ( ( ( a | F X F ~ X ( ( ~ G F F a U G ( a U a ) ) & F a ) ) | ~ G a ) & F X ( ( ( F ( F b | b ) | b ) | ( b U b ) ) U F F F ~ ( a U a ) ) )	766591
+Fmla	G G G ( X ( ( F ~ X ( b & a ) U F a ) U ( ( F ~ a | a ) & F b ) ) U X ( X ( F G a U F b ) & ( ( X X G ~ G G X ~ X a & X a ) & F X ~ a ) ) )	767864
+Fmla	( G F F a U G F G ~ F G G ( G ( F F ( ( G a U b ) & a ) & b ) U G ( ( ( ~ b & G X ~ F X G F b ) U ~ F ~ a ) & ~ F ( G X b | X b ) ) ) )	772820
+Fmla	X F ~ G F G X ( ( G G ~ ( F F X ~ ( F b U b ) & F ( a U a ) ) | a ) & X G ( X G X X X X ( G ~ G b | ~ ( b U a ) ) & ( G a U ( a & a ) ) ) )	773187
+Fmla	G ( ( ( ~ b | ~ X G G F X ( b U G F a ) ) | X ( F ( F ( a & b ) U F X ( G a | a ) ) U ( ( b U ~ b ) | b ) ) ) & ( ( F F a U G X ( a U X G a ) ) U b ) )	780847
+Fmla	G F X F F X ( G ( a | b ) U F F ~ ( G X ( ( b U b ) U X G ( b | ( b | a ) ) ) U F F ( F ~ b & ( ( ( X G ( X G a | G b ) U a ) & a ) U G G a ) ) ) )	787750
+Fmla	G X F ( ( ( F X F ( b U ( a U b ) ) & F ( ( b & b ) U b ) ) | ~ ( G ( a & b ) & ~ ( a | a ) ) ) & ~ ( ( X X F b & G a ) U ~ X F ( F ( a U a ) U X ~ b ) ) )	791898
+Fmla	F F G F ( X ( X F ( b U a ) | ( ( F ( F G a | ( F b | ~ b ) ) U F ( b & ( ~ a U b ) ) ) U ( a | a ) ) ) & X F ( ( a U ( a U X X a ) ) U ~ ( F a U G b ) ) )	793089
+Fmla	G X X F X ( ~ ( ~ ( F F ( ( ( a U F G a ) | F a ) U ( b & F b ) ) & ( ( a U X X X ( b U G X F ( b | b ) ) ) U a ) ) | G F X G G X a ) | G ~ b )	797977
+Fmla	F ~ X ( X ~ ( a | b ) U X F ( F ( G ( F a | X a ) U ( X G b & F ( a U X G X a ) ) ) U F G ( ( G a | b ) & G ~ ( F ( ~ G F a U X b ) & a ) ) ) )	801778
+Fmla	G X F ( ( ( F b U X b ) | b ) U ( ~ ~ ( ~ G b | F ( b U F ~ X b ) ) & ~ F ( X ( G a U b ) U ( ~ G a & F ( G G G ~ F X a U ~ F X b ) ) ) ) )	803613
+Fmla	G F F F ~ ( ( ~ X b & ~ ( a U F X ~ X ( X a U ( b U b ) ) ) ) U ( ( a | G a ) U ( ( G F G a & F a ) | ~ X ( b U ( ( F b U X X a ) U ( b & a ) ) ) ) ) )	814386
+Fmla	~ ( ( b & b ) U G ( X X G ( b | ( F ~ ( a | a ) & ( a & ( ( b | ~ ( a & b ) ) & G F X b ) ) ) ) U ( X X X ~ ( b U ( ( a | b ) U b ) ) U G ( F F b U ~ a ) ) ) )	814852
+Fmla	G ( X ( ( X F ( a U b ) & F ( F ( F a | ( a U a ) ) & F F X G F ( F a & ~ ( G b U ( F b U b ) ) ) ) ) | b ) | G ( X G F ( b | b ) U X ( X a U F b ) ) )	817409
+Fmla	G F ( ( F G a | ( b U F F b ) ) & ( F ( X X ~ b | G ~ ~ ( b | ( b & G a ) ) ) & ( a U X F ( X a U F X ( ~ ( a & a ) U ( X b U ~ ( X b | a ) ) ) ) ) ) )	822445
+Fmla	~ F ~ ( F ( b | b ) U F ~ ~ X ( a U X ( ( ( a & a ) U F G F X X F G ~ ( G b & ~ a ) ) & G ( F ( F ( X X ( b U b ) & ~ b ) U a ) U G G b ) ) ) )	827937
+Fmla	G ( ( ( F ( ( b U b ) U F a ) U X X ( b | a ) ) U G ~ G a ) & G ( F G X ( G ( ~ b & a ) | ~ ( a U ~ a ) ) U X ( X F a & ( ( F F b U ~ b ) U F b ) ) ) )	831104
+Fmla	G ~ ( G X G ( ~ ( a | a ) & ( a U ( b U b ) ) ) U ( ( G F G G a U X X G b ) U ~ ( F ( ( ~ F b U a ) | a ) & ( G ( X F X ~ a | G a ) | F F a ) ) ) )	836125
+Fmla	G ~ X G G G ( ~ X ( ( F X G a U ( a | G a ) ) U X X X F G X ( a U F ~ G X ( X F b & X a ) ) ) U X ( F G G b | ~ ( ( G b | a ) & a ) ) )	839881
+Fmla	~ F F G ( ( F G ( b & a ) U ( ( ( ~ ( ( a | b ) U X X F a ) U G ( b | X X b ) ) U ( X a U G ~ X a ) ) U ( ( a U b ) U ( X b U b ) ) ) ) U F X G G ~ b )	841817
+Fmla	G F F X ~ ( G X ( F ( G a & a ) & X F ( G ( ( a U a ) U F F ~ a ) U ~ ( F ( b U F b ) | b ) ) ) U ( ( ( a U G G G ~ G X a ) | b ) & X ( a U a ) ) )	845334
+Fmla	( b U ( G X X F a & G X ~ X ( G G ( ( ~ a & a ) U F b ) U ( G ( ~ b | X G ( G a | b ) ) & G ( X X ~ X X ( ( G F b | X a ) U b ) & ~ b ) ) ) ) )	847902
+Fmla	G G F ( X ~ G G ( F a & ( ~ ( G b U a ) U X X F ( ( G G F a U G X G b ) & ( b & X b ) ) ) ) & ( G X G ( a | ( X b | a ) ) | F ( F b U X a ) ) )	849055
+Fmla	X X G F ~ ( ( X ( ~ G b | G a ) & b ) U G ( X X G X ( ( ( a U ( F b & b ) ) | G G X ~ a ) U G G ( b U ~ a ) ) & G X ( ( ( b | a ) U G a ) & b ) ) )	849697
+Fmla	~ F X G ~ X X ( F G F ( F ( a U ~ F a ) & a ) & F ( X ( X G b U ( G ( a U G a ) U F a ) ) & ~ ( ( ~ F X a & ( a | a ) ) U F G ( F b | a ) ) ) )	851662
+Fmla	G F ( X ~ ~ ( ( b U X F X X ( ~ a U X ( b U G b ) ) ) U G ( G G ~ X G b | ( b | F G ( a | b ) ) ) ) & ( ( ( a U b ) | b ) & X ( ( G a U b ) & X b ) ) )	854923
+Fmla	~ F ( X ( ( G G b U G a ) U F ( ~ ( F X X b | G ~ X X b ) & ( G X ~ X a & G X G F ( b | a ) ) ) ) U F ( X ~ ~ G ~ a & G F ( b & a ) ) )	855692
+Fmla	( ( G ( ( ( ( F G F b U b ) U ~ b ) | G a ) U ~ F ( a U ( a U a ) ) ) & G G X F X X X ( ~ a U ( b & ( F X F ( G b U X b ) U ( F a | X a ) ) ) ) ) | a )	860521
+Fmla	G F F X X ~ G ( F G ~ ( ( F ~ b | X F ( ( G a | X a ) | X ( a U F b ) ) ) & ( ( X ~ F ( b & X b ) U G ( ( b | b ) U ( a | X b ) ) ) & b ) ) | G a )	861620
+Fmla	G G ( F ( X a U F ( a & ( X G ~ G F a | ( F X X F ( a U X X F X b ) U ( G F a U X ( a & X b ) ) ) ) ) ) U ( ~ ~ X ( ( b | ~ a ) & ~ a ) & a ) )	862348
+Fmla	F ~ ( G X ( a U G a ) U G ( ~ ~ ( b | ( ~ X ( ( ( G b | b ) U X G b ) | F ( G a | F b ) ) U ~ ( b U a ) ) ) U F G G G ( F X G ( b | F b ) & b ) ) )	862779
+Fmla	( G F ( ( X X a U b ) U ( ( b & a ) | a ) ) U G F ~ G ( X b | ( G ~ F b | ~ ( F a & ~ G ( ( b | a ) & G X ( ( G F a U b ) | ( G F b & G a ) ) ) ) ) ) )	864665
+Fmla	( ( b & G G G b ) U G F F ( F X F G b U ( F ( ( G ( ( F b U b ) U X a ) | a ) U ( b & X X a ) ) & ( ( G G ~ G G G ( b | b ) & b ) & ( b U ~ a ) ) ) ) )	866232
+Fmla	G ( X ( a U ( F F ~ ( ~ ( ( b U a ) U ( F X b U ~ a ) ) U X ( b & G ( ( X ~ G a & G X ( G ~ a | a ) ) U G ( a U X b ) ) ) ) & X b ) ) | ( b | ~ F a ) )	866314
+Fmla	G ( ( ( ( X a U a ) & b ) U X ( G a U F X ( a | X a ) ) ) U ( X ~ X X ~ X X F ( b & X ( b U F ( F ~ X ( G F a U ( a | b ) ) & ( F a | b ) ) ) ) | b ) )	873434
+Fmla	~ F G G ( ( ( a & X a ) & X G a ) | ( G ( F ( ~ a & a ) U b ) U ( X ( b & G F b ) U ~ ( F ( a | ~ ( ~ X b U ( G X ~ F a & G b ) ) ) & ( b U a ) ) ) ) )	874296
+Fmla	F ( ( F b U G ( ( F b U a ) U b ) ) & G F ( ~ X X F b | ( ~ F F G b U ( G ( ( F X ( a U a ) U b ) U F ( ( a U b ) & ~ ~ X a ) ) U ( ( a & a ) & b ) ) ) ) )	875129
+Fmla	X G ( ( ( ~ a | b ) U F b ) U ( ( F G ( b U ( b U ~ a ) ) U a ) & ~ F F ( ( ( ~ G F b U G a ) U a ) & G X ( G F ( a & a ) & G G ( ~ a & ( b U a ) ) ) ) ) )	879878
+Fmla	G F ( G F F F ~ G X ( G X X ( X F F ~ F ( ( G b | G b ) & ( a U ~ a ) ) & G b ) U ( G b & ( G ( X a & a ) U X b ) ) ) & ( F G ( b U a ) | a ) )	887447
+Fmla	G ~ G ( ( G ( ( b U ( G ( ( F b U a ) U b ) U a ) ) U ( a U a ) ) & G ( b | G a ) ) | G ( ( b & ( a U G b ) ) | X G ( ~ ( ~ ( b & F a ) U a ) U ( G b | G b ) ) ) )	887991
+Fmla	( G F ~ ( ( b U G G a ) | X G a ) & F ( G F ~ ( ( G X X X X a & F ~ G F X ( F X ~ ( b | b ) | F F X b ) ) | b ) & F G ( F F a U b ) ) )	889175
+Fmla	F ( ( G F ~ ~ ~ G ~ ( ( ( b | b ) & F F ( G G a & ( b | b ) ) ) | ~ G ( b | G a ) ) U X ( b | F F G b ) ) U ( G b U G ( X F a U F ~ X G b ) ) )	892231
+Fmla	( ( ( a U F b ) U F b ) & G F ( ( ( F ~ a | a ) | F ( a U F b ) ) & F ( F ( F ( b U F X b ) & ( F ( G a U G b ) U ( F b U ( a U b ) ) ) ) & ~ ( a U G b ) ) ) )	892440
+Fmla	F ~ ( X X ~ X ( F G a | ( a | X ( a U F X a ) ) ) U ( G ( ( a U ( X b | ~ G F F b ) ) & X G ( a U ( b | b ) ) ) | ( G a U G F X G ( ~ a U b ) ) ) )	893263
+Fmla	G X ( F ( X ( ( ( X a U ( b U b ) ) U X a ) U F X X G X X X G F ~ ( a & a ) ) | ( b | G b ) ) & X F ~ G G X F F ~ F X G F ( b U G a ) )	897252
+Fmla	G ( ( F G G ( F ~ X F F ( a U a ) | F X b ) & F ( ( F ( X a U F ( G b & b ) ) | a ) & X ~ b ) ) | ( b U ~ ( G ( G F a U X a ) | ( X a U G b ) ) ) )	903412
+Fmla	( G b U ~ ( X F a U G ( G X ~ ( F a | ( ~ ( ~ b U G F a ) U b ) ) | G ( ( X ( X b & G F G b ) | X ( b U ~ F ( G b & ( a & b ) ) ) ) U X G a ) ) ) )	904126
+Fmla	X G ~ X G ( ( X ~ a U G X ( ~ a & ( X a & G ( F G b & ~ X b ) ) ) ) U ( ( ( b U G ( b U a ) ) & G ( b U b ) ) U X X G G ( G ~ ( a | G b ) & a ) ) )	905185
+Fmla	( G F ( G ~ ( X X ( a U X ~ F ( a U ( ( b U b ) U G a ) ) ) | ( ~ ( a U a ) & X X b ) ) U X X X X X ( G F X a & X a ) ) & ( G ~ X ~ ~ a | a ) )	910197
+Fmla	X G G F X ( ( ( X G ( ~ a | ( b U F b ) ) U F G b ) U F X a ) U ( ~ ( G ~ ~ ( ~ ( a U a ) | ( a U G ( F b | ( a | a ) ) ) ) | a ) | X X X ( a | a ) ) )	919067
+Fmla	G ( F X X X F ~ ( G ( b & b ) U X G ( X b U X ~ X G a ) ) U X X ( ( ~ ( F ( a U a ) & a ) & ( F b & ( F a U ~ b ) ) ) | ( X ~ b U ( b U G a ) ) ) )	920817
+Fmla	G ( X ( ( G a | b ) U ~ b ) & ( F ( X ( ~ G b & a ) | ( G a U b ) ) U ( X X X b | ~ ( G a | X X X G ( G G F ( a U b ) & G ( ( b U X a ) & a ) ) ) ) ) )	921540
+Fmla	G ( X X F F ( F ( X a U a ) & F ~ ( X X F ( F ~ b U G b ) & F ( a U b ) ) ) | ( F ( ~ b & F b ) U ( G F ~ ( X b & ( ( a & X a ) & b ) ) & F a ) ) )	923268
+Fmla	X ~ X G G ~ ( G ( X X F ~ ( a & X G a ) | F X X ( ( X ( X ( b & b ) | G a ) & ( G G ( b | b ) U X b ) ) | ( F G a U F ( a & G a ) ) ) ) & ~ b )	924918
+Fmla	~ ( ( F G b U X X ~ X b ) U X ( F ( ~ b | a ) U ~ ( X ( ~ a & ( b U F b ) ) | ( X ~ X X ( a | ~ ~ G ( F a U G a ) ) U X F ~ F ( b | b ) ) ) ) )	925666
+Fmla	X F G ( ( F ( ( ( X ( G X ~ G b | ~ b ) U b ) & F X F F G ( a | a ) ) & ~ b ) | ~ G X ( a & G a ) ) & ( ( F b U ( F a U a ) ) & ( ~ X ~ b U a ) ) )	926873
+Fmla	( F X X ( ( b U ( X a & G F ~ X a ) ) & X ( ~ a | ( ( b | b ) | F b ) ) ) U ~ F ( X G ( a U ~ a ) U ( ~ ( F ( a U b ) | b ) U X X F G X G G a ) ) )	933134
+Fmla	( ( X ~ G a | ( a U a ) ) U G G ( X G ( ( a & X X ( F X X b | F ~ ( b & b ) ) ) | ( ( ( b U a ) | X a ) | ( ( a U a ) U F F X F b ) ) ) & F G G ~ b ) )	939983
+Fmla	F F G ( ( G ~ G ( a U X a ) U F X ( ( X F X b U ( X b U F G ( F a | b ) ) ) | ( a U b ) ) ) & F ~ G ( ~ b U ( G F X ( F ( b | b ) U a ) U G a ) ) )	941270
+Fmla	X G F ( F F ( X F ( ( a & b ) & ( G X a U F ( G F a U ( F ( a & a ) U X b ) ) ) ) & ~ ( ~ ~ a U G G a ) ) | X ( ( a | a ) & ( X X F X F a & a ) ) )	942869
+Fmla	G F ~ ( X G F ( a U ( G b & F a ) ) U ( F ( F ( ( b U a ) & X X ~ a ) & G b ) U F ( X X ( ~ X ( F ~ F ( b U a ) & a ) & b ) & ( X b U ( b & b ) ) ) ) )	944156
+Fmla	( F X F F X F F ( ( ( b U a ) | a ) U F F X X b ) U X G ( G ( a U b ) U ( ( X G ( a U a ) & X ~ X G ( a U G a ) ) | X X G ( ( b | a ) & G a ) ) ) )	947205
+Fmla	G X ( ( ( b U F ~ b ) & F ( F ( ( b | ~ G G F G a ) U ~ ~ X F ~ G F ( a U G a ) ) & F a ) ) | ( b | F G ( X a & X G ( ( ~ b U b ) & G b ) ) ) )	948434
+Fmla	G F ( F X X X ( X ~ F G G X ( b U b ) | ~ a ) & F X ( ( ~ ~ ~ G a U b ) & X G F ( X G X ( G b U G X ( G X a | ( a | G a ) ) ) | b ) ) )	949807
+Fmla	X ( G F ( b U F ( F a & ( X ~ G ( X ( b | ( F a U X a ) ) & F ~ a ) | ( F ( a | X a ) U ( a U b ) ) ) ) ) & X ( X ~ ( ~ ( b & b ) U G X X b ) U X a ) )	950169
+Fmla	G ( ~ X ( F X a & F ( a U G ( X X b U b ) ) ) & F X X ( X X ( F ( F b U X ( G b & a ) ) | ( G G a U F ( X a & a ) ) ) | ( ( b U b ) | G ( b & a ) ) ) )	951381
+Fmla	G ( ( ( X ( ( b U X b ) & b ) & F X ( ( ~ ( G a U a ) U ( ( b & G G a ) | a ) ) & F ( F ~ ( b U ( a & b ) ) | a ) ) ) | F a ) | ( F G F X ~ G G X a & b ) )	955236
+Fmla	G ( ( a U ~ F ( G ( b U ( G ~ b & G b ) ) | ( ( ~ ~ ( b & b ) & G a ) U X G ( a & G F b ) ) ) ) U ( F ( b & ( a U F F X ( a U b ) ) ) U ( F ~ F a & a ) ) )	956032
+Fmla	G ( X ( ( F ( a & ( X ( X ( X a U ( ~ b & ( ~ G G a | b ) ) ) & b ) & ( F G b U ( a U F F F G X b ) ) ) ) | b ) & X ( ~ a U ( a | G b ) ) ) | ( F a | a ) )	963952
+Fmla	F G F ~ F ( ( X G F ~ ( G a U F b ) U X X ( G F a U G b ) ) & G ( ( F ( ~ ~ ( b & b ) & F ( X X b U a ) ) | ~ X b ) U G ( ( b | b ) U F a ) ) )	966921
+Fmla	G F X ( ( ( b U a ) U b ) & ~ X ( X G ( a | b ) U X G G G ( ( a U ( ( ( ~ b & a ) & b ) U ( b U F ( F ( a U X ( b | F a ) ) & G X G F a ) ) ) ) & G b ) ) )	970968
+Fmla	( ( ~ ~ a U ( ( a U F b ) U G a ) ) & F ( ( F F G b & ~ G X ( b U b ) ) & ( ( ( X X X F F ( F G G b | ( a & X b ) ) U F a ) | ~ a ) U F X G a ) ) )	971493
+Fmla	G ( F F ( F a U b ) & F ( ( ( G b U b ) | ( F G ( ( a & b ) | a ) U a ) ) U F ~ ( F ( ( G F a U b ) & X G F G b ) U X G ( F X b & G ( a U ~ a ) ) ) ) )	972660
+Fmla	~ ( G F ( ( b U ~ b ) U X X G X ( F X a U ~ a ) ) U ( X ~ ( X F ~ ( b U G a ) | G ( F a U ( ( b & b ) U X ( ~ ( a & a ) U X F X b ) ) ) ) U G b ) )	973780
+Fmla	X ( ( ( F a | a ) U F G ( G X F ( a U b ) & ~ ~ F ( G b U ( F ( a & F G a ) U ~ G b ) ) ) ) & ( F ( X F F ( F ~ a | ~ a ) & X ( ~ b U b ) ) U a ) )	979208
+Fmla	~ G ( F ~ X ( F ~ ( ( b U F b ) & G a ) | F X b ) | F G G F G ( X X X ~ X G X ( a U ( ( a U F G b ) & F b ) ) | X ( G a & G X X a ) ) )	980810
+Fmla	G X F F X ( ( ( F b | ( G ( F b | a ) U ( a | a ) ) ) & ( X ( G a U ( a U X ( F X a | b ) ) ) & F a ) ) & ( G ~ G F a | F ( F a & F X F ~ F a ) ) )	980990
+Fmla	G X ~ G X X X ( X ( G X X b U b ) U F ~ ( F ~ X ( G a & ( ( a | ( b | ( a U G ( ( a & b ) U ~ b ) ) ) ) | ~ ( ( G F b | F X a ) U a ) ) ) & F a ) )	984665
+Fmla	G F ~ G ( G ( F ~ ( b U a ) & X ( G ( G F b | b ) | ( X ( a | F F b ) & X ~ X X a ) ) ) | ( X X ( G a | X ~ b ) | ( ( a | G F G b ) & G a ) ) )	989002
+Fmla	( X G ( X X ( ( ( b U a ) | F X a ) U b ) | F X X a ) U ( F X X G X a & ( F F b U X ~ F F ( ( ( b U F X b ) U G ( b U a ) ) & F ( b | F b ) ) ) ) )	994401
+Fmla	G ( ( F ( F X b U F X a ) U ~ ( G F ( ~ ~ G G ~ X ( F G F a | X a ) & G a ) | ( G a & F a ) ) ) | ( ( ( F b & b ) U F F b ) & X F ~ F b ) )	996263
+Fmla	~ F ~ F X X ( ( ( G X F F ( X b U X a ) U ( a U b ) ) & F ~ X ( F X b U G a ) ) | G F X ( ( ~ ~ ( a & a ) | F G b ) | X ~ G ( b U ~ a ) ) )	998713
+Fmla	~ F G ( ( G X F a & ~ X ( a | F F a ) ) U ( X ( G ( b U ( b & G b ) ) | ~ G F X F X F F X b ) & ~ F ( ~ X ( b & ( a | b ) ) | G ( b U b ) ) ) )	1003544
+Fmla	G ( F F b U X ( ( X G ( ~ X a | ( X ~ a | ( a U F ~ b ) ) ) U F ( F ( F ~ ~ F F G ( G ~ ( a & b ) & b ) | X a ) & ~ ~ b ) ) & X ( X b U a ) ) )	1005144
+Fmla	( G ( ( ~ ( G b U G ( ( X b & a ) U ~ F F ( ( G a | ( G ( b U a ) | X a ) ) U a ) ) ) U ( ( F ( F b | b ) U b ) U ( a U ( b | b ) ) ) ) | F X ~ b ) & ~ ( a U b ) )	1007830
+Fmla	F G F ~ ( ( F a U b ) | X G ( ~ F a U ( G F G b & F ( X G F G F G X ( F b & ~ G X b ) U X X G ( G ~ X b U G ( G a & F b ) ) ) ) ) )	1010276
+Fmla	G ( X X ( F ( F ~ G a & F a ) U X F X ~ F a ) U X ( ( b U b ) U ( a & ( G ( X F ( ( ~ G a | b ) & X b ) U F ( a U X ~ a ) ) & F ( X b & a ) ) ) ) )	1012244
+Fmla	( F ~ F F G X ( F ~ ( a U ( X G b & b ) ) U G G b ) & X ( ( ( G F a | ( b U a ) ) U X ~ b ) U ( F F X F G F F F ( b & G ( a & b ) ) U G a ) ) )	1015564
+Fmla	G F ( ~ ~ ( ( G ( X b | a ) | ~ ~ ( b U X a ) ) U ( b U F ( ~ a & F b ) ) ) & X X ( ~ ( b U ~ F b ) U ( a & ( F ( G a | X X X ( a & b ) ) U X a ) ) ) )	1017256
+Fmla	F ~ F ( G G a U ( ( F ( X X X ( b & F a ) & a ) & G X ( G F a & ~ G b ) ) | G ( F F ( ~ F X b & F F X X b ) | G ( ( ~ X b U a ) | b ) ) ) )	1019218
+Fmla	( F ( F F X b | ~ b ) & ~ F G ( G ( a | G X a ) | ~ X ~ ~ X X X ( G a | ( F ( ( F b & ~ ( a & b ) ) & X ( ~ b U F ( a | ( b | a ) ) ) ) | a ) ) ) )	1021229
+Fmla	G ~ ~ ~ ( G F G X ( G G X ( b & a ) | X ( X X X X ( G F ~ b | b ) & ( b | ~ ( X X b | ~ b ) ) ) ) U G ( b U G ( ( b U b ) U ~ ( F a U b ) ) ) )	1022594
+Fmla	X G F ( ~ F ( ( ( ( ~ b U b ) U ( a & b ) ) | ( b U X b ) ) U ( X X ( ( X G F b & ~ b ) & ( b | G ~ ( F b | b ) ) ) & ~ ( b U a ) ) ) & ( F F ( a & a ) U b ) )	1024865
+Fmla	G ~ G ( ( G ( ~ X ( b | ~ b ) U ~ a ) U ~ X ( X ( F G a | G G ~ b ) & X ~ a ) ) & X ( ~ ~ G ~ X a U ( X X X X G F G a | G F a ) ) )	1025741
+Fmla	~ ( a U ( ( ~ ( ( b U b ) | a ) | ( ( a U b ) U G G ( a U ( b U G F ( a & ( a | b ) ) ) ) ) ) U ( G G X F ~ ( X G X G b U ( F F b | a ) ) | F G G X b ) ) )	1030993
+Fmla	~ ( X ( G b U X a ) U G F ( ( F ( X b & a ) & ~ ( X ( X ( F X ( X b U a ) U ~ a ) U ( F b & a ) ) U F ( b | a ) ) ) | ( ~ G X F X b | G G F a ) ) )	1039103
+Fmla	G ( ( ( G G b U F ( F X X X a U ( ~ F G F a | b ) ) ) | ( F F F X ~ X X F ( F ~ a U ( b & a ) ) & ( X b | a ) ) ) & ( a | ( F X F G a | b ) ) )	1042532
+Fmla	G F F X ( ( ( X G ( F b U a ) U ( ~ X F ( ~ b U G b ) | b ) ) U ( ( F a U b ) U ( G a U X ( a & b ) ) ) ) & ( X ( a & F ( a & G F a ) ) U X ( b U ~ a ) ) )	1043205
+Fmla	X G ( ( F F X ( F b U G ( a & ( a U X a ) ) ) | ( X X a | ~ a ) ) U X ( ( ( ( ~ b U X ( a | ~ G b ) ) U G b ) U G ( b | X X ( a U a ) ) ) & ~ G G b ) )	1049404
+Fmla	G ( ( X ( b U ( F a U b ) ) U ~ ( X ( F a & a ) | G ( ( a & F b ) | ~ ( ( F F b U F F a ) | F F F a ) ) ) ) | ( F ( F ~ X b & ( b | b ) ) U ( G b U a ) ) )	1052922
+Fmla	( ( ( ( b | F X b ) U F b ) & F G G X X F ( ~ G X a U ( a | a ) ) ) & ~ G ( b U ( a | G ( X G ~ G ( a | ( b | G G b ) ) U ( X G b & G X a ) ) ) ) )	1053160
+Fmla	( ( ( ( b & G X a ) U b ) & G ~ ( G b U F ( G X ( ~ b & ~ X X X F X b ) U ( b & F G a ) ) ) ) & G ( X a U F X ( F b & ( ~ X b & G F F a ) ) ) )	1053961
+Fmla	G ( X X G F G ( F F X X F X X b & a ) U ( X ( G ( b & X b ) U G ( F X F ( F ~ b & b ) | G F a ) ) & F ( F F ~ ( X X b & X a ) | a ) ) )	1054730
+Fmla	( ( ( b U b ) U X ( G ( ( F a U a ) U F b ) U F ~ a ) ) & X G F X ( F ~ ( a & ( a | X a ) ) & X F X ( X b U F ( ( ~ a | G ( a & ( a | a ) ) ) & F a ) ) ) )	1055039
+Fmla	G ( G ( b U ( a | ( F a & a ) ) ) U ( ( ( ( X a | b ) & F X ( ( a U ( a | ( b & b ) ) ) U ( b U G a ) ) ) & F X F a ) & F X F X X ( F b & ~ G ( a & G a ) ) ) )	1055525
+Fmla	( G X ~ G ( ( X X ( ~ a | ( G F b & a ) ) U b ) U G ( G G G G b U ( ~ ( X X G F ( a U a ) U ( ( b U G a ) U b ) ) & G G X b ) ) ) | ( ~ F b | a ) )	1056893
+Fmla	( F ( X ( a | ( ( X F a U X ( ( a | b ) U b ) ) U ( X b | F F X F G b ) ) ) U ( ( ( ( b | a ) U a ) U G G b ) U ( b U b ) ) ) & G ( ( F G X a U ~ b ) | G a ) )	1058003
+Fmla	G F ( X X ( b U X X ( a | b ) ) & G ( ( ( b | ~ a ) U G a ) U X ( F F ( F b U F ( ( b | F b ) U ( X F ~ a | b ) ) ) & ~ ( ( X a U ( a U F b ) ) & b ) ) ) )	1059140
+Fmla	~ G F ( G X ( G ( G ( ~ F a U b ) & ~ a ) U ~ ( ( ~ b U F ( F ( b U b ) U X a ) ) U F G F F X F ( G b & G X G X b ) ) ) U F ( G X a & a ) )	1065567
+Fmla	( X ( F ( G ( b & b ) | a ) U ( G ~ b | b ) ) & G X ( X ~ ( ( G a & ( b & b ) ) & F G b ) U F X F ( F a U ~ ~ F ( ( G a | ( F X b U b ) ) U X b ) ) ) )	1065637
+Fmla	G ( ~ G G ( G ( ( F b & X ~ a ) & X ( G ~ b U X ~ a ) ) | ( G a U X X ~ ~ X X F ~ F G F b ) ) | ( ~ G ( F b U a ) U ~ X F ~ F b ) )	1067723
+Fmla	X F ( F G ( ( ( ( ( b U ~ X b ) U G a ) U a ) | ( F b U F F b ) ) U ( F ~ ~ ( ( F X b U b ) U X a ) U ~ b ) ) & F ( G ( b | b ) | ( X ( b & ~ b ) | b ) ) )	1069020
+Fmla	~ F G ~ X F ( X ( b U G X ( F b | b ) ) U ( F ~ G X ( G ( ~ G F ~ G F b U ~ b ) | X G ( ( b & X a ) & a ) ) & ( F X ( a & b ) & ( b U a ) ) ) )	1073720
+Fmla	G F ~ ( F ~ ( X G F ( a U X a ) | b ) U ( G G ( ~ X F ( F b U a ) & F ~ ( ( ( X b & G G b ) & G a ) U F a ) ) U G ( ( G ( a & a ) U b ) U G a ) ) )	1073852
+Fmla	G G ( G X b U X F ( ( ( b U ( X ( F a U ( ~ G G b & F b ) ) & a ) ) | ~ ( b U b ) ) & F ( ( F a | F G a ) U X ( ( a U F X a ) U F ( X ~ b & b ) ) ) ) )	1074902
+Fmla	~ G ( ( ( a U ( b & b ) ) U ( X ( X b & F a ) & ( a U G G a ) ) ) U G F ( G ~ F X ( ( ( ~ b U F b ) & ( a U b ) ) U F ( ( a U G ~ a ) & ( a & b ) ) ) & X b ) )	1075697
+Fmla	G ( ~ ~ G ( ( b U a ) U ( ( G ( F a & b ) U X a ) U X X ~ G G b ) ) & F ( ( ( a & G ( b | ( F b | a ) ) ) | b ) U X ( G ( b | F ( b | a ) ) & F ~ X a ) ) )	1077487
+Fmla	G ( ~ G ( G G a | ~ X F a ) & X ( F ( ( X b U ( G F F b U a ) ) U X X ~ ( F G b | ( F ( b | b ) & a ) ) ) U ~ ~ ( ( b | ( b U a ) ) U ( X a & b ) ) ) )	1087110
+Fmla	G F ( ~ G G ( a | a ) U X ( F ( ( ( X b U b ) U F a ) & G ~ X X F a ) & X X ~ X ( ( G X b | b ) | ( X ( a & F a ) U ( b U ( b | X X G a ) ) ) ) ) )	1087230
+Fmla	G F F F ( F ( X ( b U G b ) & G ( F ( ( b U b ) & a ) | X a ) ) U X ~ ( ~ ( F b U F X b ) | ( X ~ ( b | X G a ) U F G ( ( F G a U b ) U G b ) ) ) )	1088643
+Fmla	G F ~ ( ( ( a U ( b & ~ X X a ) ) | G ~ ( ( G b & b ) U ~ ( X ( b | X b ) & ~ a ) ) ) U G ( ( F a & ( X a & b ) ) U G G G G G X ( a | ~ G F a ) ) )	1088730
+Fmla	( G ( F ( X X ~ b & ~ b ) | ( a U F F a ) ) & ( F ( F X F F X ( ( F G a | a ) | ( ( ( b | b ) & a ) | X a ) ) U ~ ( ( F a & X b ) & ~ X F b ) ) U b ) )	1096485
+Fmla	F G ( ( G ( G a | ( ( a & a ) | X ( F F G X X a U F b ) ) ) U F ( G a U ~ ( b & ( G X a U b ) ) ) ) & ( ( X F a U F G b ) | ( G b | F ( b U F b ) ) ) )	1097487
+Fmla	( G G ( ( F ~ ( X a | b ) U ( F X X a | F X ( ( b | a ) U b ) ) ) U X F ( b U F ( b U a ) ) ) & ( ( a | F ( a | ( G b U a ) ) ) U ( F ~ ( F a U a ) | ~ b ) ) )	1099737
+Fmla	G G F ~ ( ( G ~ ~ G ( a & a ) & ~ b ) U X X ~ ( F G b & ( X X X X ~ X G X G b U F G G ( F X ( G X F b U G a ) | F F F a ) ) ) )	1102545
+Fmla	( ( F X X F F X X X a | ( X ( ( ( a U b ) | a ) & F ~ F b ) & F X ( X X F G ( b | a ) | G ~ ( ( G b U b ) | b ) ) ) ) U G ( ~ X ( a | a ) & F a ) )	1103805
+Fmla	G X ~ ( ( G F ~ G ( b U F F b ) & ( ( ( X a U X G a ) & F ( a | a ) ) & ( X a U a ) ) ) | ( ( ( G F b U X ( b U a ) ) & ~ G b ) & X X X X G X b ) )	1105817
+Fmla	F G ( X ( X ~ ( G a & X X G ( X F G ( X X a U b ) & ( a | ( a & b ) ) ) ) | ( ( b & b ) | ( b | G ( F a U b ) ) ) ) U ( F ( F G X b | X a ) & ~ G b ) )	1109776
+Fmla	G ~ G ( ( X ( ~ ~ b | G ( a & a ) ) U G ( F ( F ( a U X a ) & b ) U G ~ b ) ) U ~ F ( F ~ X G b & X ( F G a & ~ ( G X b U ~ ~ ~ X a ) ) ) )	1113393
+Fmla	~ ~ G ( F F G X G X b U ( X ( ~ b & G ( b U X b ) ) | ~ ( ~ X X F ~ G ~ ( a | F X F b ) | ~ F X X X X ~ G ( ( G b & b ) & b ) ) ) )	1114598
+Fmla	F G F F F F ~ ( G ( F b & ( X ( ~ b | ( a & a ) ) & X ~ X F X F ~ ( a | G F a ) ) ) U ( G ~ ( ( b U a ) | ( X b & G F b ) ) U ( G G a & b ) ) )	1116398
+Fmla	~ ( ~ X G F ( F ( ( a U F G G ( ~ a & X b ) ) U ( b U a ) ) & ( X X X X ( ~ a | X a ) & F ( X b | a ) ) ) U X G ~ ( ( b & X b ) U X ( X a | a ) ) )	1119850
+Fmla	~ X G ( F G G ( ( G a | G X ~ b ) U X ( ~ ( F b U a ) U ~ F G F a ) ) U G ( ~ F b U ( ( ( ( a | ~ F G a ) U ~ b ) | ~ a ) & G F X X a ) ) )	1124562
+Fmla	( ~ F ~ ( ( ~ F X G X ( a & a ) & F b ) | ( F ~ ( ~ X ( G F G a | F ( b | a ) ) | ( G a U F G X X b ) ) | ( a U X a ) ) ) U X ( ~ ~ b U ~ b ) )	1127506
+Fmla	G X F ~ ( ( X G F ( X G ( ( G ~ a U b ) & F b ) & ( G F X ( b U b ) & ( a & a ) ) ) & X a ) U ( F X ( F a | b ) & G ( ~ F X a | G ( G b U b ) ) ) )	1127956
+Fmla	G ~ ( X G G ~ ( ( F G F ( ~ b U ~ b ) U F ( ( b | a ) & F X a ) ) | ( a U a ) ) U ( ( ( X a & a ) U ( X b U ( F a & b ) ) ) & ( F ( b & b ) U ( ~ b & a ) ) ) )	1131523
+Fmla	~ ~ G ( G ( X ( ( a U b ) U ( ( b U a ) & F F X X ( F X ~ b U X X b ) ) ) | ( b | X F X a ) ) U X F ( F ( ( ~ b & a ) | F ( ~ ( b U a ) & a ) ) & b ) )	1134442
+Fmla	G X X ~ G X X X G ~ X ( X ( ( F ( ~ ( b U b ) U ~ ~ a ) & F F ( ( a & ( F X F ~ X a & a ) ) | X a ) ) | F b ) & X ( ( X F G b | a ) U b ) )	1135420
+Fmla	G F ( G ( ~ G X b U F F ( F X ( b | a ) & X b ) ) & X X ( G ~ ( F ( G a U b ) U G G ( ~ a U b ) ) | ~ G ( F b & ( G b U ( ~ a & ~ G b ) ) ) ) )	1135589
+Fmla	( G X ( ( ( b | a ) U ( b & ~ G a ) ) | F F ( ~ a | b ) ) & X F ~ F F ~ ( F F F a U ~ ( ( X G G X F b & G ~ X a ) U ( G G X X a U a ) ) ) )	1138615
+Fmla	X G ( F ( a | b ) U G ~ G G ( ( ( X X G a & ( G X b | ( b U a ) ) ) | G ( G F a U ~ a ) ) U X ( ( a & G F ( b U F b ) ) & G ( ~ F X G b | b ) ) ) )	1145204
+Fmla	( G ( ~ G ~ F a U X F F X ( X F ~ ( F b | X G a ) | X ( ( G F b U F X ~ ( ~ ~ b U a ) ) | X ~ G b ) ) ) & F X ( G G b U F G F b ) )	1150603
+Fmla	X G X ~ F X ( F ( ( ~ ( F b | X X X X F F ( b | G a ) ) U ~ G ( X a | ~ ( G G b | ( F X a & b ) ) ) ) U ( F a & G F b ) ) U F ( b & X a ) )	1151134
+Fmla	G X ( X F ( ( a U ~ G G X a ) & ~ G ( G a & ( ~ G G ( ( F F X b U b ) U G ( G b | ( a U X a ) ) ) & a ) ) ) U F ( X ( a U G b ) & F X F ~ b ) )	1151561
+Fmla	F G ( X ( ~ ~ G ( b U a ) U b ) U ~ ( G G ( ( F ~ F G a & ( G b | a ) ) U ~ ~ F ( G a & F b ) ) | ( G ~ ( X b U a ) U G F G ~ ( a U X b ) ) ) )	1152733
+Fmla	( X ( X b | ~ G G ~ b ) & ( ( a U ( G b | b ) ) & G ( ( F F F ( a U a ) U X a ) & X F F X F ~ ( ~ X ~ X G X a | G ( b U ~ ~ ( b & b ) ) ) ) ) )	1158729
+Fmla	X G G ( ( ~ ~ F F ( F a U ~ ( F ( X b U ~ F a ) | b ) ) & b ) | F X F ~ ( G ( a | G b ) U X G X ( X ( X b U a ) U ( F ( F ~ b U a ) & b ) ) ) )	1162644
+Fmla	G ( ( G F G b U a ) & ( F X ( ( G F F X a U G b ) | F ( ~ ~ ( ( b | X ~ ( X b & X G ( ~ b U G a ) ) ) U a ) U b ) ) U ( ( X G ~ b | a ) & F b ) ) )	1165193
+Fmla	G ( ~ ~ ( ~ a U X b ) U F ( ~ ( ( G b | a ) | ( ( X a U G F a ) | ~ X a ) ) | X ( ( X F X a | a ) | ( F X X ~ a U X ( X F a & ( F b | b ) ) ) ) ) )	1167886
+Fmla	G ( X ~ G X X ( X G ( ( ( a U b ) | b ) & b ) & F ( b & ~ a ) ) & ( G F ( ~ ~ X F ( a & b ) U a ) U ( ( b U X ~ G G G F ( ~ X b U b ) ) & F b ) ) )	1168979
+Fmla	X G ( ( ( X X ( a U a ) U b ) U ( b U F ( G F b U b ) ) ) & X F ( X ~ X X ( ( F b U a ) U G F G X G b ) & ( X G ( a U G b ) U F ( ~ a U F a ) ) ) )	1170669
+Fmla	G G G G F ( G X ( ( ( a | b ) & F ( ~ ( b | b ) | F X X X X a ) ) | ( F b | G F ~ G b ) ) & F X ~ X G F ( a & ~ F X G ( G a U F b ) ) )	1182698
+Fmla	G ( b & F X F ~ X G ( X X X F G ( G G G F a | X ( G F b & a ) ) & ~ X ( G ( X b U ( X a & G a ) ) U ~ G ( X ( ~ a | ~ b ) U G b ) ) ) )	1183686
+Fmla	X G ( F F ( a U X G G ~ ( ( G b & ~ X b ) U a ) ) & ~ G G X ( ( ( X G a | ( ( F b U G b ) U X a ) ) U X a ) | X ( ~ F ( a | b ) | X G X b ) ) )	1188025
+Fmla	( ( G G F ~ G ( ~ a | G ~ F F G a ) & ( F X F G ( F b & b ) U ~ a ) ) & ( F ( a | G G ~ a ) U G G ( ( F b U F a ) U X ( ( b | X b ) U a ) ) ) )	1188897
+Fmla	G F X ( F ~ ( ( X G ( b | b ) U G X ~ a ) U F ( ( ~ a U a ) U ~ X ( F b U ( a U a ) ) ) ) & F ~ ( X ( b U ( b U G b ) ) | ( ( a U b ) & ~ X F G b ) ) )	1197322
+Fmla	G F ( F ( ( a | F ( F b & F ( X ( b & a ) U ( b U b ) ) ) ) U a ) U ( X F ( X X ( ( ( F b U a ) U F b ) | a ) U X ( G b U X b ) ) & ~ ~ F G G ~ X b ) )	1200479
+Fmla	G ~ G G ( F F X ( X X G F a & ( X a & ~ ( F ( a & a ) U ( b | a ) ) ) ) | ( G ( G G ~ ( F a & F X F b ) & a ) U ( ( X ( b | G a ) U ~ b ) & a ) ) )	1201115
+Fmla	X F G X ~ F ( X ( X b U G X ( G b | F b ) ) | X G ( ~ X ~ X X X G X ( X X G F G a U ( ~ ( X X X ( b & a ) U b ) U G b ) ) U G b ) )	1207551
+Fmla	( G ( F G ( F X X b U F X ( X X ( ~ b U ( G ~ a U ( X b | X b ) ) ) | ( ( b U a ) U ~ b ) ) ) U F ( ( b U b ) & ~ ( X a | G F F G b ) ) ) | X F a )	1215805
+Fmla	( F X ( ( F X X ~ ( ( G ( ( b & b ) | b ) U b ) | F ( G F a U G a ) ) & ( ~ G a U X X X X X F G b ) ) & ( a | b ) ) U F G ( ~ ( b | X a ) & F b ) )	1219573
+Fmla	G F ~ X ( G ( ( G X ( ( a U a ) | ( G G G b & b ) ) & b ) & ( a | G X ~ ( ( a | G F b ) & G ( F b | a ) ) ) ) | X X ~ X F ( X ~ F ( b & b ) U a ) )	1220084
+Fmla	G ( X ( X ( ( F X b & a ) U F ( ( X a & ( ( F b U X a ) & ( ( a | b ) U a ) ) ) U ( F ( b U G a ) & b ) ) ) & F G ~ b ) | ( ( ( a | a ) U b ) U X ( F a U ~ b ) ) )	1221785
+Fmla	G ~ G G ( ( ( X G G G X X G F G b & ( G b | G ~ G ( ~ a | F X ( X X F X F b & a ) ) ) ) U X F G G b ) U ( ( a & a ) | ( a U G ~ b ) ) )	1223017
+Fmla	( ( G ~ ( ~ ( ( G a | b ) U X b ) & ( G b | G X G ~ b ) ) & a ) & F ( ( ( b | ( a U ( b U ~ a ) ) ) U ( X X F F a U a ) ) U X F ~ X ( X ( a U b ) | b ) ) )	1226019
+Fmla	~ X F X ( X G b U G G G X G ( ( X ( X X ~ F b | ( G F X ( G b U G G F b ) & a ) ) U ~ X ( a | a ) ) | G X ( ( G b U X b ) U ( a U a ) ) ) )	1227672
+Fmla	G ( ( ( ~ G b U ~ ( a | G G a ) ) | ( X X ( F G ( b & F ( a | b ) ) U G F a ) | ( ( a & ( b | b ) ) U b ) ) ) & F F X X ( ( F F a | F F b ) U G X a ) )	1232250
+Fmla	G ( ( G ( b U b ) U F ( ( a | X F X G b ) & F ( b & a ) ) ) & F ~ ( ( ( b & G a ) U X G F ( b & G X b ) ) | X X ~ ( ~ ( F b U F G a ) | ( b U a ) ) ) )	1232707
+Fmla	G ( G F X ( X ( ~ X a & ( F ( b U ~ a ) & X ( G ( ( ~ b & a ) | ( a U X ( b U a ) ) ) | G b ) ) ) & F a ) U F ( F ~ ( a | X X b ) & F ( F X a U a ) ) )	1233754
+Fmla	G ~ X G ~ X G ~ F G ( ( G ~ X ( ( X b & F b ) | ~ b ) U X X G ( F G X a | G a ) ) | ( ~ ( ( F b U X a ) U F a ) U ~ F ( G a | X b ) ) )	1234575
+Fmla	G ( ( F a U F F F b ) & ( ~ G G ( ( G ( G b | G a ) U ( ( ( a & ~ G X b ) & ~ b ) & ( a & ( b | a ) ) ) ) U ~ a ) U F ( G ~ G X ~ a & X ~ G a ) ) )	1239149
+Fmla	G X ( ( X ( F b | b ) U ( X ( F ( b | b ) & F F ~ ( G X b U ( b | ~ F a ) ) ) & G ( ~ a | ( F G b U ( a | b ) ) ) ) ) | G F ~ X ( ( X b | b ) & X a ) )	1239756
+Fmla	F G ( a U F ~ ( X X ~ X X F ( ~ ( G F ~ X G ( ( G b U G F ( a | b ) ) & a ) & ~ ~ ~ b ) & G ( ( F a U X F b ) | F X X X ~ a ) ) | a ) )	1240381
+Fmla	~ ( G ( b & a ) U ~ ( ( F ~ ~ F ( ( a | F G b ) U X F G a ) & ( b & F F ( a & b ) ) ) | G ( ~ G ( ( a U a ) & F a ) | X ( ( F b & a ) U ~ ~ X a ) ) ) )	1240531
+Fmla	G ~ ~ F ( X X ( F X a | F F ~ ( ( a U ( b | a ) ) | ~ F a ) ) & F ~ ( ( X a | a ) U ( ( G a | ( G b & F X b ) ) U F G ~ ( G b U ( a | G a ) ) ) ) )	1245449
+Fmla	G F ~ ( ( ( X ( ~ a & b ) U F ( X b & G F b ) ) U ( X G G G a & b ) ) | ( X G G ( G G ~ ( ( a & b ) U b ) | ( b & ( X X G a U a ) ) ) | ( b | G b ) ) )	1247831
+Fmla	G F X X F ~ G ( ( ( X ~ F ( F a & G b ) U G G X F ~ G b ) & X X ( b & F X F F ( ~ b U X a ) ) ) | ( F ( b U a ) U G G ( G b | F b ) ) )	1249018
+Fmla	~ F ( X ( X b | X G b ) U ( b U ( G X ( ( G ~ F ( ( ( F b & F a ) U a ) U ~ ( a U X b ) ) U G ( G ( G a & a ) U b ) ) | X G ~ G b ) U ( a & G b ) ) ) )	1252800
+Fmla	( ~ G ( ~ X ~ X ( X a U F G G a ) & a ) U X ( ( G ~ b | ( b U ~ a ) ) & F G F ~ X X X G ~ ( X ~ G G a U ( F X a & X G F G b ) ) ) )	1252969
+Fmla	G ( ~ X ( b & G X G G X G X X a ) U ( ~ G X X ( ( X a | G ( a U a ) ) U ~ ( X ( F F ~ a | ~ a ) | ( F b | G ( b & a ) ) ) ) & X ( a U X a ) ) )	1254247
+Fmla	G X ~ ( ( G G F F a U ( ( G ~ a U ~ b ) | G a ) ) & ( X ( F ( G X b & a ) U ( ( F b & b ) U F G ( G ( ( b & b ) U a ) & G G b ) ) ) U ( G F b U a ) ) )	1255981
+Fmla	G ( ( b U X G ( a | b ) ) & G F ( ( F F ( G G b | ( a U ( b U G a ) ) ) U ( ( b U b ) U ~ b ) ) & X F ( ( F G b | a ) U ( F ( F X F b & a ) U G F b ) ) ) )	1267708
+Fmla	~ G F ( ( G G X a U G F X F ( ( ( b | b ) & F b ) U ~ X ( F F ( X X b & F F a ) | ( ( ~ ( b U a ) & b ) | ( b | G b ) ) ) ) ) U G ( a U X G G b ) )	1270138
+Fmla	G F X ( ~ X G X G G X G F ( ( ~ X X ( X X b | ~ a ) U ( G F ( X b | X ~ X ( a U b ) ) & X a ) ) U b ) | ~ G ( F F ~ ( X a | a ) U a ) )	1273587
+Fmla	X G F ( ~ ( ( X G G ~ a & a ) U G X ( a U G F X ~ ( a U F ( ~ X F a | b ) ) ) ) & ( ( a & a ) | F ( ~ G ( a | a ) U ( ( a U ( X a | F b ) ) & a ) ) ) )	1273680
+Fmla	G F ( ( F ( ~ G F F a U b ) U ( F F ~ G ( G ( b | F b ) U b ) | F X X X F ( ( a | b ) U G G ( F X X X b U ( ( b | a ) | F G G b ) ) ) ) ) & b )	1274786
+Fmla	G ( X ( X F F ( a U F ( b U X ~ ( a | a ) ) ) | G X F ( ( ( F b | ~ a ) U b ) | ( a & a ) ) ) & ( F G F X G a | F X F X F X ~ ( X b | G a ) ) )	1276187
+Fmla	X ~ ( ( ( ( a U b ) U ( X G F a & F b ) ) U X ( ( X X G ~ ( ( a | a ) & ( a | F b ) ) | G b ) & a ) ) U ~ G F X F ( X X ( F a U b ) U X ( a U F b ) ) )	1276814
+Fmla	G ( F a | F X ( ~ ( G ( ( F a U a ) U F ~ ( G ~ ( X a | ~ ( b | F a ) ) | b ) ) & X X ( a | X X X X X ( ( b & X a ) | G F b ) ) ) | ( a & ~ a ) ) )	1281678
+Fmla	G ( ( b U F F X X ( a & ~ ( X ( ( G a & G ( X a U ~ a ) ) U ( G b | ( a & ~ F b ) ) ) U X G X G F X a ) ) ) | G ( ( F b & b ) U ( G b U ( b U a ) ) ) )	1286267
+Fmla	( X G G F ( X a U X X X ( ( G X ( ( a & a ) U b ) U G a ) U X X X X b ) ) & F X ( F ~ G ( X a | F F G ( ( G F b U b ) & a ) ) & ( X a U a ) ) )	1286927
+Fmla	G ~ G G X ( ( G ( a & X b ) U F G ( G G ( ( G a | b ) U a ) | ~ ( a U X X F F G a ) ) ) | ( ( ( b | b ) & G F ~ ( ~ a | a ) ) U X G ( b | G a ) ) )	1296707
+Fmla	G ( F ~ F b U ~ ( ~ ( ( F ( G ( ( F X b & b ) | a ) | a ) | G a ) U G F F b ) U G ( ( ~ F ( X ( ( b U b ) & F X F a ) & b ) U X a ) U G X X b ) ) )	1300586
+Fmla	G ( F ( X ( ( ( a U ( b | a ) ) U X X ( X F a & X a ) ) | a ) U ( a & X F F ~ ( X ( b & b ) | b ) ) ) & ( X F ( F ~ ( a | ~ b ) U ( F G a & ~ a ) ) | b ) )	1302444
+Fmla	~ ( ~ F F ( F a | F a ) | F X G G G ( F G ~ F F ( F ( ( X ( G a U b ) | b ) U ~ a ) & X ~ X b ) U ~ F ( a | ( X ( b U a ) | F F G b ) ) ) )	1302681
+Fmla	~ F ( ~ ~ ~ X X F a U F ( ( ( F b & b ) | ( F a & G ~ G X ( b U a ) ) ) & ~ ( ( ( b & F ~ b ) U a ) U X X ( ( F b U ( X a & F G b ) ) | ~ a ) ) ) )	1302865
+Fmla	F X ( ~ ( G a U F ( G X ~ ( F G b | X a ) & ( G G F ( b U ( X X ~ F a U G a ) ) U G G a ) ) ) & ( F F G a U F ( b & X ( ~ a U G ~ b ) ) ) )	1307566
+Fmla	F G ( F F X ( X F ( b | b ) | b ) & ( ~ ( ~ a U ( ~ b U ~ F ( b & G X G ~ b ) ) ) | F G ( F ( ( b | a ) | X ( b | F ~ X a ) ) U F ( b | F a ) ) ) )	1308317
+Fmla	~ F G ( ( G b U ~ ( b U ( F F ( ~ a U F ( b U X b ) ) U a ) ) ) U ~ X F ( a U ( ( F G b & X b ) & ( G G ( G a U ~ a ) | X G F G ( a U X a ) ) ) ) )	1308462
+Fmla	G ( F ( F a U ( a U F ~ a ) ) & ( ( ( b U a ) U ( F ~ b U G a ) ) & ( X ( b | ( ( a U G ( a U F b ) ) & b ) ) | ( G F F X a | ( F X ( a | X a ) | G a ) ) ) ) )	1312395
+Fmla	( F F a & G F ( F ~ ( ( X ~ F G F G ( a | G a ) U a ) | ( ( b & b ) | X ( b | b ) ) ) & G ( F F F ( ( b U a ) U X a ) U ( F F b U ( ( b U a ) & b ) ) ) ) )	1315996
+Fmla	X G F ~ G G G X X G ( X ( b | a ) U ~ ( ( F G G ( G a U F ( b & G a ) ) U b ) | X X F G ( b U F ~ ( G X b & X X F G ( a & G a ) ) ) ) )	1321449
+Fmla	~ F ( ( X X X ~ F X F ( b & a ) U F ( G ( ( ( ~ ~ G b U F a ) | F a ) U F F ( ( ( a | a ) U b ) U a ) ) U ( X b U ( a & b ) ) ) ) & ( a U G ( b U G a ) ) )	1323358
+Fmla	G F ( G ( X ~ F F G ( ( b & G b ) U ( ~ b & G a ) ) | ( ( F X ( b U b ) & ( a | ( b U a ) ) ) | ~ G ( X b & a ) ) ) & ~ G X X G ~ ( G X a & F b ) )	1325099
+Fmla	~ ( F X F ~ F F F ~ F ( ( ( G ( a U G b ) U ( X b | G b ) ) & ~ X X ( ( ( F b & X a ) | a ) & F b ) ) & G X G X X X ( b | G G a ) ) | X b )	1326170
+Fmla	( ~ ( a & ~ X F G b ) & F F ~ ( F b U ( ( a & a ) U ( X ~ X F F a U ( ( G G ~ ( ( b & F b ) U F b ) U G ( X a | F b ) ) & F G ( X b U b ) ) ) ) ) )	1327833
+Fmla	F X G ( G X a U F X F ( ( ~ X X G ( ~ ( G a U a ) U G G G X X ~ ( F X ( X b | a ) U ( b | b ) ) ) & X a ) & X ( ~ X b & X F ~ F a ) ) )	1336020
+Fmla	F ~ F G G ( ( b | a ) U ( F G ( ( X X b | a ) U X ( ( ~ b U b ) U b ) ) U ( G ~ X ( ( X F X X F b | ( a & ( a & b ) ) ) & ( a | F X b ) ) & ( a U b ) ) ) )	1337915
+Fmla	( ( F ( b U ( X X a U X ( b U G a ) ) ) & X ( X X X X ( G b | F ( ( a U b ) & F a ) ) U a ) ) & ( F ( F G ( ~ ( a & b ) | ~ G G G X a ) | a ) | X b ) )	1343022
+Fmla	G F F ( ( a U ( a & b ) ) U F X ~ ( G ( a & F X a ) | G ( G X ( ( F F b U ~ F ( a U a ) ) | ( a U ( b & b ) ) ) & ( G G F ( G X G b & b ) U ~ b ) ) ) )	1345905
+Fmla	X ~ ( G F G G X ( F ~ b U ~ ( X b U G b ) ) U X ( ( X X a & G F b ) | ( ( a U ( ( G F G b & X a ) & a ) ) U ( X G F a & ( a U ( b & G b ) ) ) ) ) )	1345945
+Fmla	F ( G F F ( F X ( b & F ~ ( ~ a | G b ) ) & ( ( G a | a ) U X G F ( F X a U ~ ( X a U G F a ) ) ) ) & ( a | ( ( a U b ) U ( ~ G X F a U X a ) ) ) )	1349537
+Fmla	X ~ ( F ( a & ~ G F F b ) U G ( F ( ( ( a & a ) U ( ( a U G X ~ X b ) U G a ) ) & ( G X G a U ( b | X b ) ) ) U G ~ ( ~ ( ~ F a U b ) | X G a ) ) )	1354832
+Fmla	G ( X F ( b U F X ~ ( ( a U a ) | F G F G b ) ) & ( X ( ( ( X a & ( ( G F F b U ~ X G X b ) U X b ) ) U b ) & F F ( a U G a ) ) U ( F a U X b ) ) )	1358235
+Fmla	( G ( ( G X b | G b ) | ( X ~ X ( ( G X b U ( ( b U ( a | a ) ) & G G F a ) ) | G F X a ) | X ( ( a U F a ) U a ) ) ) & F F F ( ( F b | a ) U G ~ b ) )	1360329
+Fmla	G ( ~ ( ~ F ( ( F b & ( a | F G a ) ) | ( ( a & a ) | a ) ) | X X G ( ( ( b | b ) U G b ) | G X X G ( a U ~ F ~ b ) ) ) | F ( ( a U a ) U ( X a & G b ) ) )	1360570
+Fmla	G F X ( ( F G ( a U b ) U ~ G ( X b U X G ( ~ X X X F X F b | ~ ( ( ( ( a & b ) & a ) | G b ) | ( F a U ~ ( b | ( b U ~ ( b U a ) ) ) ) ) ) ) ) U F a )	1361918
+Fmla	G F ~ X X F ~ X ( ~ X G ( ( ( a U ( a & G b ) ) | ( X ( G a & F ( a U X b ) ) U G ( b U ~ a ) ) ) U G ~ ( ( ~ a & F ( G b & X a ) ) U b ) ) | F b )	1365437
+Fmla	G X G X G ( ( ( F X b U a ) & ( X a U ~ G ( G a U G F ( X ~ F ~ G a & b ) ) ) ) | ( ( a U ~ ~ a ) & X X ( ( F ( b U b ) U ~ a ) U ( a | G a ) ) ) )	1366767
+Fmla	( X X ( G F X ( ( G a & ( ~ b U b ) ) | a ) U F ( F b U G b ) ) & F ~ X ( F ( b U ( G X G b & b ) ) U ~ X F X X ( X b | F ( ~ a U ( b & b ) ) ) ) )	1367301
+Fmla	G ( F ~ X ( G X ( a | F ( X X F X b U G ( b & G X ( ( b & a ) & b ) ) ) ) U ~ F ( ( ~ a | b ) & F ( F F b U ( a U a ) ) ) ) | X ( G ( b U X b ) | a ) )	1367315
+Fmla	~ ( ( G ( G ~ ~ b | F ( G b & G a ) ) | X X G X X F a ) U ~ G F ( F F F ( a & b ) | X ~ X ( ( ~ F b | G ( ( a U ~ b ) & a ) ) U G X b ) ) )	1370290
+Fmla	G ( F ( G ( b | F X a ) U ( F ~ b | F F G ~ b ) ) & ( ~ ( X G G ~ ~ ( G a U ~ F a ) & ~ F ( X G b & X a ) ) U ( G ( a U b ) & ( b U F b ) ) ) )	1375462
+Fmla	G ( X X F G ( b | a ) U ( X ( ( F ( a U G b ) | b ) & ( ~ G a | ( b U ( a U b ) ) ) ) & F ( F ( ( X b U F F a ) U X a ) U ( ( b & F X F a ) | F G a ) ) ) )	1381056
+Fmla	F ~ ( ~ b U X G G F ( G ( a | b ) U G ( ~ ( F b & F ( ( ( b | a ) U ( F G F b & F X X ( X G b U F G b ) ) ) U ( b & F a ) ) ) & G X ~ X b ) ) )	1382272
+Fmla	G F ~ X X ( ( G X a & b ) | G X ~ X X ~ ( X ~ ( ( ( b U b ) & a ) U ( F ( b & a ) U a ) ) U X ( G F b & ( ( a U b ) | F ~ ( ( G a | F a ) U b ) ) ) ) )	1385465
+Fmla	G ( G ( X G b | a ) U ( ( X ( a U ( b U ( ( G a U b ) U G a ) ) ) U b ) U ~ F ( F ( G F b | ( a & F X a ) ) U X G G G X ( X G X ~ a & G ~ b ) ) ) )	1387067
+Fmla	~ G G ( F G ( X X F ( X ( X b | G b ) & G G b ) U G ( G a | G ~ ( b & b ) ) ) | ( X b U G ~ G F X F G ~ X ~ ( a & ( ~ F a | F b ) ) ) )	1387128
+Fmla	F G F ( ( F ( ~ G G ( ( a | a ) U G G X a ) U ( X b & ( a U b ) ) ) U b ) & ~ G X ( ~ ( b U F ~ G ( a | b ) ) U G G ( F X b | ( a U F ( b | a ) ) ) ) )	1391402
+Fmla	~ F ( G ( F a & F G ~ ( ( b & F G a ) U ~ ( ~ a U X G ( b | X a ) ) ) ) | G ~ ( ( G ~ X G G b U ( a | ( a & a ) ) ) & X ( F X ( b U b ) U F b ) ) )	1393465
+Fmla	~ G F ~ ( F ( ( b U ~ ~ ( a | F a ) ) U F ~ X X G ( F F X ~ a U b ) ) U X ( a U ( F ( X ~ ~ F F ~ ( G ( G b | F b ) | a ) U a ) & ~ a ) ) )	1396385
+Fmla	G F ( X X ( ( ( b U a ) U G G F G ( ~ ( b U a ) U ( a U G G b ) ) ) & F G b ) & ( F ( G F X b & G F ( X ~ b | X a ) ) & ( F ( G a | a ) U ~ a ) ) )	1400182
+Fmla	( ~ ( X G b | G X G X X ( X a U ~ b ) ) & ( F ( G F F a U X ( ( b U ( ( a U G F F ~ X a ) U ( X F a & a ) ) ) U b ) ) U G ( ( ( b U b ) | a ) & b ) ) )	1400928
+Fmla	G ( F ( ( ( ( ~ a U F a ) U ( b & X b ) ) & ( b U a ) ) | ( F F G ( b | ~ ~ b ) & F ( b U X G F X X a ) ) ) U F ( a U ( F ( b & ~ G b ) & ( F b & a ) ) ) )	1402483
+Fmla	G X ( F ( ( ~ F F ( G b | ( a | ( G a | b ) ) ) U ( b & ~ G F b ) ) | X G X ~ b ) & G ( ( F b U a ) U F ~ ( G ~ a | ( G b U X G X X X a ) ) ) )	1403243
+Fmla	G X X ~ X G ( ( X X ( ~ F F b U ( ( b | a ) U G ( b & b ) ) ) U G X ( F X a & F ~ b ) ) | G ( G G ~ X ( ( a & X a ) U ( G F a & a ) ) U ~ a ) )	1414042
+Fmla	G G F ( F ~ ( ~ ( F ( F F b U ( F X ( b & G X b ) U F b ) ) U X ~ ( a & ( a U b ) ) ) U G ( G X ( a | ( X a U a ) ) & F ~ ~ b ) ) & ( G b U F a ) )	1417308
+Fmla	( F X X G ~ a & G F F F X ( ( F X ( F ~ G ( a U ~ X a ) U ~ X b ) U ( ~ ( a & G ( X a | F a ) ) & ( X a U X ( G G a U X a ) ) ) ) | X a ) )	1419483
+Fmla	G F ( ( X F F ( F F ( b U a ) & F X ~ a ) & F b ) & F ( X ( ~ b | a ) U F ( ( X a | F ( ( b | b ) U b ) ) U F G ( F F F ( ~ a & ~ ~ a ) | b ) ) ) )	1423770
+Fmla	X ~ ~ G ( F F b U ( F ( a U a ) & ~ F ( ( G ( a & G b ) U ( ( a | X ( F b & a ) ) U G G X G a ) ) | ( G ( ( X G X a U G a ) & a ) & F ( a U b ) ) ) ) )	1425435
+Fmla	( ( X F X F b | ~ G ~ X ( ( ( F G a | G b ) | ( ( F ( a U b ) | F a ) & F b ) ) | a ) ) U G ( ~ ( X G G G F ( G F b & X b ) U ( a & a ) ) | X b ) )	1425506
+Fmla	G ( ( ( F b U G ( ( a U a ) U ~ b ) ) U X b ) & ~ ( ~ ( X ( b U b ) U X a ) U ( ( G X X X b U G ( b | a ) ) U G ( ( F a & X ( X a | G ~ b ) ) | ~ b ) ) ) )	1427150
+Fmla	G ( F X X ( ( G F b U b ) | F ( a | ( a & X a ) ) ) U G F ~ ~ X ( X X F F ( a & b ) & ( ( b & a ) U F ( F ( b U ~ F ~ ~ a ) U ~ ( X a U a ) ) ) ) )	1437807
+Fmla	( G ( ( F X ( b U ~ X ( a & G F a ) ) | ( ~ a U a ) ) U G a ) & ~ ( G X F G ( b & G ( X b U G ( a U ( b & a ) ) ) ) | ( X F ( X a & b ) U X X G a ) ) )	1440689
+Fmla	( ( F b & X X X X ( ( F ( b | ~ b ) U X F F F X F a ) U ~ a ) ) U G G ~ ( F ( ( a & b ) & a ) U ( b U G F ( G ~ X b | ( G F b | G F a ) ) ) ) )	1443914
+Fmla	( G F ( F F ( ( b U a ) U ~ a ) & F X ( ~ ~ ( F ( b U G b ) | ( a U X X a ) ) U ( X ( X G ~ ( ( b U a ) & b ) & F ( a U a ) ) | F ( X a & b ) ) ) ) | X a )	1444969
+Fmla	X G G ( ~ F ( G ( G X a & b ) & G G ( G G a | F ( a & a ) ) ) & ( X F G ( ( F b U ( a & b ) ) | F X b ) | G ( X ( b | ~ a ) U F G F F G b ) ) )	1445325
+Fmla	~ F X ( ( G X F ~ X ( X a | X ( G a | G b ) ) U X ~ F ( G F ( F ( ~ G b U b ) | a ) & F ~ G X G G a ) ) & G ( X ( a & G a ) | G X a ) )	1446085
+Fmla	( X G b U F ~ F G ( X X ~ F a U ( G ( X G ( ( X F ( G X a U ( ( a & a ) & a ) ) U G a ) U a ) & G b ) U X X G G ( G F ~ F b & ( a U a ) ) ) ) )	1446576
+Fmla	X G ( G F X X ~ G ( X F ~ b & G X F ( F b & a ) ) & ~ ( ~ ( F a | F F a ) U G ( ( G G b U X ( a & X a ) ) & ~ F ( b U F F F F b ) ) ) )	1447412
+Fmla	G F F ( ~ ( G a U G b ) & G ( X ~ G ( F a U X b ) & ~ ( ( G ( X G G ~ a | b ) U G ~ ~ ( F ( a & b ) | b ) ) U ( F X a U ( G G X a & a ) ) ) ) )	1449946
+Fmla	F ( X X G F X ( X F ( G ( b | ~ F a ) & ( b U a ) ) & ( ( a U X X X ( a | ( a U a ) ) ) & F ~ ( G b U ( X b & G a ) ) ) ) & ~ ( G F ( X a & b ) & a ) )	1451086
+Fmla	G F X F ( ~ X G X G X ( F ( X G ~ G b | b ) U G ( X F ( a U F b ) U ~ F b ) ) | ~ ~ ~ G G ( ( X G b U ( G ( F b & b ) & a ) ) U G a ) )	1452675
+Fmla	X G G ( G F ( G F a & ( b U ~ a ) ) | G ( X ~ a | ( ( F b | ( F ( a & a ) U ( G X ~ G X G X ( b U G b ) U ( F X b & X a ) ) ) ) U X X ~ b ) ) )	1455382
+Fmla	G G F ~ G ( ( ( ~ b U ( ~ ~ X b & G ( b & F X b ) ) ) | ~ ( ~ ~ a U X F G b ) ) U ( X ( a & G F G ~ G ( ( a & a ) & b ) ) U ( b & G ( b U a ) ) ) )	1457398
+Fmla	G G ( ( a | ( ( F ( ( a U ( a | b ) ) U ( ~ G F b | ~ b ) ) U X X ( b U ( ( b & b ) U b ) ) ) & X ( F ~ F a U ( b U X a ) ) ) ) & F X ( ( F b & ~ G b ) & a ) )	1457567
+Fmla	~ ( F G G X G X G ( X ( F X a & ~ a ) U ( G G ~ ( ~ ( a U b ) U F a ) U ( X b & X G F a ) ) ) & ( X F ~ X ~ b & ( b U X ( ~ a & X b ) ) ) )	1462211
+Fmla	G F ( F b & X ~ ( ( ( G b U G G ( ( ~ a & ~ ~ a ) | a ) ) U G F F b ) U G X G G ~ ( ( X ( a | F ( b & ~ b ) ) & F G F F G b ) & G F a ) ) )	1463377
+Fmla	( ( ~ X ~ X ( F F ( ( G X X X ~ a | ( F b & ~ b ) ) & ( G b | X X ~ X b ) ) | ~ ( b & G a ) ) | F ( F ( F a U a ) | F G b ) ) U ~ G G G a )	1464234
+Fmla	( ~ ( G ( G b U b ) & X G X ( ( ( X a U a ) U ~ ( G a U ~ a ) ) U ( F a & G b ) ) ) U G X F F ( F X F ( F X b & b ) & ( ~ a & F ( a & ( a & a ) ) ) ) )	1467673
+Fmla	G F ~ G F G X ( ( X G a U G X ( ( ( ~ b & X b ) U F ~ F b ) U G ~ ( F a U X b ) ) ) U G ( ( ( F G a U a ) U G b ) & ( ( a | ~ ~ a ) U F b ) ) )	1468976
+Fmla	G ~ ( ( G G ( a | G ( G a U G G G b ) ) | ~ ( ( ( ( b U F b ) & X F F ~ X ( b U b ) ) | X b ) U ( ( ( b & a ) | a ) U X ( X a | a ) ) ) ) | ~ X F G a )	1474809
+Fmla	G F X X ( ( G X ( G a & ( ( ( ( X a & b ) U F b ) U ( a | X a ) ) U a ) ) U ( ( F F F F a U b ) & F ~ G a ) ) & ( F X G F ~ X ( G F b | b ) U a ) )	1478481
+Fmla	( ( F ~ G X ( ~ a & ( ~ b & ( ( X F a & b ) | ( a U a ) ) ) ) U ( F G b U b ) ) & G ~ ( G ~ ( a U a ) | ( G F b & G ( a U ( G a U ( b U G ( a U b ) ) ) ) ) ) )	1478689
+Fmla	F G ~ G X ( ( G X b | ( a & b ) ) | F G ~ X ( ( ( F G X ( X F b U F a ) U b ) | ( G X ~ a & F a ) ) U ( X F a U X X ( F b U ( b & ~ a ) ) ) ) )	1480895
+Fmla	~ ( X ~ ~ ~ G ( ( ( a | X ( X F X X F a & F F ( b | ~ b ) ) ) U ( ( a | a ) | G a ) ) | G F F ( ( b & F X b ) & b ) ) U ( G F ( a U a ) U X G a ) )	1488632
+Fmla	~ F ~ ~ ( X G X X ( ~ ( ( F a | G a ) U ( ( ( G a | a ) U G b ) U F b ) ) U X a ) U F G ( ~ G ( b | F X ( a & ( b & a ) ) ) U ( G ( a | b ) U X b ) ) )	1489620
+Fmla	G ~ X ( ( b U X ( ( F a & F b ) & a ) ) U G ~ X F X ( F ~ ~ ( ~ ( X G b U ( G b | G a ) ) & ( F ( b | b ) | F F b ) ) U ( X F a & X X F b ) ) )	1495513
+Fmla	G ( X X ( F G ( F G b | a ) & ( F ( X b | b ) | G X a ) ) & F ( ( G X X G F a | F ( b U a ) ) & F ( G b U ~ ( X G G ( F ( b & a ) | b ) & b ) ) ) )	1495890
+Fmla	F G ( F G F ( F G b | ( X ( a | a ) | G ( F ( a | X F X ~ X ( X X b | a ) ) U a ) ) ) & G F G ( X X ( F F ( b U b ) U ~ X G b ) | F X b ) )	1499356
+Fmla	G ( ( X ( F ~ G b | ( a | a ) ) & F ( G b U ( ( X b & G F ( a U a ) ) & F ~ G ( X b & X G ( ( X b & X b ) U G b ) ) ) ) ) | F X X X ( b U X F a ) )	1507461
+Fmla	~ F ~ ( ~ G ( ( F G ( G a & X b ) & G G ~ X b ) & ( ( G F b U a ) & F b ) ) & F ( ~ ( X ( X G a | G X G F G F G F b ) U ~ F b ) U a ) )	1510460
+Fmla	G ( X ( ~ G ~ ( ( b U F b ) & F ( F ( b U a ) | X X b ) ) & ( ( F a | a ) | ~ b ) ) & ( F X X X ( X b U ( F G a U a ) ) U ~ G G ( a | ( a & ~ a ) ) ) )	1510858
+Fmla	G ~ X G ( G a U G G G ( ( ( G a U ~ ( F G ( G G a | b ) & F ~ ( a & ~ X G a ) ) ) U X ~ F X F X ( X ~ X G ( b | b ) | X b ) ) U ~ b ) )	1515264
+Fmla	( ( F F ( ( ( ~ a & F a ) U X X ( b U F G b ) ) U X X ( a & b ) ) U ~ G X G ( a | F b ) ) & ( F ( ( b U a ) U F G b ) U X ( G F G ~ ( b & a ) U b ) ) )	1517474
+Fmla	( ~ G ( ( G ( G a U X b ) U ( F G X b U ~ X a ) ) | F X G ( ( F F b & ~ ( a | F G a ) ) | ( G ~ b U ( ( a & b ) U X X G G a ) ) ) ) & F ( a & b ) )	1518990
+Fmla	( ( a | b ) U ( F ~ ( F X a U G G ( b & ( ( F b U G X G b ) & G F b ) ) ) & ( ( F a U ( b | G ( b | ( a U b ) ) ) ) & ( X ~ X X X G a U X F X b ) ) ) )	1521754
+Fmla	G F ( ( F ( F X F ( ( a U ( a U b ) ) & a ) & ( ( X b U a ) & ( b | b ) ) ) | F F a ) U ( F X ( X ( a & b ) U F ( ( F b & a ) | F b ) ) & G F F ~ F X b ) )	1523395
+Fmla	G ~ ~ X F F ~ X ( ( G F ~ b U X G G G F ~ F X F X ~ ~ ~ ~ ~ X ( ( b U b ) | G G G G a ) ) U G X ( G ( X b | a ) | X ~ b ) )	1527856
+Fmla	G F X ( ( ( G G a | ~ b ) & X F F ( G G X ( b | ( ~ a U G a ) ) | F ( X F G F a U ( b & a ) ) ) ) & ( ( ~ F ( X b & b ) U ( X a & a ) ) U ~ G a ) )	1529660
+Fmla	G ( ( X ( ( a & F a ) | ( ( a U b ) | b ) ) & a ) U ( G F ( ( G ~ G G X ~ F X b & F ( a U F b ) ) U ( ~ a | G a ) ) U ( ( b & ~ G b ) & ( F G b U a ) ) ) )	1531178
+Fmla	~ X ( G ( ( F a U ( a U G b ) ) U b ) U ~ ~ G ( ~ X F F ( F F a U ( ~ F b U X X ( a U a ) ) ) | ( ( ( ( b | a ) U b ) & ( ~ F a U a ) ) & F ( a & b ) ) ) )	1533910
+Fmla	X G F ( ~ ( G ( X ( b | a ) & a ) & X X ( F F b U a ) ) U ~ ( X b U ( G G ( b | G ~ a ) U ( ( ( G a U F a ) | a ) U ( X X G ( a & b ) & G G b ) ) ) ) )	1533986
+Fmla	( G ( F ( ~ ( b U G b ) U ( ( b & b ) U X a ) ) U b ) & G X F ( ( a U F ~ F ( G ( G ( a U b ) U G a ) & a ) ) & F X F ( ( a & G a ) U F X ( G b U a ) ) ) )	1534442
+Fmla	G ( ( ( b U X X a ) U X F b ) & X ~ ( G ( ( G b & b ) & ( G F b | a ) ) | G X ( G ~ F ( ( F a U b ) U F X b ) | X G ( ( G b | ~ b ) U ( a U a ) ) ) ) )	1537435
+Fmla	X G ~ ( ( X X G ( ( b U ( F a & ~ X X X F ~ G b ) ) U ( ~ ( X F a & X F ( a | X ( a | X a ) ) ) & ~ a ) ) & G b ) U G ( b | ( ~ ~ b U G a ) ) )	1537770
+Fmla	G G F F X ( ( ~ ( G b U G X ( ~ F G ( b & F a ) & a ) ) U ( ( ~ a U G ( b U ( a U b ) ) ) U X F F G G a ) ) U ( ( b & a ) & ( G a U G ( a U ~ b ) ) ) )	1543693
+Fmla	X F G G G ( ( ( b U a ) | X ( X F X F a | ( ~ a | G ~ b ) ) ) U ( G ( b & ( X b U b ) ) U ~ X ( ( a | a ) | X ~ ( G a | X X X F F G F b ) ) ) )	1544179
+Fmla	X G ( ( ( ( G a U a ) U X ( ( ( b | a ) U F ~ G F G a ) U X G ~ b ) ) | ( X X b U ( F F a | b ) ) ) & F F X ( F ~ ~ a U ( ( b | b ) U X X X b ) ) )	1546656
+Fmla	( ~ a & F G ( ( F ( ( b U b ) U F a ) U ( X X a & F ( F F G a U ( b U a ) ) ) ) U ( ( b & b ) & ~ ( ( F G G ( G b | G a ) U X ( b U b ) ) & ~ ( b U a ) ) ) ) )	1546812
+Fmla	~ F ( ( ( X G F ( G b & a ) U G ( ( ( X X b | ( ~ b & b ) ) U ( b & X a ) ) | ( X X G F ( a U b ) | G b ) ) ) | ( F G G ~ b U a ) ) U ~ X F ( a | a ) )	1551629
+Fmla	~ F ( ~ X ~ ( X G G ~ X ( b U ( ( b & ( F G ~ X b & ( a | a ) ) ) & b ) ) | ~ ( F ( F X a U b ) U b ) ) & ( ( ( X ~ X b U a ) & F a ) & ( b & G b ) ) )	1555167
+Fmla	G ( G ( b | ( F F ~ F G b U ( b & b ) ) ) U ( X ~ ( ( a | F ( X ( X b U b ) & ( G a U G G F F a ) ) ) | ~ F X X F F ( ~ F b & b ) ) | ( b & b ) ) )	1555255
+Fmla	X G F ( ~ X ~ a & F X F ~ X ( G X ~ ( ( a | b ) | X F ~ F a ) U G ~ X X ( ( X ( G F X X b | F a ) & X G G ( b | b ) ) & F ~ b ) ) )	1557937
+Fmla	G G F X ( ( X b U X F ( X b & F a ) ) & ~ G F ( G ( G ~ ( ( G ( X b | b ) U b ) U ~ X G a ) U ( X F b U G ~ ( a & b ) ) ) & X F G F F b ) )	1570578
+Fmla	G F ( X X ( ( G F X X ( ~ ( F F ( F b & b ) | G a ) & ~ b ) & X ( ( G a U a ) U ~ ( ~ F a U ( b U b ) ) ) ) | ( X X ~ a U ( b U a ) ) ) & F F F b )	1571003
+Fmla	X G ~ ( G G ( ( b U ~ ( b | F a ) ) & ( G X ~ X F X b U G ( a U ( F b U b ) ) ) ) U F G ( ( a & ( a & F a ) ) U X ( ( ( X a U G b ) & G b ) & ~ a ) ) )	1573334
+Fmla	G F ( ( ( F ( ( G b | X ( b | a ) ) | ~ ( a & b ) ) | F b ) U ( F X a | a ) ) U F X ( F ( ~ ( a U b ) U G F G b ) & ( ~ b & ( F F ( F X b U b ) & a ) ) ) )	1576406
+Fmla	G F ~ ( X X X G G ( G b | ( F ( F a U G ~ F a ) U ( G ( ~ b & ~ F b ) U a ) ) ) & X ~ ( G ( b U F ~ X G b ) & ( ( b & X b ) | ( X a | b ) ) ) )	1577725
+Fmla	G F ~ ( G ( ( F a U ~ G ( G a & ( ( G b U ~ a ) | F a ) ) ) & ( a & b ) ) U ~ ( ( b U X ( F X F a U ( b U a ) ) ) & F X F F ( a U F X ~ X ~ b ) ) )	1578416
+Fmla	~ ( ( ( ( F a | ( G a U b ) ) U G ~ G ( b U b ) ) | F X F a ) U G X ( X ~ X X X F F a U ~ ( G F b U ( F G F ( a U ~ b ) U ( F b U X a ) ) ) ) )	1579047
+Fmla	~ X X F F ( ( G F a | X X ( F G F a & X b ) ) U G ( ( X ( a & a ) U ( G G ( a | G F ~ X b ) & ( ~ b & a ) ) ) | G ( b | G X ( a U F X b ) ) ) )	1580273
+Fmla	( X F ( F ~ a | G ~ F ~ b ) U ( F F ( a U a ) U G ( ( X X ( F b | a ) | F F ( X F F G ( a | b ) | ~ X X b ) ) & ~ ( F ( b & b ) & G ~ a ) ) ) )	1582025
+Fmla	G ( X F X ( ( G ( F b | a ) & a ) U ( ~ ( ~ b & a ) U b ) ) U ( ( X ( X F ( a U b ) & X F ( X b U ~ a ) ) | ( ~ a U a ) ) U ( X F b & X ( G a U ~ b ) ) ) )	1582115
+Fmla	G X ( ( ( X F X a & ( a U F ( ( b | a ) U X a ) ) ) U F X F F G ( X X X ( F ( ( a & b ) & b ) | ( b | F a ) ) | ( F a U b ) ) ) & X ~ G F ( a | F b ) )	1585068
+Fmla	G ( ( G F ( F X F ( F ( a & a ) & F G F b ) U X a ) & ~ ( G G b | G a ) ) | ( ( G G X X ( b | ( a & X F G b ) ) & G a ) | X X ( b U F G b ) ) )	1585804
+Fmla	( G ( ( F ( ( F G ( ~ a | b ) U ( F X ~ G G b & F G X b ) ) & F G ( ~ a | ( b & a ) ) ) | G ~ ( b U a ) ) | ( ( a U a ) U b ) ) & F ( ( b U X a ) | X a ) )	1588977
+Fmla	F G F ~ F ( G X ( G X ( ~ X ( X b & F G ( a U b ) ) U ~ F ( ( F G a | F ( b U G a ) ) | a ) ) U X ( b & a ) ) U G ( X b & ( G ~ ~ a & F b ) ) )	1590536
+Fmla	G ~ ( ( G G X ( G ( a & a ) & G G b ) | X X X X X ( G b & G X a ) ) U F ( G F ~ ~ X ( ( a U ~ ( F b | G b ) ) U b ) | ~ G ( X b | X a ) ) )	1592749
+Fmla	G ( ~ X G X ~ F F ( ( F ~ b | ~ ( ( X ~ a U G b ) | X ~ a ) ) & F ( a U b ) ) U F ( F F F G F a & F X ( X G X b U ~ ( G a & ~ b ) ) ) )	1593367
+Fmla	F ( F ( ~ ( G X X ~ F F a & ( b U G a ) ) U ( ~ ~ ( a U ( b & a ) ) & G F ( G b | b ) ) ) & ( ( ( b U a ) U G ( X ~ b | a ) ) U G ( X X X a U ~ b ) ) )	1601461
+Fmla	G ( F ~ X ( ( X G G b | ~ G F G a ) & ( a U b ) ) U ( F ( ~ b | ~ G ( ( b & b ) U G a ) ) & ( ( F X F ( a U a ) & ( X b & ( G a U F b ) ) ) | ~ a ) ) )	1606226
+Fmla	( ( ~ a | a ) U F ~ ( G F a U F ( G ( ( b & a ) U ( X G ~ ( b U b ) & G ~ F a ) ) | G X ( G G ( a & a ) | ( G b & ( X a & G G F X ( a & b ) ) ) ) ) ) )	1607827

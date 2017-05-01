@@ -1,4 +1,4 @@
-#!/bin/env ocaml
+#!/usr/bin/env ocaml
 (* parameters: size1 num_atoms interation_start iteration_end *)
 (* based on make_random_ctls_formulas.ml from TimeLogicUnify *)
 let printf = Printf.printf

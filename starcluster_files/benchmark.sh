@@ -58,7 +58,10 @@ do
 			fi
 			echo --- $t $f 
 			export DEPTH
-			time -p timeout $TIMEOUT bash "$SOLVER"parallel.sh "`cat ../tests/$f`" $NAME
+			if [ "$t" = Fmla ]
+			then fmla=$f; t="?"
+			else fmla="`cat ../tests/$f`"
+			time -p timeout $TIMEOUT bash "$SOLVER"parallel.sh "$fmla" $NAME
 
 	        	bash makelog.sh "`cat ../tests/$f`" $NAME "$f"
 			date -Ins
