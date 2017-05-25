@@ -1,4 +1,4 @@
-#!/bin/bash
+# /bin/bash
 if ! git commit ..
 then 
 	echo press CTRL-C to stop
@@ -45,19 +45,27 @@ grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - 
 IP=`cat ip.txt`
 set | grep IP
 
-#"echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
-starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
-(cd ../tar && 
+[ -e ../tar.gz ] ||
+(cd ../tar &&
 	mkdir -p usr/bin; mkdir -p root/.ssh/; mkdir -p usr/lib/x86_64-linux-gnu/
 	cp ~/.gitconfig root/
 	cp ../../bin/checker usr/bin
+	strip tar/usr/bin/checker
 	cp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 usr/lib/x86_64-linux-gnu/
 	chmod 700 . root root/.ssh usr usr/bin usr/lib usr/lib/x86_64-linux-gnu
 	chmod 600 root/.ssh/*
 	tar -zcf ../tar.gz . --owner=0 --group=0
-	rsync -a --progress --size-only ../tar.gz root@$IP:tar.gz
-	#scp ../tar.gz root@$IP: 
 )
+#"echo $(cat remote.pub) >> ~/.ssh/authorized_keys"
+starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $(cat ~/.ssh/id_rsa.pub)) >> ~/.ssh/authorized_keys"
+
+rsync -a --progress --size-only ../tar.gz root@$IP:tar.gz
+#rsync -a --progress --size-only ~/benchmarks.tar.gz ../tar.gz root@$IP:tar.gz
+(cd ~/benchmarks rsync -a `ls grep -v log_| grep -v pids | grep -v output` root@$IP:benchmarks/)
+
+#tar -zc `ls benchmarks/* -d | grep -v log_| grep -v pids | grep -v output` | gzip --rsyncable > benchmarks.tar.gz
+	#scp ../tar.gz root@$IP: 
+
 i=1
 _ssh "cat /etc/hosts" > hosts
 for n in `grep -o node... hosts`; do starcluster sshnode $CLUSTER $n "echo $(cat ../tar/root/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" & done
@@ -77,6 +85,8 @@ set -x
 NODES=`cat /etc/hosts | grep -o node...|tr "\n" " "|sed s/\ $//`; set |grep NODES > nodes.sh
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
 for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
+for n in $NODES; do rsync ~/benchmarks $n: ; done
+#for n in $NODES; do ssh $n "tar -zxvf ~/benchmarks.tar.gz" ; done
 for n in $NODES; do ssh $n mkdir ~/out; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
 #while read SSH ; do < checker.gz $SSH "gunzip > /usr/bin/checker; chmod +x /usr/bin/checker; mkdir -p ~/out"; scp echo XXX; done < ssh.txt
