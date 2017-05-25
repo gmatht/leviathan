@@ -86,6 +86,9 @@ NODES=`cat /etc/hosts | grep -o node...|tr "\n" " "|sed s/\ $//`; set |grep NODE
 for n in $NODES; do scp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 $n:/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 ; done
 for n in $NODES; do scp /usr/bin/checker $n:/usr/bin/checker ; done
 for n in $NODES; do rsync ~/benchmarks $n: ; done
+apt-get install ocaml-nox default-jre -y
+for n in $NODES; do $n: "apt-get install ocaml-nox default-jre -y" ; done
+
 #for n in $NODES; do ssh $n "tar -zxvf ~/benchmarks.tar.gz" ; done
 for n in $NODES; do ssh $n mkdir ~/out; done
 for n in $(grep -o node... /etc/hosts); do echo ssh $n; done > ssh.txt; echo "sh -c" >> ssh.txt; cat ssh.txt; wc -l ssh.txt
