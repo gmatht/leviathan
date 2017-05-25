@@ -61,7 +61,7 @@ starcluster sshmaster $CLUSTER "(echo $(cat ../tar/root/.ssh/id_rsa.pub); echo $
 
 rsync -a --progress --size-only ../tar.gz root@$IP:tar.gz
 #rsync -a --progress --size-only ~/benchmarks.tar.gz ../tar.gz root@$IP:tar.gz
-(cd ~/prj/quicktab &&  rsync -a `ls grep -v log_| grep -v pids | grep -v output` root@$IP:benchmarks/)
+(cd ~/benchmarks &&  rsync -a `ls | grep -v log_| grep -v pids | grep -v output` root@$IP:benchmarks/)
 
 #tar -zc `ls benchmarks/* -d | grep -v log_| grep -v pids | grep -v output` | gzip --rsyncable > benchmarks.tar.gz
 	#scp ../tar.gz root@$IP: 
