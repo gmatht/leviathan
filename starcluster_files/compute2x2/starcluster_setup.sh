@@ -119,7 +119,7 @@ fi
 
 if [ -e task.sh ]
 then
-	bash task.sh
+	time -o all.time bash task.sh
 else
 	echo DEBUG
 	TASK="bash benchmark.sh"
@@ -130,7 +130,7 @@ else
 	fi
 	echo "$TASK" > task.log
 
-	_ssh "
+	time -o all.time _ssh "
 cd leviathan/starcluster_files
 $TASK
 " | tee sc_bench.txt

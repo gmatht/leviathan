@@ -29,4 +29,21 @@ HOME=$NEW_HOME bash
 
 exit
 ca-central-1 ami-b3d965d7
+https://cloud-images.ubuntu.com/locator/ec2/
+ap-northeast-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-1de1df7a	hvm
+ap-northeast-2	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-6722ff09	hvm
+ap-south-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-4fa4d920	hvm
+ap-southeast-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-93ef68f0	hvm
+ap-southeast-2	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-1e01147d	hvm
+ca-central-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-e273cf86	hvm
+cn-north-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170303	ami-a163b4cc	hvm
+eu-central-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-a74c95c8	hvm
+eu-west-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-6c101b0a	hvm
+eu-west-2	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-056d7a61	hvm
+sa-east-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-4bd8b727	hvm
+us-east-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-20631a36	hvm
+us-east-2	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-a5b196c0	hvm
+us-gov-west-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170330	ami-ff22a79e	hvm
+us-west-1	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-9fe6c7ff	hvm
+us-west-2	xenial	16.04 LTS	amd64	hvm:ebs-ssd	20170516	ami-45224425	hvm
 
