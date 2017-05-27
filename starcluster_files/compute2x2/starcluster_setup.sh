@@ -120,7 +120,7 @@ fi
 
 if [ -e task.sh ]
 then
-	time -o all.time bash task.sh
+	/usr/bin/time -o all.time bash task.sh
 else
 	echo DEBUG
 	TASK="bash benchmark.sh"
