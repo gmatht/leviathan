@@ -98,6 +98,7 @@ apt-get install -y git-core'
 fi 
 #END SETUP
 _ssh '
+mkdir -p ~/store
 if [ -e leviathan ] 
 then
  cd leviathan
