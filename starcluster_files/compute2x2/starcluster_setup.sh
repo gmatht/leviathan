@@ -40,10 +40,18 @@ then
 
 date > starttime.txt
 starcluster start --force-spot-master -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
+
+
+
 starcluster lc $CLUSTER > starcluster_lc.txt
 grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
 IP=`cat ip.txt`
 set | grep IP
+
+if ! timeout 1 ../ssh.sh command -v git
+then
+	starcluster restart $CLUSTER
+fi
 
 [ -e ../tar.gz ] ||
 (cd ../tar &&
