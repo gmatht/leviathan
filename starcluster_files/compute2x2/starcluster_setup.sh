@@ -48,7 +48,7 @@ grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - 
 IP=`cat ip.txt`
 set | grep IP
 
-if ! timeout 1 ../ssh.sh command -v git
+if ! timeout 1 ../ssh.sh true
 then
 	starcluster restart $CLUSTER || true
 fi
