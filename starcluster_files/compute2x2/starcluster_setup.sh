@@ -50,7 +50,7 @@ set | grep IP
 
 if ! timeout 1 ../ssh.sh command -v git
 then
-	starcluster restart $CLUSTER
+	starcluster restart $CLUSTER || true
 fi
 
 [ -e ../tar.gz ] ||
