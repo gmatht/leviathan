@@ -139,7 +139,7 @@ else
 	fi
 	echo "$TASK" > task.log
 
-	time -o all.time _ssh "
+	/usr/bin/time -o all.time _ssh "
 cd leviathan/starcluster_files
 $TASK
 " | tee sc_bench.txt
