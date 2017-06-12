@@ -1,5 +1,5 @@
 mkdir -p ~/store
-DEPTHS="`seq 1 20`"
+DEPTHS="`seq 1 2`"
 for L in U0 U1 U2 U3
 do
 	cat ../tests/lists/$L | while read t f
