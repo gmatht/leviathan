@@ -58,7 +58,7 @@ fi
 	mkdir -p usr/bin; mkdir -p root/.ssh/; mkdir -p usr/lib/x86_64-linux-gnu/
 	cp ~/.gitconfig root/
 	cp ../../bin/checker usr/bin
-	strip tar/usr/bin/checker
+	strip usr/bin/checker
 	cp /usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 usr/lib/x86_64-linux-gnu/
 	chmod 700 . root root/.ssh usr usr/bin usr/lib usr/lib/x86_64-linux-gnu
 	chmod 600 root/.ssh/*
