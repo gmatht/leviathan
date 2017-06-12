@@ -139,10 +139,10 @@ else
 	fi
 	echo "$TASK" > task.log
 
-	/usr/bin/time -o all.time _ssh "
+	(time _ssh "
 cd leviathan/starcluster_files
 $TASK
-" | tee sc_bench.txt
+") | tee sc_bench.txt 2> sc_bench.err
 fi
 
 if bash ../backup.sh
