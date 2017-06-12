@@ -18,7 +18,9 @@ for n in $NODES localhost; do ssh $n 'killall    checker'; done
 for n in $NODES localhost; do ssh $n 'killall -9 checker'; done
 
 if [ -z "$nCPU"  ]
-then nCPU=`cat /proc/cpuinfo | grep processor | wc -l`
+then 
+	nCPU=`cat /proc/cpuinfo | grep processor | wc -l`
+	nCPU=$((nCPU/2)) #AWS tends to use hyperthreading so physical CPUs = vCPUs/2
 fi
 
 nNODE=$(echo $NODES | wc -w)
