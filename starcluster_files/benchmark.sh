@@ -2,7 +2,7 @@
 #(cd ~/store/; mkdir -p sav; for f in `cat bak/ready.txt`; do mv bak/$f sav/$f; done)
 
 SETS="${B_SETS:-U0 U1 U2 U3 H S0 S1 S2 S3}"
-DEPTHS="${B_DEPTHS:-16 18 19 24 40 48 56 64 72 80}"
+DEPTHS="${B_DEPTHS:-4 6 8 12 16 24 32 48 64 96 128}"
 TIMEOUT="${B_TIMEOUT:-1}"
 
 ls ~/store/summary*txt && (

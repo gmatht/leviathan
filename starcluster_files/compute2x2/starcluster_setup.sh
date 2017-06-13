@@ -37,6 +37,8 @@ _ssh() {
 # SETUP SERVER
 if ! ( [ -z "$REDO" ] &&  [ -e ip.txt ] && timeout 1 ../ssh.sh command -v git )
 then
+echo ~
+sleep 1
 
 date > starttime.txt
 starcluster start --force-spot-master -c $(echo $CLUSTER | sed s/[.].*// ) $CLUSTER || true
