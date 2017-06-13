@@ -1,6 +1,6 @@
 #DEPTH=17; gcc parse_clock.cpp; for f in store/compute_serial/U[123]_*; do echo $f; zcat $f | PC_FLOAT=y ./a.out $DEPTH:719 | average.sh; zcat $f | PC_FLOAT=y ./a.out $DEPTH:720 | average.sh 2> /dev/null; zcat $f | PC_FLOAT=y ./a.out $DEPTH:718 | average.sh 2> /dev/null; done
 gcc parse_clock.cpp -O2 -o parse_clock
-DEPTHS="`seq 1 20`"
+DEPTHS="`seq 1 25`"
 zcat $(ls store/compute_serial/U?_*gz) > /tmp/zcat
 (
 for DEPTH in $DEPTHS; do echo -ne "\t$DEPTH"; done; echo

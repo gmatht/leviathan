@@ -2,7 +2,7 @@
 #(cd ~/store/; mkdir -p sav; for f in `cat bak/ready.txt`; do mv bak/$f sav/$f; done)
 
 SETS="${B_SETS:-U0 U1 U2 U3 H S0 S1 S2 S3}"
-DEPTHS="${B_DEPTHS:-4 6 8 12 16 24 32 48 64 96 128}"
+DEPTHS="${B_DEPTHS:-4 6 8 12 16 18 19 20 21 22 24 32 48 64 96 128}"
 TIMEOUT="${B_TIMEOUT:-1}"
 
 ls ~/store/summary*txt && (
@@ -54,7 +54,7 @@ do
 	 	for DEPTH in $DEPTHS
 #4 8 16 17 18 19 32 64 128 
 	 	do
-	 		NAME="$SOLVER$L"_`printf %4d  $i | tr \  0`_$nJOB"@"$DEPTH
+	 		NAME="$SOLVER$L"_`printf %4d  $i | tr \  0`_$nJOB"@"$DEPTH.T$TIMEOUT
 			if [ -e ~/store/sav/$NAME.gz ]
 			then continue
 			fi
