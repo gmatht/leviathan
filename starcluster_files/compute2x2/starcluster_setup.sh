@@ -133,7 +133,7 @@ then
 	/usr/bin/time -o all.time bash task.sh
 else
 	echo DEBUG
-	TASK="bash benchmark.sh; CLOCK_DEPTH=20 B_TIMEOUT=1000 B_DEPTHS=20 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh"
+	TASK="bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.default;  CLOCK_DEPTH=20 B_TIMEOUT=1000 B_DEPTHS=20 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh"
 
 	if [ ! -z "$1" ]
 	then
