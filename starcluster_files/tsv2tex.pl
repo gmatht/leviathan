@@ -2,16 +2,18 @@ use strict;
 #$L=<>;
 #print $:L;
 
+my $dp=$ENV{"DP"}; #Decimal Places
+
 #open $F, "<", $ARGV[0];
 our $R=<>;
 chomp $R;
 my @heading=split /\t/, $R;
 $R=<>;
-chomp $R;
-our @format=split /\t/, $R;
+my $R_=$R;
+chomp $R_;
+our @format=split /\t/, $R_;
 
 #open $F, "<", $ARGV[0];
-my $R=<>;
 
 my $s_heading="";
 my $s_header='\begin{tabular}{';
@@ -40,8 +42,8 @@ sub doline {
 	chomp $W;
 
 	my $zeros="000";
-	$W=~s/\b([0-9]+)[.]([0-9]{1,3})[0-9]+\b/\1.\2$zeros/g;
-	$W=~s/\b([0-9]+)[.]([0-9]{1,3})[0-9]+\b/\1&\2/g;
+	$W=~s/\b([0-9]+)[.]([0-9]{1,$dp})[0-9]*\b/\1.\2$zeros/g;
+	$W=~s/\b([0-9]+)[.]([0-9]{1,$dp})[0-9]*\b/\1&\2/g;
 
 	$W=~s/\t/ & /g;
 	$W=~s/_/\\_/g;

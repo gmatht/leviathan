@@ -3,7 +3,8 @@
 
 SETS="${B_SETS:-U0 U1 U2 U3 H S0 S1 S2 S3}"
 #DEPTHS="${B_DEPTHS:-4 6 8 12 16 18 19 20 21 22 24 32 48 64 96 128}"
-DEPTHS="${B_DEPTHS:-20 64}"
+#DEPTHS="${B_DEPTHS:-20 64}"
+DEPTHS="${B_DEPTHS:-18}"
 TIMEOUT="${B_TIMEOUT:-1}"
 
 ls ~/store/summary*txt && (
