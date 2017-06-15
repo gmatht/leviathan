@@ -47,13 +47,15 @@ starcluster start --force-spot-master -c $(echo $CLUSTER | sed s/[.].*// ) $CLUS
 
 starcluster lc $CLUSTER > starcluster_lc.txt
 grep -o "ec2-[^-]*-[^-]*-[^-]*-[^.-]*" starcluster_lc.txt | sed s/ec..// | tr - . | head -n1 > ip.txt
-IP=`cat ip.txt`
-set | grep IP
 
-if ! timeout 1 ../ssh.sh true
+if [ ! -z "$IP" ] && ! timeout 1 ../ssh.sh true
 then
 	starcluster restart $CLUSTER || true
 fi
+
+
+IP=`cat ip.txt`
+set | grep IP
 
 [ -e ../tar.gz ] ||
 (cd ../tar &&
