@@ -136,7 +136,12 @@ then
 else
 	echo DEBUG
 	#TASK="bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.default;  CLOCK_DEPTH=20 B_TIMEOUT=1000 B_DEPTHS=20 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh"
-	TASK="bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.default;  CLOCK_DEPTH=20 B_TIMEOUT=1000 B_DEPTHS=18 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh"
+	#TASK="bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.default;  CLOCK_DEPTH=20 B_TIMEOUT=1000 B_DEPTHS=18 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh"
+	TASK="bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.default 
+B_TIMEOUT=1000 B_DEPTHS=18 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.18
+B_TIMEOUT=1000 B_DEPTHS=20 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.20
+B_TIMEOUT=1000 B_DEPTHS=64 B_SETS='S0 S1 S2 S3 U0 U1 U2 U3' bash benchmark.sh; mv ~/store/summary.txt ~/store/summary.txt.64
+"
 
 	if [ ! -z "$1" ]
 	then
