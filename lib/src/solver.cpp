@@ -835,6 +835,8 @@ void Solver::_print_stats() const
 	if (_result == Result::SATISFIABLE) {
 		stream << "IsSat!" 
 			<< " JOB="<<job_no<< " SEC=" << (double)clock()/1000000 << std::endl; 
+		std::cerr << stream.str();
+		exit(5);
 	}
 	if (_result == Result::UNSATISFIABLE) {
 		stream << "Unsat!"
