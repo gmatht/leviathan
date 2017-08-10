@@ -4,13 +4,13 @@ NAME=`echo "$*"|tr ' ' -`
 ocaml ./make_random_ltl_formulas.ml 50 2 $i 2147483647 | while read f
 do
 	if printf "%s\n" "$f" | timeout $1 rivals/pltl/pltl tree
-	then echo TREE: "$f"
+	then echo TREE: $i "$f"
 	else
 		if printf "%s\n" "$f" | timeout $1 rivals/pltl/pltl graph
-		then echo GRAPH: "$f"
+		then echo GRAPH: $i "$f"
 		else
 			if JOB_NO=1/1@0 timeout $2 ../bin/checker -l "$f"
-			then echo LV: "$f"
+			then echo LV: $i "$f"
 			else 
 				echo $i >> non_trivial_n_$NAME.txt
 				echo $f >> non_trivial_f_$NAME.txt
@@ -18,4 +18,5 @@ do
 		fi
 	fi
 	i=$((i+1))
-done 2>&1 | gzip > filter_formulas.log.gz
+done 2>&1 | gzip > filter_formulas_$NAME.log.gz
+

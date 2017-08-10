@@ -6,7 +6,7 @@ echo -e "jobs\tset\tsum\tn\tmean\tmedian\tmin\tmax"
 	#for L in U0 U1 U2 U3 S0 S1 S2 S3; do
 for TYPE in U S; do
 for L_ in 0 1 2 3; do
-for i in 2 8 32 88; do
+for i in 2 8 32 88 128; do
 #for F in summary_*[2-9]@*tsv; do
 	L=$TYPE$L_
 	F=summary_"$i"@"$DEPTH".tsv
