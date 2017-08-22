@@ -2,7 +2,7 @@
 
 # About Parallel Leviathan
 
-This is modification of the original Leviathan tableau to be allow work to be divided between multiple independant jobs that can be run in parallel CPUs. This will be presented at [GandALF 2017](http://eptcs.web.cse.unsw.edu.au/paper.cgi?GANDALF2017:10.pdf). The raw benchmark data [(705MB)](http://staffhome.ecm.uwa.edu.au/~00061811/parallel_benchdata.tar.gz), used in this paper is available online, including the comparison with PolSAT [(26MB)](http://staffhome.ecm.uwa.edu.au/~00061811/polsat_benchdata.tar.gz)
+This modification allows Leviathan to divide work between multiple independant jobs that can be run in parallel. This will be presented at [GandALF 2017](http://eptcs.web.cse.unsw.edu.au/paper.cgi?GANDALF2017:10.pdf). The raw benchmark data [(705MB)](http://staffhome.ecm.uwa.edu.au/~00061811/parallel_benchdata.tar.gz), used in this paper is available online, including the comparison with PolSAT [(26MB)](http://staffhome.ecm.uwa.edu.au/~00061811/polsat_benchdata.tar.gz).
 
 The usage of Parallel Leviathan is similar to the original, but you can specify a `JOB_NO` in the format `job-number/number-of-jobs@split-depth`. See the GandALF paper for a discription of split depth, 20 is a reasonable default. The original formula is satisfiable iff any of the JOBs report "IsSat". For example:
 
@@ -19,7 +19,7 @@ The usage of Parallel Leviathan is similar to the original, but you can specify 
     Unsat! JOB=2/2@1 SEC=0.001453
     The formula is unsatisfiable!
 
-## About
+## About (Original) Leviathan
 
 Leviathan is an implementation of a tableau method for [LTL](https://en.wikipedia.org/wiki/Linear_temporal_logic) satisfiability checking based on the paper "A new rule for a traditional tree-style LTL tableau" by [Mark Reynolds](http://www.csse.uwa.edu.au/~mark/research/Online/ltlsattab.html).
 
