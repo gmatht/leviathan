@@ -1,0 +1,13 @@
+Directories are named "compute[CPUS_PER_NODE]x[NODES]" so we can multiply out the two numbers to get the total number of CPUs in the cluster.  (But some CPUS are virtual so only have as many used). Some directories are suffixed with .1 .2 .3 etc., this indicated that the benchmark has been run multiple times with the same cluster size (but perhaps different sets of split depths investigated)
+
+The most detailed files are called things like H_0001_8@64.T2.gz. 
+H_0001_8@64 means formula number "0001" from the "H"ard benchmark set, split into "8" jobs at depth "64" and a "T"imeout of "2" seconds.
+This file contains the output from each job (so if all jobs report unsatisfiable the formula is unsatisfiable, if any job reports satisfiable the formula is satisfiable).
+The Hard benchmark set was formulas that could be solved within IIRC an hour by the original formula. 
+"H" could instead be "S1"..."S3" increasingly hard (but solved) satisfiable formulas, or "U" the unsatifiable formulas.
+These lists are stored in the git repository under tests/lists
+
+
+The main file in each directory is the summary.txt. 
+
+
