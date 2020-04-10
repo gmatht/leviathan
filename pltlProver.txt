@@ -1,0 +1,4 @@
+Satisfiable
+echo 'X p & X X ~ p' | JOB_NO=1/2@2 ./pltl tree
+echo 'X p & X X ~ p' | JOB_NO=2/2@2 ./pltl tree
+

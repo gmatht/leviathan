@@ -1,0 +1,93 @@
+diff --git a/PLTLTree.ml b/PLTLTree.ml
+index 0ff0e7a..a92c908 100644
+--- a/PLTLTree.ml
++++ b/PLTLTree.ml
+@@ -163,6 +163,38 @@ let mk_Uev lvl fs chn =
+   done;
+   uev
+ 
++let job_no, num_jobs, split_depth = Scanf.sscanf (Sys.getenv "JOB_NO") "%u/%u@%u" (fun x y z -> x,y,z )
++
++let to_job i =
++  let m = (i mod num_jobs) in
++  let r = (i / num_jobs) in
++    if r>0 then 
++      m
++    else
++      let _ = Random.init r in (*set random seed*)
++      ((Random.int(num_jobs))+m) mod num_jobs
++
++let last_depth = ref 0
++let width = Array.make 1000 0
++let dump_depth = true
++
++(** Return None on nodes not assigned to this job,
++    otherwise call intern_isSat *)
++
++let rec sntern_isSat fset fsetc hc chn dp ht =
++  (*assert(dp <= split_depth || job_no > 0);*)
++  if (dp < 1000) then ( 
++    if(dump_depth) then (Printf.printf "%u\n" dp);
++      width.(dp)<-width.(dp)+1
++   );
++(*      if (dp <= clock_depth)
++        std::cout << "^" << dp << ":" << clock() << "\n";
++    }
++*)
++  if (dp = split_depth && ( to_job(width.(dp)-1) != (job_no-1) ) ) then 
++    None 
++  else
++    intern_isSat fset fsetc hc chn dp ht
+ 
+ (** Gets a tableau node (i.e. its formula set and histories)
+     and builds the sub-tableau rooted at the given node.
+@@ -177,7 +209,9 @@ let mk_Uev lvl fs chn =
+     @return None if the node is marked,
+     Some uev otherwise where uev is the Uev of the node.
+  *)
+-let rec intern_isSat fset fsetc hc chn dp ht =
++
++
++and intern_isSat fset fsetc hc chn dp ht =
+   let pf = getPFinclEX fset in
+   if pf >= 0 then
+     let pftype = !arrayType.(pf) in
+@@ -203,10 +237,10 @@ let rec intern_isSat fset fsetc hc chn dp ht =
+           let cntr = insertFormula fset fsetc f1 in
+           let mrk1 =
+             if not cntr then
+-              if lvl = 0 then intern_isSat fset fsetc hc chn (succ dp) ht
++              if lvl = 0 then sntern_isSat fset fsetc hc chn (succ dp) ht
+               else begin
+                 setChn chn pf 0;
+-                let res = intern_isSat fset fsetc hc chn (succ dp) ht in
++                let res = sntern_isSat fset fsetc hc chn (succ dp) ht in
+                 setChn chn pf lvl;
+                 res
+               end
+@@ -217,7 +251,7 @@ let rec intern_isSat fset fsetc hc chn dp ht =
+           | _ ->
+               let cntr = insertFormula fset2 fsetc2 f2 in
+               let mrk2 =
+-                if not cntr then intern_isSat fset2 fsetc2 hc chn (succ dp) ht
++                if not cntr then sntern_isSat fset2 fsetc2 hc chn (succ dp) ht
+                 else begin
+                   if dp > !pathlength then pathlength := dp;
+                   None
+@@ -248,7 +282,7 @@ let rec intern_isSat fset fsetc hc chn dp ht =
+             blitBS hcfsetc fsetc;
+             GHt.add hc hcfsetc dp;
+             let nchn = newChn hcfsetc dp chn in
+-            let mrk = intern_isSat fset fsetc hc nchn (succ dp) ht in
++            let mrk = sntern_isSat fset fsetc hc nchn (succ dp) ht in
+             GHt.remove hc hcfsetc;
+             match mrk with
+             | None ->
+@@ -313,4 +347,7 @@ let isSat ?(verbose = false) f =
+     print_endline ("Longest path: " ^ (string_of_int !pathlength));
+     print_newline ()
+   end else ();
++  if sat 
++  then Printf.eprintf "Satisfiable\n"
++  else Printf.eprintf "Unsatisfiable\n";
+   sat
